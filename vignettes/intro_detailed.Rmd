@@ -1,0 +1,240 @@
+---
+title: "intro_detailed"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{intro_detailed}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mypkgv3)
+```
+
+# Package Structure
+
+This package support to compute time-varying and time-invariant coefficients using approach HTE, handling both continuous and binary outcome types. It includes
+
+-   Build-in datasets with different size and outcome kinds: `ConSampleSmall` and `BiSample`
+
+-   Main function: `MainfctAllT()` and `MainfctSepT()` .
+
+-   Other functions called by main functions
+
+    -   Estimators functions: `ExpProb()`, `PrinPred()`, `MuPred()` .
+
+    -   Link functions: `Score_beta()`, `Jacobian_beta()`
+
+In the following part, a detailed example will be provided.
+
+# Data
+
+There are two complex built-in datasets, each containing a different type of outcome (Y). The description of each variable can be accessed using ``` ?``BiSample ```.
+
+The dataset can be provided in any format (e.g., `data.table`, `data.frame`).
+
+```{r dataset}
+data("ConSampleSmall", package ="mypkgv3")
+head(ConSampleSmall)
+```
+
+```{r}
+colnames(BiSample)
+```
+
+```{r}
+unique(BiSample$time)
+```
+
+# Function
+
+## Nuisance Models
+
+Those models will be passed to estimator functions. For example,
+
+`exp_fo` is the formula to estimate exposure probabilities, where A is treatment status and a binary variable.
+
+`prin_fo` is the formula to estimate principal score, where S is survival status and also a binary variable.
+
+`mu_fo` is the formula to estimate outcome mean, where Y is the outcome and can be binary or continuous.
+
+```{r Nuisance Models}
+exp.fo  <- A ~  X1 + X2 + X3 + X4 + X5 + X6 
+
+prin.fo <- S ~ (X1 + X2 + X3 + X4 + X5 + X6) * A
+
+mu.fo <- Y ~ (X1 + X2 + X3 + X4 + X5 + X6) * A + S - 1
+
+```
+
+## Estimators Function
+
+The following three functions are called by main functions: `ExpProb()`, `PrinPred()`, `MuPred()` .
+
+### `ExpProb()`
+
+Function `ExpProb()` estimates exposure probabilities by fitting a logistic regression model.
+
+Three parameters are needed: exposure probability formula, the fitting dataset and the prediction dataset.
+
+It will return a vector of predicted exposure probabilities for all individuals in the dataset.
+
+```{r ExpProb}
+# ExpProb(formula, fit_dat, pred_dat)
+expprob <- ExpProb(formula = exp_fo,
+                   fit_dat = ConSampleSmall, 
+                   pred_dat = ConSampleSmall)
+head(expprob)
+class(expprob)
+```
+
+### `PrinPred()`
+
+Function `PrinPred()` estimates principal score by fitting a logistic regression model.
+
+This function requires six parameters:
+
+-   principal score formula,
+
+-   the fitting dataset,
+
+-   the prediction dataset,
+
+-   treatment status(`trt`, a binary variable 1/0 indicating treatment assignment),
+
+-   the name of indicator column in your dataset (`ind_col`, a string),
+
+-   the name of treatment status column in your own dataset.(`A_col,` a string)
+
+```{r PrinPred}
+prinpred <- PrinPred(
+   formula = prin_fo,
+   fit_dat = ConSampleSmall,
+   pred_dat = ConSampleSmall,
+   trt = 1
+   # ind_col = "ind",
+   # A_col = "A"
+)
+
+class(prinpred)
+names(prinpred)
+```
+
+It will return a list including a vector of principle score`(e_pred)` and the fitted model object with detailed estimation results.`(fit_ps_A)`.
+
+```{r}
+class(prinpred)
+names(prinpred)
+```
+
+The vector will look like the following line:
+
+```{r}
+head(prinpred$e_pred)
+```
+
+The fitted model object will look like the following line:
+
+```{r}
+head(prinpred$fit_ps_A)
+```
+
+### `MuPred(mu_fo)`
+
+Function `MuPred()` estimates outcome mean by fitting linear regression model or logistic regression model, which depends on the type of outcome Y.
+
+It requires seven parameters:
+
+-   outcome mean formula,
+
+-   the fitting dataset
+
+-   the prediction dataset,
+
+-   treatment status(`trt`, a binary variable 1/0 indicating treatment assignment).
+
+-   the type of outcome Y(continuous or binary) the name of indicator column in your dataset (`ind_col`, a string); if the
+
+-   the name of survival status(`S_col`, a string ) the name of treatment status column in your own dataset.(`A_col,`a string)
+
+It will return a list including a vector of outcome mean.
+
+```{r MuPred}
+# MuPred(formula, fit_dat, pred_dat, trt, Y_type)
+
+mupred <- MuPred(
+   formula = mu_fo,
+   fit_dat =  ConSampleSmall,
+   pred_dat =  ConSampleSmall,
+   trt = 1,
+   Y_type = 1 
+   # S_col = "S",
+   # A_col = "A"
+)
+
+head(mupred)
+```
+
+```{r}
+head(mupred)
+```
+
+## Main Function
+
+There are two main functions to computes covariants.
+
+MainfctSepT() estimates the
+
+```{r MainfctSepT}
+resultSepT <- MainfctSepT(
+ K = 3, data = ConSampleSmall,
+ exp_fo = exp.fo,
+ prin_fo = prin.fo,
+ mu_fo = mu.fo,
+ Y_type = 1,
+ col_names = c("X1","X3","X5"),
+ n = 4,
+ S_col = "S",
+ A_col = "A",
+ Y_col = "Y",
+ ind_col = "ind",
+ time_col = "time",
+ id_col = "id"
+)
+resultSepT
+
+```
+
+```{r}
+resultSepT
+```
+
+```{r}
+resultAllT <- MainfctAllT(
+ K = 3, data = ConSampleSmall,
+ exp_fo = exp.fo,
+ prin_fo = prin.fo,
+ mu_fo = mu.fo,
+ Y_type = 1,
+ col_names = c("X1","X3","X5"),
+ n = 4,
+ S_col = "S",
+ A_col = "A",
+ Y_col = "Y",
+ ind_col = "ind",
+ time_col = "time",
+ id_col = "id"
+)
+
+```
+
+```{r}
+resultAllT
+```

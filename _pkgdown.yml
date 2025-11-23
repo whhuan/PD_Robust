@@ -1,0 +1,35 @@
+url: https://github.com/yourname/mypkgv3
+
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+navbar:
+  title: "mypkgv3"
+  type: default
+  left:
+    - text: "Simple Introduction"
+      href: reference/index.html
+    - text: "Tutorials"
+      href: articles/index.html
+  right:
+    - icon: fa-github
+      href: https://github.com/yourname/mypkgv3
+
+reference:
+  - title: "Main Function"
+    contents:
+      - ExpProb
+      - MuPred
+      - PrinPred
+      - MainfctAllT
+      - MainfctSepT
+  - title: "Datasets"
+    contents:
+      - BiSample
+      - ConSampleSmall
+
+articles:
+  - title: "Tutorials"
+    contents:
+      - intro_detailed
