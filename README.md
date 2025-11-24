@@ -21,8 +21,7 @@ build-in datasets.
 
 ## Installation
 
-You can install the development version of mypkgv3 like so: 提供 GitHub
-安装方式（或 CRAN 如果已上线）
+You can install the development version of mypkgv3 like so: GitHub link
 devtools::install_github(“yourgithub/mypkgv3”)
 
 ``` r
@@ -62,7 +61,7 @@ devtools::install("~/mypkgv3")
 #> *** moving datasets to lazyload DB
 #> ** tests
 #> ** byte-compile and prepare package for lazy loading
-#> # 自动建议的 @importFrom：
+#> #  @importFrom：
 #> #' @importFrom data.table .N .SD := setDT
 #> #' @importFrom rootSolve multiroot
 #> #' @importFrom speedglm speedglm speedglm.wfit
