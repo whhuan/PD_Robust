@@ -1,0 +1,131 @@
+# Diagnostics, profiling, and sensitivity analysis
+
+``` r
+
+library(PDRobust)
+data("BiSample", package = "PDRobust")
+raw <- BiSample
+map <- Mapping(
+  baseline_time = 0,
+  cutoff_time = 2,
+  covariates = c("X1", "X2", "X4"),
+  interest_vars = c("X1", "X2"),
+  y_type = "B"
+)
+pd_data <- DataStandard(raw, map)
+ps_fo <- A ~ X1 + X2 + X4
+prin_fo <- S ~ X1 + X2 + X4 + A + time
+```
+
+## Propensity-score balance
+
+``` r
+
+ps_diag <- PSDiag(pd_data, ps_fo)
+ps_diag$smd_before
+ps_diag$smd_after
+ps_diag$weights
+ps_diag$propensity
+plot(ps_diag)
+```
+
+[`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md)
+uses the original pooled denominator before weighting and the weighted
+effective-sample-size denominator after ordinary IPTW. Before weights
+are calculated, it always executes `pi <- pmin(pmax(pi, 0.01), 0.99)`.
+
+## Principal-score balance
+
+``` r
+
+prin_diag <- PrinSDiag(pd_data, ps_fo, prin_fo)
+prin_diag$statistics
+prin_diag$p0
+prin_diag$p1
+prin_diag$propensity
+plot(prin_diag)
+```
+
+[`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
+evaluates the original diagnostic equation at cutoff using cumulative
+principal probabilities. Its propensity scores are also always clipped
+to `[0.01, 0.99]` before the diagnostic denominators are formed.
+
+## Principal-stratum summaries
+
+``` r
+
+profile <- QR(
+  pd_data,
+  prin_fo,
+  quantile_level = c(0.25, 0.5, 0.75)
+)
+profile$mean
+profile$quantile
+profile$weights
+```
+
+[`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) uses cutoff
+principal-score weights. Means are weighted directly, and quantiles are
+estimated using weighted intercept-only
+[`quantreg::rq()`](https://rdrr.io/pkg/quantreg/man/rq.html) models.
+
+## Treatment-group odds ratios
+
+``` r
+
+or0 <- ORCI(pd_data, S ~ X1 + X2 + X4, treatment_group = 0)
+or1 <- ORCI(pd_data, S ~ X1 + X2 + X4, treatment_group = 1)
+or0$forestplotdat
+or0$model
+plot(or0)
+```
+
+[`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md) fits a
+cutoff logistic model within the selected treatment group and returns
+exponentiated coefficients, confidence intervals, the fitted model,
+analysis data, settings, and a forest plot.
+
+## Binary- and continuous-outcome sensitivity analysis
+
+``` r
+
+set.seed(20260728)
+binary_sa <- SA(
+  pd_data,
+  A ~ X1 + X2 + X4,
+  S ~ X1 + X2 + X4 + A + time,
+  Y ~ X1 + X2 + A,
+  ratiovec = c(0, 0.02)
+)
+
+data("ImperfectConSample", package = "PDRobust")
+continuous_map <- Mapping(
+  baseline_time = 3,
+  cutoff_time = 9,
+  covariates = c("X1", "X2", "X4"),
+  interest_vars = c("X1", "X2"),
+  y_type = "C"
+)
+continuous_data <- DataStandard(
+  ImperfectConSample, continuous_map, drop = TRUE
+)
+
+continuous_sa <- SA(
+  continuous_data,
+  A ~ X1 + X2 + X4,
+  S ~ X1 + X2 + X4 + A + time,
+  Y ~ X1 + X2 + A,
+  ratiovec = c(0, 0.05)
+)
+
+binary_sa$data
+continuous_sa$data
+```
+
+At each observed time,
+[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) defines
+perturbation variance using the ordinary variance of all observed
+outcomes at that time. Binary analyses retain a binomial logistic
+nuisance model and use the bounded-link HTE equation; continuous
+analyses retain the original linear-model and closed-form equations.

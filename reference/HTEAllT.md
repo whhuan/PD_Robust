@@ -1,0 +1,97 @@
+# Estimate pooled heterogeneous treatment effects across all times
+
+`HTEAllT()` always uses every actual observed analysis time from the
+mapped baseline through the mapped cutoff, inclusive. It does not accept
+or use `target_time`. The propensity, principal-score, and outcome
+models are refitted internally for the point estimate and for every
+bootstrap sample.
+
+## Usage
+
+``` r
+HTEAllT(
+  data,
+  ps_fo,
+  prin_fo,
+  out_fo,
+  B,
+  conf_level = 0.95,
+  max_attempts = NULL,
+  verbose = TRUE
+)
+```
+
+## Arguments
+
+- data:
+
+  A standardized `pd_data` object returned by
+  [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
+
+- ps_fo:
+
+  Propensity-score formula.
+
+- prin_fo:
+
+  Principal-score formula.
+
+- out_fo:
+
+  Outcome-model formula.
+
+- B:
+
+  Number of successful subject-level bootstrap replications.
+
+- conf_level:
+
+  Confidence level for Wald intervals based on bootstrap SDs.
+
+- max_attempts:
+
+  Maximum bootstrap attempts. `NULL` uses `10 * B`.
+
+- verbose:
+
+  Emit bootstrap progress messages.
+
+## Value
+
+A `pd_hte_pooled` object. `analysis_times` gives the complete
+baseline-to-cutoff grid, `time_effect_estimable` records whether a time
+effect was included, and `bootstrap_info` records requested and
+successful replicates, attempts, completion status, categorized
+failures, and captured warnings.
+
+## Details
+
+If the prepared data contain only one analysis time, the estimator omits
+the time-effect term and records that the time effect is not estimable.
+
+## Examples
+
+``` r
+# \donttest{
+data("BiSample", package = "PDRobust")
+map <- Mapping(
+  baseline_time = 0, cutoff_time = 2,
+  covariates = c("X1", "X2", "X4"),
+  interest_vars = c("X1", "X2"), y_type = "B"
+)
+pd_dat <- DataStandard(BiSample, map)
+fit <- HTEAllT(
+  pd_dat,
+  A ~ X1 + X2 + X4,
+  S ~ X1 + X2 + X4 + A + time,
+  Y ~ X1 + X2 + A,
+  B = 0
+)
+fit$summary
+#>          term    estimate SD LowerBound UpperBound
+#> 1   Intercept  0.18398791 NA         NA         NA
+#> 2          X1 -0.03594524 NA         NA         NA
+#> 3          X2 -0.07593298 NA         NA         NA
+#> 4 Time Effect -0.01611745 NA         NA         NA
+# }
+```
