@@ -108,7 +108,7 @@ test_that("PrinPred follows the 0.2.3 baseline inclusion rule", {
     map <- attr(workflow$data, "pd_mapping")
     observed <- PrinPred(
       workflow$prin_fo, workflow$data, workflow$data,
-      treatment = 0, mapping = map
+      a = 0, mapping = map
     )
     expected <- manual_principal(workflow, treatment = 0)
     expect_equal(as.numeric(observed), round(expected, 3))
@@ -131,7 +131,7 @@ test_that("PrinPred uses no at-risk indicator for a single observed time", {
   ))
   observed <- PrinPred(
     workflow$prin_fo, workflow$data, workflow$data,
-    treatment = 0, mapping = map
+    a = 0, mapping = map
   )
 
   expect_equal(as.numeric(observed), round(expected, 3))
@@ -144,7 +144,7 @@ test_that("PrinPred rejects incomplete cumulative prediction grids", {
   expect_error(
     PrinPred(
       workflow$prin_fo, workflow$data, incomplete,
-      treatment = 0, mapping = map
+      a = 0, mapping = map
     ),
     "every actual observed time"
   )
@@ -306,7 +306,7 @@ test_that("PrinPred test panels are full rank and avoid separation warnings", {
         workflow$prin_fo,
         workflow$data,
         workflow$data,
-        treatment = 0,
+        a = 0,
         mapping = map
       )
     )

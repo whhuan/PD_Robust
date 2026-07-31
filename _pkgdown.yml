@@ -1,18 +1,16 @@
 url: https://whhuan.github.io/PD_Robust/
-
 template:
   bootstrap: 5
-
 home:
   title: PDRobust
-  description: Mapping-driven principal-stratification analysis under truncation by death.
-
+  description: Mapping-driven principal-stratification analysis under truncation by
+    death.
 reference:
 - title: Package overview
-  contents:
-  - PDRobust-package
+  contents: PDRobust-package
 - title: Mapping and prepared data
-  desc: Define the data-layout contract, validate raw data, and attach the standardized mapping.
+  desc: Define the data-layout contract, validate raw data, and attach the standardized
+    mapping.
   contents:
   - Mapping
   - DataCheck
@@ -36,7 +34,6 @@ reference:
   - QR
   - ORCI
   - SA
-
 articles:
 - title: Workflows
   navbar: Workflows
@@ -46,3 +43,4 @@ articles:
   - '"prediction-models"'
   - '"diagnostics-and-sensitivity"'
   - '"Functions"'
+

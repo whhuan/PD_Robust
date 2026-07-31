@@ -22,7 +22,8 @@ baseline through cutoff. No hidden global or session cache is created.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/whhuan/PD_Robust} \url{https://whhuan.github.io/PD_Robust/}
+  \item \url{https://github.com/whhuan/PD_Robust}
+  \item \url{https://whhuan.github.io/PD_Robust/}
   \item Report bugs at \url{https://github.com/whhuan/PD_Robust/issues}
 }
 

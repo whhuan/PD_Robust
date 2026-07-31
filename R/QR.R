@@ -58,7 +58,7 @@ QR <- function(data, prin_fo, quantile_level = 0.5) {
   }
 
   p0_all <- .pd_prinpred_impl(
-    prin_fo, panel, panel, treatment = 0, mapping = mapping
+    prin_fo, panel, panel, a = 0, mapping = mapping
   )
   cutoff_index <- which(panel[[mapping$time_col]] == mapping$cutoff_time)
   raw_cutoff <- panel[[mapping$id_col]][cutoff_index]

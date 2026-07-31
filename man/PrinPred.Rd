@@ -4,7 +4,7 @@
 \alias{PrinPred}
 \title{Estimate cumulative principal scores}
 \usage{
-PrinPred(prin_fo, fit_dat, pred_dat, treatment, mapping, ...)
+PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)
 }
 \arguments{
 \item{prin_fo}{Principal-score formula.}
@@ -13,7 +13,7 @@ PrinPred(prin_fo, fit_dat, pred_dat, treatment, mapping, ...)
 
 \item{pred_dat}{Data on which to predict cumulative scores.}
 
-\item{treatment}{Treatment level, either \code{0} or \code{1}.}
+\item{a}{Treatment level for principal-score prediction, either \code{0} or \code{1}.}
 
 \item{mapping}{A \code{pd_mapping} object.}
 
@@ -48,7 +48,7 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 score0 <- PrinPred(
   S ~ X1 + X2 + X4 + A + time,
-  pd_dat, pd_dat, treatment = 0, mapping = map
+  pd_dat, pd_dat, a = 0, mapping = map
 )
 head(score0)
 }

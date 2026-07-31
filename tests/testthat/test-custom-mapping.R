@@ -17,7 +17,7 @@ test_that("prediction and analysis functions honor custom structural names", {
 
   ps <- PSPred(ps_fo, prepared, prepared, standardized_mapping)
   p0 <- PrinPred(
-    prin_fo, prepared, prepared, treatment = 0,
+    prin_fo, prepared, prepared, a = 0,
     mapping = standardized_mapping
   )
   fit_outcome <- prepared[prepared$alive == 1, , drop = FALSE]

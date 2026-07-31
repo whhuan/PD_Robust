@@ -13,7 +13,7 @@
 #' @param prin_fo Principal-score formula.
 #' @param fit_dat Data used to fit the model.
 #' @param pred_dat Data on which to predict cumulative scores.
-#' @param treatment Treatment level, either `0` or `1`.
+#' @param a Treatment level for principal-score prediction, either `0` or `1`.
 #' @param mapping A `pd_mapping` object.
 #' @param ... Additional arguments passed to `stats::glm()`.
 #'
@@ -32,14 +32,14 @@
 #' pd_dat <- DataStandard(BiSample, map)
 #' score0 <- PrinPred(
 #'   S ~ X1 + X2 + X4 + A + time,
-#'   pd_dat, pd_dat, treatment = 0, mapping = map
+#'   pd_dat, pd_dat, a = 0, mapping = map
 #' )
 #' head(score0)
 #' @export
-PrinPred <- function(prin_fo, fit_dat, pred_dat, treatment, mapping, ...) {
+PrinPred <- function(prin_fo, fit_dat, pred_dat, a, mapping, ...) {
   .pd_round_prediction(
     .pd_prinpred_impl(
-      prin_fo, fit_dat, pred_dat, treatment, mapping, ...
+      prin_fo, fit_dat, pred_dat, a, mapping, ...
     )
   )
 }
@@ -47,21 +47,20 @@ PrinPred <- function(prin_fo, fit_dat, pred_dat, treatment, mapping, ...) {
 #' Full-precision principal-score implementation
 #'
 #' @noRd
-.pd_prinpred_impl <- function(prin_fo, fit_dat, pred_dat, treatment,
+.pd_prinpred_impl <- function(prin_fo, fit_dat, pred_dat, a,
                               mapping, ...) {
-  if (length(treatment) != 1L || is.na(treatment) ||
-      !treatment %in% c(0, 1)) {
-    .pd_stop("`treatment` must be 0 or 1.")
+  if (length(a) != 1L || is.na(a) || !a %in% c(0, 1)) {
+    .pd_stop("`a` must be 0 or 1.")
   }
   prepared <- .pd_prinpred_fit(
     prin_fo = prin_fo,
     fit_dat = fit_dat,
     pred_dat = pred_dat,
     mapping = mapping,
-    diagnostic_treatment = treatment,
+    diagnostic_treatment = a,
     ...
   )
-  .pd_prinpred_predict(prepared, treatment)
+  .pd_prinpred_predict(prepared, a)
 }
 
 #' Fit one full-precision principal-score model for internal prediction
@@ -227,16 +226,15 @@ PrinPred <- function(prin_fo, fit_dat, pred_dat, treatment, mapping, ...) {
 #' Predict one treatment arm from a fitted principal-score model
 #'
 #' @noRd
-.pd_prinpred_predict <- function(prepared, treatment) {
-  if (length(treatment) != 1L || is.na(treatment) ||
-      !treatment %in% c(0, 1)) {
-    .pd_stop("`treatment` must be 0 or 1.")
+.pd_prinpred_predict <- function(prepared, a) {
+  if (length(a) != 1L || is.na(a) || !a %in% c(0, 1)) {
+    .pd_stop("`a` must be 0 or 1.")
   }
   fit <- prepared$fit
   pred_dat <- prepared$pred_dat
   post_times <- prepared$post_times
   mapping <- prepared$mapping
-  pred_dat[[mapping$A_col]] <- as.numeric(treatment)
+  pred_dat[[mapping$A_col]] <- as.numeric(a)
   conditional <- .pd_predict_checked(
     fit, pred_dat, "PrinPred principal-score model",
     allow_rank_deficient = TRUE

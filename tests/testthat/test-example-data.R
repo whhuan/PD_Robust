@@ -115,7 +115,7 @@ test_that("built-in example data enter the mapping-driven public workflow", {
   ))
   p0 <- suppressWarnings(PrinPred(
     alive_status ~ X1 + X2 + X4 + treatment + visit_month,
-    prepared, prepared, treatment = 0, mapping = prepared_mapping
+    prepared, prepared, a = 0, mapping = prepared_mapping
   ))
   outcome_fit <- prepared[prepared$alive_status == 1L, , drop = FALSE]
   mu1 <- suppressWarnings(OutPred(

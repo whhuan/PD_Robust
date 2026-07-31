@@ -18,6 +18,12 @@ test_that("the public interface follows the independent-prediction design", {
   expect_false("target_time" %in% names(formals(HTEAllT)))
   expect_false("target_time" %in% names(formals(SA)))
   expect_false("target_time" %in% names(formals(PrinPred)))
+  expect_identical(
+    names(formals(PrinPred)),
+    c("prin_fo", "fit_dat", "pred_dat", "a", "mapping", "...")
+  )
+  expect_identical(formals(PrinPred)$a, quote(expr = ))
+  expect_false("treatment" %in% names(formals(PrinPred)))
 
   expect_identical(
     names(formals(ORCI)),
