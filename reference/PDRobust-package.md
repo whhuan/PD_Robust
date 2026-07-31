@@ -29,7 +29,8 @@ hidden global or session cache is created.
 Useful links:
 
 - <https://github.com/whhuan/PD_Robust>
-  <https://whhuan.github.io/PD_Robust/>
+
+- <https://whhuan.github.io/PD_Robust/>
 
 - Report bugs at <https://github.com/whhuan/PD_Robust/issues>
 

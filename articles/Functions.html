@@ -42,7 +42,6 @@
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
   </ul>
 </li>
-<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -344,16 +343,16 @@ returns one propensity prediction for every row of
 <span>  <span class="va">prin_fo</span>,</span>
 <span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  treatment <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  a <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="va">mapping</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">p0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 1.000 0.936 0.877 1.000 0.831 0.690</span></span></code></pre>
 <p><code><a href="../reference/PrinPred.html">PrinPred()</a></code> returns cumulative principal-survival
-probabilities under the requested treatment. In longitudinal data it
-fits on post-baseline rows whose subjects survived the immediately
-preceding observed time. In a single-time analysis it uses all complete
-rows and does not construct an at-risk indicator.</p>
+probabilities under the requested treatment level <code>a</code>. In
+longitudinal data it fits on post-baseline rows whose subjects survived
+the immediately preceding observed time. In a single-time analysis it
+uses all complete rows and does not construct an at-risk indicator.</p>
 </div>
 <div class="section level4">
 <h4 id="outpred">

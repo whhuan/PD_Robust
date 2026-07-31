@@ -53,14 +53,14 @@ p0 <- PrinPred(
   S ~ X1 + X2 + X4 + A + time,
   fit_dat = pd_data,
   pred_dat = pd_data,
-  treatment = 0,
+  a = 0,
   mapping = map
 )
 p1 <- PrinPred(
   S ~ X1 + X2 + X4 + A + time,
   fit_dat = pd_data,
   pred_dat = pd_data,
-  treatment = 1,
+  a = 1,
   mapping = map
 )
 head(cbind(pd_data[c("id", "time")], p0, p1))

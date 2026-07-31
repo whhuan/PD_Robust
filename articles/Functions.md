@@ -331,7 +331,7 @@ p0 <- PrinPred(
   prin_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
-  treatment = 0,
+  a = 0,
   mapping = mapping
 )
 head(p0)
@@ -341,8 +341,8 @@ head(p0)
 
 [`PrinPred()`](https://whhuan.github.io/PD_Robust/reference/PrinPred.md)
 returns cumulative principal-survival probabilities under the requested
-treatment. In longitudinal data it fits on post-baseline rows whose
-subjects survived the immediately preceding observed time. In a
+treatment level `a`. In longitudinal data it fits on post-baseline rows
+whose subjects survived the immediately preceding observed time. In a
 single-time analysis it uses all complete rows and does not construct an
 at-risk indicator.
 

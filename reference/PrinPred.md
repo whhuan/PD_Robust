@@ -7,7 +7,7 @@ baseline through cutoff are used. The model is refitted on every call.
 ## Usage
 
 ``` r
-PrinPred(prin_fo, fit_dat, pred_dat, treatment, mapping, ...)
+PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)
 ```
 
 ## Arguments
@@ -24,9 +24,9 @@ PrinPred(prin_fo, fit_dat, pred_dat, treatment, mapping, ...)
 
   Data on which to predict cumulative scores.
 
-- treatment:
+- a:
 
-  Treatment level, either `0` or `1`.
+  Treatment level for principal-score prediction, either `0` or `1`.
 
 - mapping:
 
@@ -66,7 +66,7 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 score0 <- PrinPred(
   S ~ X1 + X2 + X4 + A + time,
-  pd_dat, pd_dat, treatment = 0, mapping = map
+  pd_dat, pd_dat, a = 0, mapping = map
 )
 head(score0)
 #> [1] 1.000 0.947 0.886 1.000 0.673 0.420
