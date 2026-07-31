@@ -1,16 +1,11 @@
 ---
-title: "Functions"
-author: "Huan Wang"
-date: "2026-07-30"
-output: html_document
-editor_options: 
-  markdown: 
-    wrap: 80
+title: "Detailed Function Presentation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Detailed Function Presentation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # PDRobust
 
@@ -27,7 +22,7 @@ data("BiSample") -> Mapping() -> DataCheck() -> DataStandard() -> prediction / d
 
 ```{r}
 library(PDRobust)
-#data("BiSample", package = "PDRobust")
+data("BiSample", package = "PDRobust")
 head(BiSample)
 ```
 
@@ -56,7 +51,7 @@ mapping <- Mapping(
   outcome = "Y",
   baseline_time = 0,
   cutoff_time = 2,
-  covariates = c("X1", "X2","X3", "X4","X5","X6"),
+  covariates = c("X1", "X3", "X4", "X5", "X6"),
   interest_vars = c("X1", "X3"),
   y_type = "B"
 )
@@ -144,9 +139,9 @@ print(dim(con_data))
 ## Model formulas used below
 
 ```{r}
-ps_fo <- A ~ X1 + X2 + X3 + X4 + X5 + X6
-prin_fo <- S ~ X1 + X2 + X3 + X4 + X5 + X6 
-out_fo <- Y ~ X1 + X2 + X3 + X4 + X5 + X6 + S
+ps_fo <- A ~ X1 + X3 + X4 + X5 + X6
+prin_fo <- S ~ (X1 + X3 + X4 + X5 + X6 ) * A
+out_fo <- Y ~ (X1 + X3 + X4 + X5 + X6) * A + S
 ```
 
 ## 5. Prediction functions
@@ -387,8 +382,4 @@ continuous_sensitivity <- SA(
   clinical_outcome ~ X1 + X2 + treatment,
   ratiovec = c(0, 0.05)
 )
-```
-
-```{r}
-continuous_sensitivity
 ```

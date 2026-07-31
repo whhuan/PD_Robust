@@ -7,3 +7,5 @@
 *.tar.gz
 .httr-oauth
 .quarto
+/doc/
+/Meta/

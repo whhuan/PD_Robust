@@ -41,7 +41,8 @@ articles:
 - title: Workflows
   navbar: Workflows
   contents:
-  - getting-started
-  - data-requirements
-  - prediction-models
-  - diagnostics-and-sensitivity
+  - '"getting-started"'
+  - '"data-requirements"'
+  - '"prediction-models"'
+  - '"diagnostics-and-sensitivity"'
+  - '"Functions"'

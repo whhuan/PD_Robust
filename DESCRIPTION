@@ -48,5 +48,6 @@ VignetteBuilder: knitr
 LazyData: true
 LazyDataCompression: xz
 URL: https://github.com/whhuan/PD_Robust
+     https://whhuan.github.io/PD_Robust/
 BugReports: https://github.com/whhuan/PD_Robust/issues
 Config/roxygen2/version: 8.0.0
