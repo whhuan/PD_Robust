@@ -1,0 +1,14 @@
+^CRAN-SUBMISSION$
+^FILE_MANIFEST\.md$
+^LICENSE\.md$
+^PDRobust\.Rproj$
+^README\.Rmd$
+^CHECK_REPORT\.md$
+^\.Rproj\.user$
+^\.github$
+^cran-comments\.md$
+^data-raw$
+^docs$
+^_pkgdown\.yml$
+^\.DS_Store$
+^man/\.DS_Store$

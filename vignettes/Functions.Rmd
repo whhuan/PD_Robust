@@ -1,0 +1,394 @@
+---
+title: "Functions"
+author: "Huan Wang"
+date: "2026-07-30"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 80
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# PDRobust
+
+PDRobust implements principal-stratification analyses for longitudinal outcomes
+that may be truncated by death. Version 0.3.7 uses an explicit mapping-driven
+workflow and refits each nuisance prediction model from the data supplied to the
+current function call.
+
+``` text
+data("BiSample") -> Mapping() -> DataCheck() -> DataStandard() -> prediction / diagnostic / analysis functions
+```
+
+## 1. Load the built-in package data
+
+```{r}
+library(PDRobust)
+#data("BiSample", package = "PDRobust")
+head(BiSample)
+```
+
+```{r}
+data("ImperfectConSample", package = "PDRobust")
+head(ImperfectConSample)
+```
+
+this dataset has unordered patient id, visit month是记录的时间节点；X1 –
+X6是一些基础数据，是covariates；alive status记录了此刻是否存活，
+
+Both objects are ordinary long-format data frames loaded from the package
+`data/` directory. `BiSample` is the analysis-ready binary example used for the
+main workflow. `ImperfectConSample` is a continuous example with deliberately
+imperfect records for demonstrating validation and explicit subject-level
+deletion.
+
+## 2. Define roles and analysis settings with `Mapping()`
+
+```{r}
+mapping <- Mapping(
+  id = "id",
+  time = "time",
+  treatment = "A",
+  survival = "S",
+  outcome = "Y",
+  baseline_time = 0,
+  cutoff_time = 2,
+  covariates = c("X1", "X2","X3", "X4","X5","X6"),
+  interest_vars = c("X1", "X3"),
+  y_type = "B"
+)
+
+mapping
+```
+
+`Mapping()` returns a `pd_mapping` object containing the structural column
+names, raw baseline and cutoff times, all nuisance-model covariates, effect
+modifiers, and the outcome type.
+
+## 3. Validate the raw data with `DataCheck()`
+
+```{r}
+check <- DataCheck(BiSample, mapping, strict = FALSE)
+names(check)                   
+```
+
+```{r}
+check$ready_for_analysis
+```
+
+```{r}
+check$manual_resolution_required
+```
+
+```{r}
+head(check$checks)                   # one row per validation rule
+```
+
+```{r}
+head(check$diagnostics)               # affected rows, IDs, and time summaries
+```
+
+`DataCheck()` never modifies the input data. It returns an itemized validation
+report with pass/fail status, severity, analysis-blocking status, diagnostic
+details, and recommended handling.
+
+## 4. Standardize the panel with `DataStandard()`
+
+`DataStandard()` returns a sorted `pd_data` data frame. It safely converts
+explicit binary encodings, maps IDs to consecutive integers, maps the observed
+analysis-time grid to consecutive integers, and attaches mapping and audit
+attributes. Use `drop = TRUE` only when the reported subject-level exclusions
+are intended.
+
+```{r}
+pd_data <- DataStandard(BiSample, mapping,drop =TRUE)
+head(pd_data)
+```
+
+for imperfect dataset, we have:
+
+```{r}
+data("ImperfectConSample", package = "PDRobust")
+head(ImperfectConSample)
+```
+
+```{r}
+con_mapping <- Mapping(
+  id = "patient_id",
+  time = "visit_month",
+  treatment = "treatment",
+  survival = "alive_status",
+  outcome = "clinical_outcome",
+  baseline_time = 0,
+  cutoff_time = 12,
+  covariates = c("X1", "X2", "X3", "X4", "X5", "X6"),
+  interest_vars = c("X1", "X2"),
+  y_type = "C"
+)
+
+con_data <- DataStandard(ImperfectConSample, con_mapping, drop = TRUE)
+```
+
+```{r}
+head(con_data)
+```
+
+```{r}
+print(dim(ImperfectConSample))
+print(dim(con_data))
+```
+
+## Model formulas used below
+
+```{r}
+ps_fo <- A ~ X1 + X2 + X3 + X4 + X5 + X6
+prin_fo <- S ~ X1 + X2 + X3 + X4 + X5 + X6 
+out_fo <- Y ~ X1 + X2 + X3 + X4 + X5 + X6 + S
+```
+
+## 5. Prediction functions
+
+### `PSPred()`
+
+```{r}
+ps <- PSPred(
+  ps_fo,
+  fit_dat = pd_data,
+  pred_dat = pd_data,
+  mapping = mapping
+)
+
+length(ps)              # nrow(pd_data)
+head(ps)
+```
+
+`PSPred()` fits a baseline logistic treatment model and returns one propensity
+prediction for every row of `pred_dat`.
+
+### `PrinPred()`
+
+```{r}
+p0 <- PrinPred(
+  prin_fo,
+  fit_dat = pd_data,
+  pred_dat = pd_data,
+  treatment = 0,
+  mapping = mapping
+)
+head(p0)
+```
+
+`PrinPred()` returns cumulative principal-survival probabilities under the
+requested treatment. In longitudinal data it fits on post-baseline rows whose
+subjects survived the immediately preceding observed time. In a single-time
+analysis it uses all complete rows and does not construct an at-risk indicator.
+
+### `OutPred()`
+
+```{r}
+mu1 <- OutPred(
+  out_fo,
+  fit_dat = pd_data,
+  pred_dat = pd_data,
+  a = 1,
+  mapping = mapping
+)
+
+head(mu1)
+```
+
+`OutPred()` returns predicted outcomes after setting treatment to `a` and
+survival to one in `pred_dat`. It uses linear regression for `y_type = "C"` and
+logistic regression for `y_type = "B"`.
+
+## 6. Diagnostics
+
+### `PSDiag()`
+
+```{r}
+ps_diagnostic <- PSDiag(pd_data, ps_fo)
+```
+
+```{r}
+names(ps_diagnostic)
+```
+
+```{r}
+print(ps_diagnostic)
+ps_diagnostic$plot
+```
+
+`PSDiag()` returns unadjusted and IPTW-adjusted standardized mean differences,
+ordinary IPTW weights, clipped propensity scores, plotting data, and a ggplot.
+The propensity scores are always truncated internally by
+`pmin(pmax(pi, 0.01), 0.99)` before weights are calculated.
+
+### `PrinSDiag()`
+
+```{r}
+principal_diagnostic <- PrinSDiag(pd_data, ps_fo, prin_fo)
+
+print(principal_diagnostic)
+principal_diagnostic$plot
+```
+
+`PrinSDiag()` returns cutoff-aligned standardized balance statistics, clipped
+propensity scores, cumulative principal scores under treatment 0 and 1, plotting
+data, and a ggplot.
+
+## 7. Principal-stratum profiling with `QR()`
+
+`QR()` returns principal-score-weighted means and weighted quantiles of the
+mapped interest variables at cutoff, together with the weights and mapping.
+
+```{r}
+principal_profile <- QR(
+  pd_data,
+  prin_fo,
+  quantile_level = c(0.25, 0.50, 0.75)
+)
+
+print(principal_profile)
+```
+
+## 8. Treatment-group odds ratios with `ORCI()`
+
+```{r}
+or_control <- ORCI(
+  pd_data,
+  S ~ X1 + X3 + X4,
+  a = 0,
+  conf_level = 0.95
+)
+
+print(or_control)             
+or_control$plot
+```
+
+`ORCI()` returns treatment-group-specific cutoff odds ratios and confidence
+intervals, the fitted logistic model, analysis data, settings, and a forest
+plot.
+
+## Sensitivity analysis
+
+```{r}
+sensitivity <- SA(
+  pd_data,
+  ps_fo,
+  prin_fo,
+  out_fo,
+  ratiovec = c(1, 2)
+)
+
+```
+
+```{r}
+print(sensitivity)
+```
+
+```{r}
+sensitivity$plot
+```
+
+## 9. Time-specific HTEs with `HTESepT()`
+
+```{r}
+separate_hte <- HTESepT(
+  pd_data,
+  ps_fo = ps_fo,
+  prin_fo = prin_fo,
+  out_fo = out_fo,
+  target_time = c(1, 2),
+  B = 5,
+  conf_level = 0.95,
+  max_attempts = NULL,
+  verbose = TRUE
+)
+
+
+```
+
+```{r}
+separate_hte$summary
+separate_hte$forest_plot
+```
+
+```{r}
+head(separate_hte$boot_mat)
+```
+
+`HTESepT()` returns an HTE estimate for each requested observed standardized
+time and each mapped effect modifier, plus the intercept. `target_time` controls
+reported outcome-analysis times only; principal scores still accumulate over the
+full baseline-to-cutoff grid. Set `B > 0` for subject-level bootstrap standard
+errors and Wald confidence intervals.
+
+## 10. Pooled HTEs with `HTEAllT()`
+
+```{r}
+pooled_hte <- HTEAllT(
+  pd_data,
+  ps_fo = ps_fo,
+  prin_fo = prin_fo,
+  out_fo = out_fo,
+  B = 0,
+  verbose = FALSE
+)
+
+```
+
+```{r}
+pooled_hte$summary
+pooled_hte$forest_plot
+```
+
+`HTEAllT()` always pools every observed standardized time from baseline through
+cutoff. For a single analysis time it omits the time-effect term and records
+that the time effect is not estimable.
+
+## 11.
+
+```{r}
+
+```
+
+`SA()` derives the outcome type from the standardized mapping. Continuous
+outcomes use the original linear-model and closed-form sensitivity equations.
+Binary outcomes use logistic outcome prediction and the same bounded-link HTE
+equation as `HTESepT()`. In both cases it returns estimates under each specified
+outcome-noise variance ratio, observed outcome variance by time, and one plot
+per mapped interest variable.
+
+The continuous built-in example can be prepared explicitly as follows:
+
+```{r, eval=FALSE}
+continuous_mapping <- Mapping(
+  id = "patient_id",
+  time = "visit_month",
+  treatment = "treatment",
+  survival = "alive_status",
+  outcome = "clinical_outcome",
+  baseline_time = 0,
+  cutoff_time = 12,
+  covariates = paste0("X", 1:6),
+  interest_vars = c("X1", "X2"),
+  y_type = "C"
+)
+continuous_data <- DataStandard(
+  ImperfectConSample, continuous_mapping, drop = TRUE
+)
+continuous_sensitivity <- SA(
+  continuous_data,
+  treatment ~ X1 + X2 + X4,
+  alive_status ~ X1 + X2 + X4 + treatment + visit_month,
+  clinical_outcome ~ X1 + X2 + treatment,
+  ratiovec = c(0, 0.05)
+)
+```
+
+```{r}
+continuous_sensitivity
+```

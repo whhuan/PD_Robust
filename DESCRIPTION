@@ -1,0 +1,52 @@
+Package: PDRobust
+Title: Robust Longitudinal Treatment Effect Estimation Under Truncation by Death
+Version: 0.3.7
+Authors@R: c(
+    person(
+        given = "Huan",
+        family = "Wang",
+        email = "whhuan42@gmail.com",
+        role = c("aut", "cre")
+    ),
+    person(
+        given = "Yilin",
+        family = "Zhang",
+        role = "aut"
+    )
+  )
+Description: Implements principal-stratification methods for estimating
+    time-specific and pooled heterogeneous treatment effects in longitudinal
+    studies where outcomes may be truncated by death. An explicit mapping is
+    the sole source of truth for structural columns, baseline and cutoff times,
+    prediction-model covariates, effect modifiers, and continuous or binary
+    outcome type. The propensity-score, principal-score, and outcome-prediction
+    functions refit and predict independently on every call and do not create
+    shared fitted-model state. Time-specific estimation accepts an explicit set
+    of target times, while pooled estimation always uses every observed time
+    from baseline through cutoff. The package also provides subject-level
+    bootstrap inference, balance diagnostics, principal-stratum summaries,
+    treatment-group-specific odds-ratio estimation, and sensitivity analysis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.2.0)
+Imports:
+    ggplot2,
+    quantreg,
+    rootSolve,
+    stats,
+    utils
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/Needs/coverage: covr
+Config/Needs/website: pkgdown
+VignetteBuilder: knitr
+LazyData: true
+LazyDataCompression: xz
+URL: https://github.com/whhuan/PD_Robust
+BugReports: https://github.com/whhuan/PD_Robust/issues
+Config/roxygen2/version: 8.0.0

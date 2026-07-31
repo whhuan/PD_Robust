@@ -1,0 +1,47 @@
+url: https://whhuan.github.io/PD_Robust/
+
+template:
+  bootstrap: 5
+
+home:
+  title: PDRobust
+  description: Mapping-driven principal-stratification analysis under truncation by death.
+
+reference:
+- title: Package overview
+  contents:
+  - PDRobust-package
+- title: Mapping and prepared data
+  desc: Define the data-layout contract, validate raw data, and attach the standardized mapping.
+  contents:
+  - Mapping
+  - DataCheck
+  - DataStandard
+  - BiSample
+  - ImperfectConSample
+- title: Independent prediction functions
+  desc: Refit and predict independently on every call without cached fitted models.
+  contents:
+  - PSPred
+  - PrinPred
+  - OutPred
+- title: Heterogeneous treatment effects
+  contents:
+  - HTESepT
+  - HTEAllT
+- title: Diagnostics and supporting analyses
+  contents:
+  - PSDiag
+  - PrinSDiag
+  - QR
+  - ORCI
+  - SA
+
+articles:
+- title: Workflows
+  navbar: Workflows
+  contents:
+  - getting-started
+  - data-requirements
+  - prediction-models
+  - diagnostics-and-sensitivity

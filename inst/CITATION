@@ -1,0 +1,13 @@
+citHeader("To cite PDRobust in publications use:")
+
+bibentry(
+  bibtype = "Manual",
+  title = "PDRobust: Robust Longitudinal Treatment Effect Estimation Under Truncation by Death",
+  author = c(
+    person("Huan", "Wang"),
+    person("Yilin", "Zhang")
+  ),
+  year = "2026",
+  note = paste("R package version", meta$Version),
+  url = "https://github.com/whhuan/PD_Robust"
+)
