@@ -1,5 +1,69 @@
 # Changelog
 
+## PDRobust 0.3.7
+
+### Interfaces and example data
+
+- All ten
+  [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
+  arguments are required and every package example now supplies the five
+  structural column roles explicitly.
+- [`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md) now
+  requires the treatment-group argument `a`; the obsolete
+  `treatment_group` argument and its default were removed.
+- Tests and vignettes now use the current `ImperfectConSample` contract:
+  noncanonical clinical column names, character visit months 0/6/12,
+  preserved X1-X6 covariate names, and explicitly reported recoverable
+  imperfections.
+
+### Model warnings and diagnostics
+
+- Logistic warnings are normalized so nonconvergence and separation are
+  each reported once per fit instead of duplicating both
+  [`glm()`](https://rdrr.io/r/stats/glm.html) and package-level
+  messages.
+- [`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md),
+  [`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md),
+  and [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md)
+  consolidate repeated point-estimate nuisance warnings at the public
+  analysis boundary. Bootstrap warnings remain silent during resampling
+  and are aggregated in `bootstrap_info`.
+- Analysis-internal principal-score and outcome models are fitted once
+  for each distinct data/formula combination and reused for the two
+  counterfactual treatment predictions, eliminating identical duplicate
+  fits without changing the prediction equations.
+- Returned model diagnostics identify the analysis, sample type, target
+  time, treatment group, fitting rows and subjects, response counts,
+  formula, predictors, rank status, finite-prediction status,
+  convergence, and separation.
+
+### Return precision
+
+- Final user-facing predictions, estimates, diagnostics, confidence
+  intervals, odds ratios, weighted summaries, and sensitivity tables are
+  rounded to three decimal places.
+- Full precision is retained for analysis data, internal nuisance
+  predictions, fitted models, probabilities, weights, score equations,
+  optimization, bootstrap replicates, and confidence-interval
+  calculations.
+- `generate_data_example()` performs its simulation at full precision
+  and rounds only the final generated data frame.
+
+### Validation cleanup
+
+- Binary conversion and invalid-row detection now share one
+  authoritative implementation.
+- Validation guaranteed by
+  [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
+  is no longer repeated by
+  [`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md).
+- [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
+  now consumes the authoritative initial
+  [`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
+  result instead of repeating mapping, column, and nonempty-data checks.
+- Prepared-data helpers now reuse the validated mapping instead of
+  retrieving and validating it multiple times in the same public call.
+
 ## PDRobust 0.3.6
 
 ### Estimation and bootstrap

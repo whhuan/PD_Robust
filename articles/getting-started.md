@@ -77,7 +77,7 @@ ps_diag <- PSDiag(pd_data, ps_fo)
 prin_diag <- PrinSDiag(pd_data, ps_fo, prin_fo)
 profile <- QR(pd_data, prin_fo, c(0.25, 0.5, 0.75))
 odds_ratio <- ORCI(
-  pd_data, S ~ X1 + X2 + X4, treatment_group = 0
+  pd_data, S ~ X1 + X2 + X4, a = 0
 )
 
 ps_diag$smd_after
@@ -143,9 +143,14 @@ binary_sensitivity <- SA(
 
 data("ImperfectConSample", package = "PDRobust")
 continuous_map <- Mapping(
-  baseline_time = 3,
-  cutoff_time = 9,
-  covariates = c("X1", "X2", "X4"),
+  id = "patient_id",
+  time = "visit_month",
+  treatment = "treatment",
+  survival = "alive_status",
+  outcome = "clinical_outcome",
+  baseline_time = 0,
+  cutoff_time = 12,
+  covariates = paste0("X", 1:6),
   interest_vars = c("X1", "X2"),
   y_type = "C"
 )
@@ -155,9 +160,9 @@ continuous_data <- DataStandard(
 
 continuous_sensitivity <- SA(
   continuous_data,
-  A ~ X1 + X2 + X4,
-  S ~ X1 + X2 + X4 + A + time,
-  Y ~ X1 + X2 + A,
+  treatment ~ X1 + X2 + X4,
+  alive_status ~ X1 + X2 + X4 + treatment + visit_month,
+  clinical_outcome ~ X1 + X2 + treatment,
   ratiovec = c(0, 0.05)
 )
 

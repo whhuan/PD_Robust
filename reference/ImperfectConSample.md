@@ -1,7 +1,13 @@
-# Imperfect continuous longitudinal example data
+# Imperfect Continuous Longitudinal Example Data
 
-A deliberately imperfect long-format continuous-outcome data frame for
-demonstrating validation and standardization diagnostics.
+A deliberately imperfect continuous-outcome longitudinal data set
+derived from the analysis-ready `ConSample` data. The data mimic common
+issues encountered in raw clinical data exports while remaining
+recoverable using
+[`DataCheck`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
+and
+[`DataStandard`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
+with `drop = TRUE`.
 
 ## Usage
 
@@ -11,16 +17,24 @@ ImperfectConSample
 
 ## Format
 
-A deliberately imperfect long-format data frame with the following
-variables:
+A data frame in long format with one row per subject and visit,
+containing the following variables:
 
-- id:
+- `patient_id`:
 
-  Noncanonical subject identifier.
+  Noncanonical character subject identifier.
 
-- time:
+- `visit_month`:
 
-  Raw analysis time encoded as character values 3, 6, and 9.
+  Character-encoded visit time in months.
+
+- `treatment`:
+
+  Character-encoded binary treatment assignment.
+
+- `alive_status`:
+
+  Character-encoded binary survival or intermediate status.
 
 - X1, X2, X3:
 
@@ -30,63 +44,40 @@ variables:
 
   Binary baseline covariates.
 
-- A:
+- `clinical_outcome`:
 
-  Binary treatment indicator encoded as character values.
-
-- Pi:
-
-  Simulated treatment probability.
-
-- S1, S0:
-
-  Potential survival indicators under treatment and control.
-
-- EY1, EY0:
-
-  Potential continuous-outcome conditional means.
-
-- Y1, Y0:
-
-  Potential continuous outcomes.
-
-- S:
-
-  Observed survival encoded as character values.
-
-- Y:
-
-  Observed continuous outcome, structurally missing after death.
-
-- U11:
-
-  Always-survivor indicator `S1 * S0`.
-
-- S1minusS0:
-
-  Difference between potential survival indicators.
+  Continuous longitudinal clinical outcome.
 
 ## Source
 
-Simulated for package validation examples.
+Simulated for package examples.
+
+## Details
+
+The data include nonstandard subject identifiers, character-encoded
+visit times and binary variables, unsorted records, an incomplete
+longitudinal record, missing required covariate values, a missing
+outcome among survivors, and a record with a missing subject identifier.
+Structural outcome missingness for records with `alive_status = 0` is
+retained.
 
 ## Examples
 
 ``` r
 data("ImperfectConSample", package = "PDRobust")
 head(ImperfectConSample)
-#>            id time         X1         X2          X3 X4 X5 X6 A        Pi S1 S0
-#> 1 subject_171    3  0.4540710 -0.2774896  0.90993870  1  0  0 1 0.9050652  1  1
-#> 2 subject_100    6  0.5014679  1.0781961 -0.53812324  1  1  1 1 0.8431193  1  1
-#> 3  subject_56    3 -0.5335556 -0.8424094 -0.09196662  0  1  0 1 0.9080071  1  1
-#> 4  subject_34    6 -1.5447306  0.8740341 -0.03008102  1  1  0 1 0.5820402  1  1
-#> 5 subject_164    9  0.4218631  1.1140381 -0.08442510  1  0  0 1 0.7457024  1  1
-#> 6  subject_58    3 -0.7972671  1.3252652 -0.16084732  0  1  0 1 0.7631763  1  1
-#>        EY1      EY0       Y1        Y0 S        Y U11 S1minusS0
-#> 1 8.325225 7.616573 6.643768 12.670851 1 6.643768   1         0
-#> 2 8.981719 8.177565 7.286246 10.532920 1 7.286246   1         0
-#> 3 7.302970 6.849763 6.419524  3.252127 1 6.419524   1         0
-#> 4 8.586194 8.056272 3.165516  9.772680 1 3.165516   1         0
-#> 5 9.072174 8.527027 7.837081  6.435173 1 7.837081   1         0
-#> 6 8.090926 7.454211 1.584122  6.137023 1 1.584122   1         0
+#>   patient_id visit_month alive_status treatment clinical_outcome     X1     X2
+#> 1    PT-0171           0            1         1            4.598  1.452 -2.075
+#> 2    PT-0100           6            0         1               NA  1.473 -0.758
+#> 3    PT-0056           0            1         0            8.806 -2.722 -0.735
+#> 4    PT-0034           6            1         0           13.851 -1.471  0.278
+#> 5    PT-0164          12            1         1            9.643 -1.272 -1.881
+#> 6    PT-0058           0            1         1           10.341 -0.534 -0.842
+#>       X3 X4 X5 X6
+#> 1 -0.147  0  1  1
+#> 2  0.608  0  1  1
+#> 3  0.424  1  1  0
+#> 4 -0.158  0  0  0
+#> 5 -3.333  0  1  0
+#> 6 -0.092  0  1  0
 ```

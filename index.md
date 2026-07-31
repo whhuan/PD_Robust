@@ -1,109 +1,128 @@
-# PDRobust
+# PDRobust: A Novel Analytical Tool for Evaluating Longitudinal Trajectories with truncation by death.
 
-------------------------------------------------------------------------
+![](reference/figures/fcfigure.png)
 
-editor_options: markdown: wrap: 80 —
+## Background
 
-PDRobust implements principal-stratification analyses for longitudinal
-outcomes that may be truncated by death. Version 0.3.5 uses an explicit
-mapping-driven workflow and refits each nuisance prediction model from
-the data supplied to the current function call.
+Real-world data, such as administrative claims and/or electronic health
+records, is widely used for conducting longitudinal trajectory analyses.
+However, when investigating the trajectory of the Heterogeneous
+Treatment Effect (HTE) of an exposure/intervention, traditional methods
+cannot sufficiently address challenges inherent to the data, including
+
+1.  the presence of truncation by death, and
+
+2.  the characterization of the unobserved principal stratum of patients
+    who would survive till the specific time point regardless of the
+    exposure occurrence.
+
+Therefore, methodological innovation is required to deal with these two
+challenges to obtain valid inference and interpretability.
+
+## Introduction
+
+**PDRobust** is a novel analytical tool that incorporates multiple
+statistical techniques, including propensity score weighting, principal
+score weighting, conditional outcome mean fitting, and projection
+methods. It provides a thorough set of analyses, including the triply
+robust estimate of the HTE with the bootstrap standard deviation, and
+the diagnosis of nuisance models. The workflow is as follows.
 
 ``` text
-pd_example_data() -> Mapping() -> DataCheck() -> DataStandard()
-                  -> prediction / diagnostic / analysis functions
+data -> Mapping() -> DataCheck() -> DataStandard()
+ -> prediction / diagnostic / analysis functions
 ```
 
-## Installation
+## 1. Load the built-in package data
 
-``` r
-
-# install.packages("remotes")
-# remotes::install_github("whhuan/PD_Robust")
-```
-
-## 1. Load example data with `pd_example_data()`
+Both objects are ordinary long-format data frames loaded from the
+package `data/` directory. `BiSample` is the analysis-ready binary
+example used for the main workflow. `ImperfectConSample` is a continuous
+example with deliberately imperfect records for demonstrating validation
+and explicit subject-level deletion.
 
 ``` r
 
 library(PDRobust)
-
-binary_raw <- pd_example_data("binary")
-continuous_raw <- pd_example_data("continuous")
-imperfect_raw <- pd_example_data("imperfect")
-
-class(binary_raw)       # "data.frame"
-dim(binary_raw)
-head(binary_raw)
+data("ImperfectConSample", package = "PDRobust")
+dim(ImperfectConSample)
+#> [1] 599  11
 ```
 
-`pd_example_data()` returns a long-format data frame. The bundled binary
-data are used below for the main workflow; the continuous data are used
-for sensitivity analysis with
-[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md).
+``` r
+
+head(ImperfectConSample)
+#>   patient_id visit_month alive_status treatment clinical_outcome     X1     X2
+#> 1    PT-0171           0            1         1            4.598  1.452 -2.075
+#> 2    PT-0100           6            0         1               NA  1.473 -0.758
+#> 3    PT-0056           0            1         0            8.806 -2.722 -0.735
+#> 4    PT-0034           6            1         0           13.851 -1.471  0.278
+#> 5    PT-0164          12            1         1            9.643 -1.272 -1.881
+#> 6    PT-0058           0            1         1           10.341 -0.534 -0.842
+#>       X3 X4 X5 X6
+#> 1 -0.147  0  1  1
+#> 2  0.608  0  1  1
+#> 3  0.424  1  1  0
+#> 4 -0.158  0  0  0
+#> 5 -3.333  0  1  0
+#> 6 -0.092  0  1  0
+```
 
 ## 2. Define roles and analysis settings with `Mapping()`
+
+[`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
+is the sole source of truth for structural column names, raw baseline
+and cutoff times, all nuisance-model covariates, effect modifiers, and
+the outcome type.
 
 ``` r
 
 mapping <- Mapping(
-  id = "id",
-  time = "time",
-  treatment = "A",
-  survival = "S",
-  outcome = "Y",
+  id = "patient_id",
+  time = "visit_month",
+  treatment = "treatment",
+  survival = "alive_status",
+  outcome = "clinical_outcome",
   baseline_time = 0,
-  cutoff_time = 2,
-  covariates = c("X1", "X2", "X4"),
+  cutoff_time = 12,
+  covariates = c("X1", "X2", "X3", "X4", "X5", "X6"),
   interest_vars = c("X1", "X2"),
-  y_type = "B"
+  y_type = "C"
 )
-
-class(mapping)          # "pd_mapping"
-mapping
-mapping$covariates
-mapping$interest_vars
 ```
-
-[`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
-returns a `pd_mapping` object containing the structural column names,
-raw baseline and cutoff times, all nuisance-model covariates, effect
-modifiers, and the outcome type.
 
 ## 3. Validate the raw data with `DataCheck()`
-
-``` r
-
-check <- DataCheck(binary_raw, mapping)
-
-class(check)                    # "pd_data_check"
-check$ready_for_analysis
-check$manual_resolution_required
-check$checks                    # one row per validation rule
-check$diagnostics               # affected rows, IDs, and time summaries
-print(check)
-```
 
 [`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
 never modifies the input data. It returns an itemized validation report
 with pass/fail status, severity, analysis-blocking status, diagnostic
 details, and recommended handling.
 
-## 4. Standardize the panel with `DataStandard()`
+``` r
+
+check <- DataCheck(ImperfectConSample, mapping)
+```
 
 ``` r
 
-pd_data <- DataStandard(binary_raw, mapping)
-
-class(pd_data)                  # c("pd_data", "data.frame")
-head(pd_data)
-attr(pd_data, "pd_mapping")     # standardized mapping
-attr(pd_data, "pd_original_mapping")
-standardization <- attr(pd_data, "pd_standardization")
-standardization$time_map
-standardization$id_map
-standardization$attrition
+names(check)
+#> [1] "valid"                      "ready_for_analysis"        
+#> [3] "manual_resolution_required" "can_standardize"           
+#> [5] "checks"                     "settings"                  
+#> [7] "diagnostics"
 ```
+
+``` r
+
+check$ready_for_analysis
+#> [1] FALSE
+check$manual_resolution_required
+#> [1] FALSE
+check$can_standardize
+#> [1] TRUE
+```
+
+## 4. Standardize the panel with `DataStandard()`
 
 [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
 returns a sorted `pd_data` data frame. It safely converts explicit
@@ -112,191 +131,44 @@ analysis-time grid to consecutive integers, and attaches mapping and
 audit attributes. Use `drop = TRUE` only when the reported subject-level
 exclusions are intended.
 
-## Model formulas used below
+``` r
+
+pd_data <- DataStandard(ImperfectConSample, mapping, drop = TRUE)
+```
 
 ``` r
 
-ps_fo <- A ~ X1 + X2 + X4
-prin_fo <- S ~ X1 + X2 + X4 + A + time
-out_fo <- Y ~ X1 + X2 + A
-standardized_mapping <- attr(pd_data, "pd_mapping")
+head(pd_data)
+#>   patient_id visit_month alive_status treatment clinical_outcome     X1     X2
+#> 1          1           0            1         1           10.803  0.168  0.421
+#> 2          1           1            1         1           12.006  0.168  0.421
+#> 3          1           2            1         1            7.833  0.168  0.421
+#> 4          2           0            1         0            4.101 -2.400 -0.324
+#> 5          2           1            1         0            5.508 -2.400 -0.324
+#> 6          2           2            0         0               NA -2.400 -0.324
+#>       X3 X4 X5 X6
+#> 1 -0.557  1  1  1
+#> 2 -0.557  1  1  1
+#> 3 -0.557  1  1  1
+#> 4 -0.391  0  0  0
+#> 5 -0.391  0  0  0
+#> 6 -0.391  0  0  0
 ```
 
-## 5. Prediction functions
-
-### `PSPred()`
+## 4. Run analysis and diagnostic functions
 
 ``` r
 
-ps <- PSPred(
-  ps_fo,
-  fit_dat = pd_data,
-  pred_dat = pd_data,
-  mapping = standardized_mapping
-)
-
-class(ps)               # c("pd_prediction", "numeric")
-length(ps)              # nrow(pd_data)
-head(ps)
+ps_fo <- treatment ~ X1 + X2 + X3 + X4 + X5 + X6
+prin_fo <- alive_status ~ X1 + X2 + X3 + X4 + X5 + X6 
+out_fo <- clinical_outcome ~ (X1 + X2 + X3 + X4 + X5 + X6) * treatment 
 ```
 
-[`PSPred()`](https://whhuan.github.io/PD_Robust/reference/PSPred.md)
-fits a baseline logistic treatment model and returns one propensity
-prediction for every row of `pred_dat`.
-
-### `PrinPred()`
-
-``` r
-
-p0 <- PrinPred(
-  prin_fo,
-  fit_dat = pd_data,
-  pred_dat = pd_data,
-  treatment = 0,
-  mapping = standardized_mapping
-)
-
-p1 <- PrinPred(
-  prin_fo,
-  fit_dat = pd_data,
-  pred_dat = pd_data,
-  treatment = 1,
-  mapping = standardized_mapping
-)
-
-class(p0)               # c("pd_prediction", "numeric")
-head(cbind(pd_data[c("id", "time")], p0, p1))
-```
-
-[`PrinPred()`](https://whhuan.github.io/PD_Robust/reference/PrinPred.md)
-returns cumulative principal-survival probabilities under the requested
-treatment. In longitudinal data it fits on post-baseline rows whose
-subjects survived the immediately preceding observed time. In a
-single-time analysis it uses all complete rows and does not construct an
-at-risk indicator.
-
-### `OutPred()`
-
-``` r
-
-outcome_fit_data <- pd_data[pd_data$S == 1, , drop = FALSE]
-
-mu0 <- OutPred(
-  out_fo,
-  fit_dat = outcome_fit_data,
-  pred_dat = pd_data,
-  a = 0,
-  mapping = standardized_mapping
-)
-mu1 <- OutPred(
-  out_fo,
-  fit_dat = outcome_fit_data,
-  pred_dat = pd_data,
-  a = 1,
-  mapping = standardized_mapping
-)
-
-class(mu1)              # c("pd_prediction", "numeric")
-head(cbind(mu0, mu1))
-```
-
-[`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md)
-returns predicted outcomes after setting treatment to `a` and survival
-to one in `pred_dat`. It uses linear regression for `y_type = "C"` and
-logistic regression for `y_type = "B"`.
-
-## 6. Diagnostics
-
-### `PSDiag()`
-
-``` r
-
-ps_diagnostic <- PSDiag(pd_data, ps_fo)
-
-class(ps_diagnostic)            # c("pd_exposure_diagnostic", "PSDiag")
-ps_diagnostic$smd_before
-ps_diagnostic$smd_after
-summary(ps_diagnostic$weights)
-range(ps_diagnostic$propensity) # always within 0.01 and 0.99
-ps_diagnostic$plot
-plot(ps_diagnostic)
-```
-
-[`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md)
-returns unadjusted and IPTW-adjusted standardized mean differences,
-ordinary IPTW weights, clipped propensity scores, plotting data, and a
-ggplot. The propensity scores are always truncated internally by
-`pmin(pmax(pi, 0.01), 0.99)` before weights are calculated.
-
-### `PrinSDiag()`
-
-``` r
-
-principal_diagnostic <- PrinSDiag(pd_data, ps_fo, prin_fo)
-
-class(principal_diagnostic)       # c("pd_principal_diagnostic", "PrinSDiag")
-principal_diagnostic$statistics
-range(principal_diagnostic$propensity) # always within 0.01 and 0.99
-head(principal_diagnostic$p0)
-head(principal_diagnostic$p1)
-principal_diagnostic$plot
-plot(principal_diagnostic)
-```
-
-[`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
-returns cutoff-aligned standardized balance statistics, clipped
-propensity scores, cumulative principal scores under treatment 0 and 1,
-plotting data, and a ggplot.
-
-## 7. Principal-stratum profiling with `QR()`
-
-``` r
-
-principal_profile <- QR(
-  pd_data,
-  prin_fo,
-  quantile_level = c(0.25, 0.50, 0.75)
-)
-
-class(principal_profile)       # c("pd_principal_summary", "QR")
-principal_profile$mean
-principal_profile$quantile
-head(principal_profile$weights)
-print(principal_profile)
-```
-
-[`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) returns
-principal-score-weighted means and weighted quantiles of the mapped
-interest variables at cutoff, together with the weights and mapping.
-
-## 8. Treatment-group odds ratios with `ORCI()`
-
-``` r
-
-or_control <- ORCI(
-  pd_data,
-  S ~ X1 + X2 + X4,
-  treatment_group = 0
-)
-or_treated <- ORCI(
-  pd_data,
-  S ~ X1 + X2 + X4,
-  treatment_group = 1
-)
-
-class(or_control)              # c("pd_odds_ratios", "odds_ratios")
-or_control$forestplotdat       # OR, lower bound, upper bound
-or_control$model               # fitted cutoff logistic model
-or_control$analysis_data
-or_control$plot
-plot(or_control)
-```
-
-[`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md) returns
-treatment-group-specific cutoff odds ratios and confidence intervals,
-the fitted logistic model, analysis data, settings, and a forest plot.
-
-## 9. Time-specific HTEs with `HTESepT()`
+[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
+returns an estimate for each requested observed standardized time and
+each mapped effect modifier, plus the intercept. `target_time` controls
+reported outcome-analysis times only. Set `B > 0` for subject-level
+bootstrap standard errors and Wald confidence intervals.
 
 ``` r
 
@@ -306,96 +178,46 @@ separate_hte <- HTESepT(
   prin_fo = prin_fo,
   out_fo = out_fo,
   target_time = c(1, 2),
-  B = 0,
-  verbose = FALSE
+  B = 3,
+  verbose = TRUE
 )
+#> Bootstrap: 1/3 successful after 1 attempts.
+#> Bootstrap: 2/3 successful after 2 attempts.
+#> Bootstrap: 3/3 successful after 3 attempts.
+```
 
-class(separate_hte)            # "pd_hte_timevarying"
-separate_hte$summary           # time, term, estimate, SD, CI
-separate_hte$target_time
-separate_hte$convergence
-separate_hte$bootstrap_info
-separate_hte$boot_mat
+``` r
+
+names(separate_hte)   
+#>  [1] "summary"           "forest_plot"       "bootstrap_info"   
+#>  [4] "boot_mat"          "convergence"       "model_diagnostics"
+#>  [7] "warnings"          "mapping"           "target_time"      
+#> [10] "formulas"          "settings"          "call"
+```
+
+``` r
+
 separate_hte$forest_plot
-plot(separate_hte)
 ```
 
-[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-returns an HTE estimate for each requested observed standardized time
-and each mapped effect modifier, plus the intercept. `target_time`
-controls reported outcome-analysis times only; principal scores still
-accumulate over the full baseline-to-cutoff grid. Set `B > 0` for
-subject-level bootstrap standard errors and Wald confidence intervals.
+![](reference/figures/README-unnamed-chunk-13-1.png)
 
-## 10. Pooled HTEs with `HTEAllT()`
-
-``` r
-
-pooled_hte <- HTEAllT(
-  pd_data,
-  ps_fo = ps_fo,
-  prin_fo = prin_fo,
-  out_fo = out_fo,
-  B = 0,
-  verbose = FALSE
-)
-
-class(pooled_hte)              # "pd_hte_pooled"
-pooled_hte$summary             # term, estimate, SD, CI
-pooled_hte$analysis_times
-pooled_hte$time_effect_estimable
-pooled_hte$convergence
-pooled_hte$bootstrap_info
-pooled_hte$boot_mat
-pooled_hte$forest_plot
-plot(pooled_hte)
-```
-
-[`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md)
-always pools every observed standardized time from baseline through
-cutoff. For a single analysis time it omits the time-effect term and
-records that the time effect is not estimable.
-
-## 11. Continuous-outcome sensitivity analysis with `SA()`
-
-``` r
-
-continuous_mapping <- Mapping(
-  baseline_time = 0,
-  cutoff_time = 2,
-  covariates = c("X1", "X2", "X4"),
-  interest_vars = c("X1", "X2"),
-  y_type = "C"
-)
-continuous_data <- DataStandard(continuous_raw, continuous_mapping)
-
-set.seed(20260728)
-sensitivity <- SA(
-  continuous_data,
-  A ~ X1 + X2 + X4,
-  S ~ X1 + X2 + X4 + A + time,
-  Y ~ X1 + X2 + A,
-  ratiovec = c(0, 0.05, 0.10)
-)
-
-class(sensitivity)             # c("pd_sensitivity", "SA")
-sensitivity$data               # tidy ratio-time-term estimates
-sensitivity$beta_df_wide       # one row per ratio and time
-sensitivity$variance_by_time
-sensitivity$plot               # named list of ggplots
-print(sensitivity)
-```
-
-[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) is
-restricted to continuous outcomes. It returns HTE estimates under each
-specified outcome-noise variance ratio, the observed outcome variance by
-time, and one sensitivity plot per mapped interest variable.
+Final user-facing estimates, predictions, diagnostics, and confidence
+intervals are rounded to three decimal places. Model fitting,
+probabilities, weights, estimating equations, bootstrap replicates, and
+confidence-interval calculations retain full numerical precision. If a
+finite prediction-based logistic fit is unstable, direct prediction
+calls issue one model warning; analysis calls consolidate repeated
+point-estimate warnings and store bootstrap warnings and model
+diagnostics in their returned objects. Within an analysis sample, one
+fitted nuisance model is reused for its `A = 0` and `A = 1`
+counterfactual predictions when the fitting rows and formula are
+identical.
 
 ## Returned object summary
 
 | Function | Main returned class | Main components |
 |----|----|----|
-| `pd_example_data()` | `data.frame` | Long-format example data |
 | [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md) | `pd_mapping` | Structural roles, times, covariates, effect modifiers, outcome type |
 | [`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md) | `pd_data_check` | Readiness flags, checks, diagnostics, settings |
 | [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md) | `pd_data` | Standardized panel plus mapping and audit attributes |

@@ -5,17 +5,18 @@ cutoff times, prediction-model covariates, effect modifiers, and outcome
 type. `target_time` is deliberately not stored in the mapping; it is an
 argument of
 [`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-only.
+only. All ten arguments are required; no structural role or analysis
+setting is inferred or defaulted.
 
 ## Usage
 
 ``` r
 Mapping(
-  id = "id",
-  time = "time",
-  treatment = "A",
-  survival = "S",
-  outcome = "Y",
+  id,
+  time,
+  treatment,
+  survival,
+  outcome,
   baseline_time,
   cutoff_time,
   covariates,
@@ -26,10 +27,25 @@ Mapping(
 
 ## Arguments
 
-- id, time, treatment, survival, outcome:
+- id:
 
-  Character scalars naming the subject ID, analysis time, treatment,
-  survival/intermediate status, and outcome columns.
+  Character scalar naming the subject ID column.
+
+- time:
+
+  Character scalar naming the analysis time column.
+
+- treatment:
+
+  Character scalar naming the treatment column.
+
+- survival:
+
+  Character scalar naming the survival/intermediate status column.
+
+- outcome:
+
+  Character scalar naming the outcome column.
 
 - baseline_time:
 
@@ -61,6 +77,8 @@ A `pd_mapping` object.
 
 ``` r
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 3,
   cutoff_time = 9,
   covariates = c("X1", "X2", "X4"),

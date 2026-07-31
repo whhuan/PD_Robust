@@ -67,12 +67,21 @@ HTESepT(
 A `pd_hte_timevarying` object containing time-specific estimates, the
 explicitly requested `target_time`, and `bootstrap_info` with requested
 and successful replicates, attempts, completion status, categorized
-failures, and captured warnings.
+failures, warning counts, and model diagnostics. Numeric estimates and
+interval summaries are rounded to three decimals only after inference;
+`boot_mat` retains full precision.
 
 ## Details
 
 The propensity, principal-score, and outcome models are refitted
-internally for the point estimate and for every bootstrap sample.
+internally for the point estimate and for every bootstrap sample. Within
+one analysis sample, a model fitted to the same rows and formula is
+reused only to obtain the two counterfactual treatment predictions.
+
+Repeated finite-prediction separation or convergence messages are
+consolidated at the analysis boundary. Model-level details remain
+available in `model_diagnostics`; bootstrap warnings and their counts
+are stored in `bootstrap_info`.
 
 ## Examples
 
@@ -80,6 +89,8 @@ internally for the point estimate and for every bootstrap sample.
 # \donttest{
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -93,12 +104,12 @@ fit <- HTESepT(
   target_time = c(0, 2), B = 0
 )
 fit$summary
-#>   time covariate    estimate SD LowerBound UpperBound
-#> 1    0 Intercept  0.08204782 NA         NA         NA
-#> 2    0        X1  0.03944098 NA         NA         NA
-#> 3    0        X2 -0.12088946 NA         NA         NA
-#> 4    2 Intercept  0.02215715 NA         NA         NA
-#> 5    2        X1 -0.07023692 NA         NA         NA
-#> 6    2        X2  0.01739805 NA         NA         NA
+#>   time covariate estimate SD LowerBound UpperBound
+#> 1    0 Intercept    0.225 NA         NA         NA
+#> 2    0        X1   -0.041 NA         NA         NA
+#> 3    0        X2   -0.070 NA         NA         NA
+#> 4    2 Intercept    0.044 NA         NA         NA
+#> 5    2        X1   -0.019 NA         NA         NA
+#> 6    2        X2   -0.175 NA         NA         NA
 # }
 ```

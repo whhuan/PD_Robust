@@ -36,13 +36,16 @@ PSPred(ps_fo, fit_dat, pred_dat, mapping, ...)
 
 ## Value
 
-A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`.
+A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`,
+rounded to three decimal places after prediction.
 
 ## Examples
 
 ``` r
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -50,5 +53,5 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 ps <- PSPred(A ~ X1 + X2 + X4, pd_dat, pd_dat, map)
 head(ps)
-#> [1] 0.9697104 0.9697104 0.9697104 0.9332226 0.9332226 0.9332226
+#> [1] 0.971 0.971 0.971 0.933 0.933 0.933
 ```

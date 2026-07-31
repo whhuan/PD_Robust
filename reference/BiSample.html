@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -68,32 +69,11 @@
 <dt>A</dt>
 <dd><p>Binary treatment indicator.</p></dd>
 
-<dt>Pi</dt>
-<dd><p>Simulated treatment probability.</p></dd>
-
-<dt>S1, S0</dt>
-<dd><p>Potential survival indicators under treatment and control.</p></dd>
-
-<dt>logit_Y1, logit_Y0</dt>
-<dd><p>Potential-outcome linear predictors.</p></dd>
-
-<dt>prob_Y1, prob_Y0</dt>
-<dd><p>Potential binary-outcome probabilities.</p></dd>
-
-<dt>Y1, Y0</dt>
-<dd><p>Potential binary outcomes.</p></dd>
-
 <dt>S</dt>
 <dd><p>Binary survival or intermediate-status indicator.</p></dd>
 
 <dt>Y</dt>
 <dd><p>Binary outcome, structurally missing after death.</p></dd>
-
-<dt>U11</dt>
-<dd><p>Always-survivor indicator <code>S1 * S0</code>.</p></dd>
-
-<dt>S1minusS0</dt>
-<dd><p>Difference between potential survival indicators.</p></dd>
 
 
 </dl></div>
@@ -106,20 +86,13 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">BiSample</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id time         X1        X2         X3 X4 X5 X6 A        Pi S1 S0   logit_Y1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1    0  1.5205087  0.261479  0.6488924  0  1  0 1 0.9808431  1  1 -1.0310761</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1    1  1.5205087  0.261479  0.6488924  0  1  0 1 0.9808431  1  1 -0.9310761</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1    2  1.5205087  0.261479  0.6488924  0  1  0 1 0.9808431  1  1 -0.8310761</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2    0 -0.3950091 -1.241097 -0.1151943  0  1  0 1 0.9272987  1  1 -2.2067618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2    1 -0.3950091 -1.241097 -0.1151943  0  1  0 1 0.9272987  1  0 -2.1067618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2    2 -0.3950091 -1.241097 -0.1151943  0  1  0 1 0.9272987  1  0 -2.0067618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     logit_Y0    prob_Y1    prob_Y0 Y1 Y0 S Y U11 S1minusS0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -1.3741641 0.26287554 0.20194791  0  0 1 0   1         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -1.1741641 0.28270646 0.23610313  1  1 1 1   1         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -0.9741641 0.30341759 0.27405129  1  0 1 1   1         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 -2.1316317 0.09914492 0.10606018  0  0 1 0   1         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -3.9316317 0.10844135 0.01923443  0  0 1 0   0         1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 -3.7316317 0.11849480 0.02339336  0  0 1 0   0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id time S A Y     X1     X2     X3 X4 X5 X6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1    0 1 1 0  1.521  0.261  0.649  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1    1 1 1 0  1.521  0.261  0.649  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1    2 1 1 1  1.521  0.261  0.649  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2    0 1 1 0 -0.395 -1.241 -0.115  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2    1 1 1 0 -0.395 -1.241 -0.115  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2    2 1 1 0 -0.395 -1.241 -0.115  0  1  0</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

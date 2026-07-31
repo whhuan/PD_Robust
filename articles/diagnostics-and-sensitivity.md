@@ -6,6 +6,11 @@ library(PDRobust)
 data("BiSample", package = "PDRobust")
 raw <- BiSample
 map <- Mapping(
+  id = "id",
+  time = "time",
+  treatment = "A",
+  survival = "S",
+  outcome = "Y",
   baseline_time = 0,
   cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
@@ -74,8 +79,8 @@ estimated using weighted intercept-only
 
 ``` r
 
-or0 <- ORCI(pd_data, S ~ X1 + X2 + X4, treatment_group = 0)
-or1 <- ORCI(pd_data, S ~ X1 + X2 + X4, treatment_group = 1)
+or0 <- ORCI(pd_data, S ~ X1 + X2 + X4, a = 0)
+or1 <- ORCI(pd_data, S ~ X1 + X2 + X4, a = 1)
 or0$forestplotdat
 or0$model
 plot(or0)
@@ -101,9 +106,14 @@ binary_sa <- SA(
 
 data("ImperfectConSample", package = "PDRobust")
 continuous_map <- Mapping(
-  baseline_time = 3,
-  cutoff_time = 9,
-  covariates = c("X1", "X2", "X4"),
+  id = "patient_id",
+  time = "visit_month",
+  treatment = "treatment",
+  survival = "alive_status",
+  outcome = "clinical_outcome",
+  baseline_time = 0,
+  cutoff_time = 12,
+  covariates = paste0("X", 1:6),
   interest_vars = c("X1", "X2"),
   y_type = "C"
 )
@@ -113,9 +123,9 @@ continuous_data <- DataStandard(
 
 continuous_sa <- SA(
   continuous_data,
-  A ~ X1 + X2 + X4,
-  S ~ X1 + X2 + X4 + A + time,
-  Y ~ X1 + X2 + A,
+  treatment ~ X1 + X2 + X4,
+  alive_status ~ X1 + X2 + X4 + treatment + visit_month,
+  clinical_outcome ~ X1 + X2 + treatment,
   ratiovec = c(0, 0.05)
 )
 

@@ -32,12 +32,16 @@ DataStandard(data, mapping, drop = FALSE)
 
 A `pd_data` frame. Attributes include the standardized mapping, original
 mapping, final readiness check, time/ID audit maps, and attrition.
+Analysis columns and computational mappings retain full precision; only
+returned display diagnostics and attrition percentages are rounded.
 
 ## Examples
 
 ``` r
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"

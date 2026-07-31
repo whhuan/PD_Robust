@@ -23,7 +23,8 @@ PSDiag(data, ps_fo)
 
 ## Value
 
-A `PSDiag` object containing SMDs, weights, predictions, and a plot.
+A `PSDiag` object containing three-decimal SMD summaries and a plot;
+propensity scores and weights retain full precision.
 
 ## Examples
 
@@ -31,6 +32,8 @@ A `PSDiag` object containing SMDs, weights, predictions, and a plot.
 # \donttest{
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -38,7 +41,7 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 result <- PSDiag(pd_dat, A ~ X1 + X2 + X4)
 result$smd_after
-#>           X1           X2           X4 
-#>  0.220926393 -0.085729356 -0.001878587 
+#>     X1     X2     X4 
+#>  0.203 -0.095 -0.019 
 # }
 ```

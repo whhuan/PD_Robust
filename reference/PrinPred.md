@@ -39,7 +39,9 @@ PrinPred(prin_fo, fit_dat, pred_dat, treatment, mapping, ...)
 
 ## Value
 
-A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`.
+A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`,
+rounded to three decimal places after cumulative probabilities have been
+calculated.
 
 ## Details
 
@@ -55,6 +57,8 @@ used for fitting.
 ``` r
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -65,5 +69,5 @@ score0 <- PrinPred(
   pd_dat, pd_dat, treatment = 0, mapping = map
 )
 head(score0)
-#> [1] 1.0000000 0.9811472 0.9474094 1.0000000 0.6886823 0.3747396
+#> [1] 1.000 0.947 0.886 1.000 0.673 0.420
 ```

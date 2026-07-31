@@ -27,7 +27,8 @@ QR(data, prin_fo, quantile_level = 0.5)
 
 ## Value
 
-A `QR` object containing weighted means and quantiles.
+A `QR` object containing three-decimal weighted means and quantiles;
+principal-score weights retain full precision.
 
 ## Examples
 
@@ -35,6 +36,8 @@ A `QR` object containing weighted means and quantiles.
 # \donttest{
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -46,7 +49,7 @@ result <- QR(
   quantile_level = c(0.25, 0.5, 0.75)
 )
 result$mean
-#>        X1        X2 
-#> 0.3586368 0.1272697 
+#>    X1    X2 
+#> 0.345 0.101 
 # }
 ```

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -79,6 +80,11 @@ vector with class <code>pd_prediction</code>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
 <span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="va">BiSample</span></span>
 <span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Mapping.html">Mapping</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>  time <span class="op">=</span> <span class="st">"time"</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="st">"A"</span>,</span>
+<span>  survival <span class="op">=</span> <span class="st">"S"</span>,</span>
+<span>  outcome <span class="op">=</span> <span class="st">"Y"</span>,</span>
 <span>  baseline_time <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  cutoff_time <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X4"</span><span class="op">)</span>,</span>
@@ -130,7 +136,19 @@ are used.</p>
 <p>Separation, aliased nuisance coefficients, or extreme fitted
 probabilities may produce warnings. They do not invalidate a prediction
 when the fitted model still returns a complete finite vector. Missing,
-non-finite, or row-misaligned predictions remain errors.</p>
+non-finite, or row-misaligned predictions remain errors. Direct
+prediction functions report one normalized warning per fit.
+<code><a href="../reference/HTESepT.html">HTESepT()</a></code>, <code><a href="../reference/HTEAllT.html">HTEAllT()</a></code>, and <code><a href="../reference/SA.html">SA()</a></code>
+consolidate repeated point-estimate warnings and retain bootstrap
+warnings in returned diagnostics. Within one analysis sample, the same
+fitted principal-score or outcome model is reused for its two
+counterfactual treatment predictions when its fitting rows and formula
+are identical.</p>
+<p>Public prediction vectors are rounded to three decimal places.
+Analysis functions call full-precision internal implementations, so this
+display rounding never enters weights, estimating equations,
+optimization, bootstrap replicates, or confidence-interval
+calculations.</p>
 </div>
 <div class="section level2">
 <h2 id="outcome-prediction">Outcome prediction<a class="anchor" aria-label="anchor" href="#outcome-prediction"></a>

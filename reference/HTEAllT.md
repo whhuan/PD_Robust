@@ -4,7 +4,9 @@
 mapped baseline through the mapped cutoff, inclusive. It does not accept
 or use `target_time`. The propensity, principal-score, and outcome
 models are refitted internally for the point estimate and for every
-bootstrap sample.
+bootstrap sample. Within one analysis sample, a model fitted to the same
+rows and formula is reused only to obtain the two counterfactual
+treatment predictions.
 
 ## Usage
 
@@ -62,9 +64,16 @@ A `pd_hte_pooled` object. `analysis_times` gives the complete
 baseline-to-cutoff grid, `time_effect_estimable` records whether a time
 effect was included, and `bootstrap_info` records requested and
 successful replicates, attempts, completion status, categorized
-failures, and captured warnings.
+failures, and captured warning counts, and model diagnostics. Numeric
+estimates and interval summaries are rounded to three decimals only
+after inference; `boot_mat` retains full precision.
 
 ## Details
+
+Repeated finite-prediction separation or convergence messages are
+consolidated at the analysis boundary. Model-level details remain
+available in `model_diagnostics`; bootstrap warnings and their counts
+are stored in `bootstrap_info`.
 
 If the prepared data contain only one analysis time, the estimator omits
 the time-effect term and records that the time effect is not estimable.
@@ -75,6 +84,8 @@ the time-effect term and records that the time effect is not estimable.
 # \donttest{
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -88,10 +99,10 @@ fit <- HTEAllT(
   B = 0
 )
 fit$summary
-#>          term    estimate SD LowerBound UpperBound
-#> 1   Intercept  0.18398791 NA         NA         NA
-#> 2          X1 -0.03594524 NA         NA         NA
-#> 3          X2 -0.07593298 NA         NA         NA
-#> 4 Time Effect -0.01611745 NA         NA         NA
+#>          term estimate SD LowerBound UpperBound
+#> 1   Intercept    0.107 NA         NA         NA
+#> 2          X1   -0.137 NA         NA         NA
+#> 3          X2   -0.008 NA         NA         NA
+#> 4 Time Effect   -0.097 NA         NA         NA
 # }
 ```

@@ -6,7 +6,7 @@ treatment group at the mapped cutoff time.
 ## Usage
 
 ``` r
-ORCI(data, fomula, treatment_group = 0, conf_level = 0.95)
+ORCI(data, fomula, a, conf_level = 0.95)
 ```
 
 ## Arguments
@@ -19,9 +19,9 @@ ORCI(data, fomula, treatment_group = 0, conf_level = 0.95)
 
   Logistic-regression formula.
 
-- treatment_group:
+- a:
 
-  Cutoff treatment group, exactly `0` or `1`.
+  Required cutoff treatment group, exactly `0` or `1`.
 
 - conf_level:
 
@@ -29,7 +29,8 @@ ORCI(data, fomula, treatment_group = 0, conf_level = 0.95)
 
 ## Value
 
-An `odds_ratios` object containing estimates, model, and plot.
+An `odds_ratios` object containing three-decimal odds-ratio summaries, a
+full-precision fitted model, model diagnostics, and a plot.
 
 ## Examples
 
@@ -37,18 +38,20 @@ An `odds_ratios` object containing estimates, model, and plot.
 # \donttest{
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
 )
 pd_dat <- DataStandard(BiSample, map)
 result <- ORCI(
-  pd_dat, S ~ X1 + X2 + X4, treatment_group = 0
+  pd_dat, S ~ X1 + X2 + X4, a = 0
 )
 result$forestplotdat
-#>    covname    estcoef   lowerbd    upperbd
-#> X1      X1  1.3632587 0.4255882   4.366838
-#> X2      X2 15.0439260 1.3934636 162.415230
-#> X4      X4  0.9979709 0.1218108   8.176174
+#>    covname estcoef lowerbd upperbd
+#> X1      X1   1.784   0.739   4.306
+#> X2      X2   1.307   0.609   2.806
+#> X4      X4   1.506   0.359   6.319
 # }
 ```

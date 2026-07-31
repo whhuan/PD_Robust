@@ -28,7 +28,8 @@ PrinSDiag(data, ps_fo, prin_fo)
 
 ## Value
 
-A `PrinSDiag` object containing standardized statistics and plots.
+A `PrinSDiag` object containing three-decimal standardized statistics
+and plots; nuisance probabilities retain full precision.
 
 ## Examples
 
@@ -36,6 +37,8 @@ A `PrinSDiag` object containing standardized statistics and plots.
 # \donttest{
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -47,7 +50,7 @@ result <- PrinSDiag(
   S ~ X1 + X2 + X4 + A + time
 )
 result$statistics
-#>         X1         X2         X4 
-#>  0.6784997 -2.2757485  0.2844073 
+#>     X1     X2     X4 
+#>  0.684 -0.645 -0.284 
 # }
 ```

@@ -9,14 +9,14 @@ window, nuisance-model covariates, effect modifiers, and outcome type.
 ``` r
 
 map <- Mapping(
-  id = "id",
-  time = "time",
-  treatment = "A",
-  survival = "S",
-  outcome = "Y",
-  baseline_time = 3,
-  cutoff_time = 9,
-  covariates = c("X1", "X2", "X4"),
+  id = "patient_id",
+  time = "visit_month",
+  treatment = "treatment",
+  survival = "alive_status",
+  outcome = "clinical_outcome",
+  baseline_time = 0,
+  cutoff_time = 12,
+  covariates = paste0("X", 1:6),
   interest_vars = c("X1", "X2"),
   y_type = "C"
 )

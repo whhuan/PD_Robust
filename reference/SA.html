@@ -13,7 +13,7 @@ Both cutoff treatment groups enter the estimating equations."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@ Both cutoff treatment groups enter the estimating equations."></head><body>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -86,8 +87,8 @@ Both cutoff treatment groups enter the estimating equations.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>SA</code> object containing tidy and wide estimates, convergence
-diagnostics, and plots.</p>
+    <p>An <code>SA</code> object containing rounded tidy and wide estimates,
+full-precision estimating diagnostics, consolidated warnings, and plots.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -100,7 +101,9 @@ binomial rather than fitting a logistic model to invalid pseudo-responses.
 Binary HTE coefficients use the same bounded-link estimating equation as
 <code><a href="HTESepT.html">HTESepT()</a></code>.</p>
 <p>All three prediction models are refitted internally; no fitted model is
-cached or reused across calls.</p>
+cached or reused across calls. Within one scenario, a model fitted to the
+same rows and formula is reused only to obtain the two counterfactual
+treatment predictions.</p>
     </div>
 
     <div class="section level2">
@@ -108,6 +111,8 @@ cached or reused across calls.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="Mapping.html">Mapping</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  id <span class="op">=</span> <span class="st">"id"</span>, time <span class="op">=</span> <span class="st">"time"</span>, treatment <span class="op">=</span> <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span>  survival <span class="op">=</span> <span class="st">"S"</span>, outcome <span class="op">=</span> <span class="st">"Y"</span>,</span></span>
 <span class="r-in"><span>  baseline_time <span class="op">=</span> <span class="fl">0</span>, cutoff_time <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X4"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>, y_type <span class="op">=</span> <span class="st">"B"</span></span></span>
@@ -121,13 +126,13 @@ cached or reused across calls.</p>
 <span class="r-in"><span>  ratiovec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.05</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ratio time      term    estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0    0 Intercept  0.08204782</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     0    0        X1  0.03944098</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0    0        X2 -0.12088946</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     0    1 Intercept  0.39267825</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0    1        X1 -0.09638312</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     0    1        X2 -0.10362649</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ratio time      term estimate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0    0 Intercept    0.225</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     0    0        X1   -0.041</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0    0        X2   -0.070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     0    1 Intercept   -0.244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0    1        X1   -0.385</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     0    1        X2    0.233</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

@@ -42,13 +42,16 @@ OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)
 
 ## Value
 
-A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`.
+A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`,
+rounded to three decimal places after prediction.
 
 ## Examples
 
 ``` r
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -56,5 +59,5 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 mu1 <- OutPred(Y ~ X1 + X2 + A + S, pd_dat, pd_dat, a = 1, mapping = map)
 head(mu1)
-#> [1] 0.3134524 0.3134524 0.3134524 0.1703618 0.1703618 0.1703618
+#> [1] 0.287 0.287 0.287 0.147 0.147 0.147
 ```

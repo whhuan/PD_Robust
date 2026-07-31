@@ -14,6 +14,11 @@ library(PDRobust)
 data("BiSample", package = "PDRobust")
 raw <- BiSample
 map <- Mapping(
+  id = "id",
+  time = "time",
+  treatment = "A",
+  survival = "S",
+  outcome = "Y",
   baseline_time = 0,
   cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
@@ -72,7 +77,21 @@ are used.
 Separation, aliased nuisance coefficients, or extreme fitted
 probabilities may produce warnings. They do not invalidate a prediction
 when the fitted model still returns a complete finite vector. Missing,
-non-finite, or row-misaligned predictions remain errors.
+non-finite, or row-misaligned predictions remain errors. Direct
+prediction functions report one normalized warning per fit.
+[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md),
+[`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md),
+and [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md)
+consolidate repeated point-estimate warnings and retain bootstrap
+warnings in returned diagnostics. Within one analysis sample, the same
+fitted principal-score or outcome model is reused for its two
+counterfactual treatment predictions when its fitting rows and formula
+are identical.
+
+Public prediction vectors are rounded to three decimal places. Analysis
+functions call full-precision internal implementations, so this display
+rounding never enters weights, estimating equations, optimization,
+bootstrap replicates, or confidence-interval calculations.
 
 ## Outcome prediction
 

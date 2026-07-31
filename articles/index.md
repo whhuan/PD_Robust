@@ -10,3 +10,5 @@
   models](https://whhuan.github.io/PD_Robust/articles/prediction-models.md):
 - [Diagnostics, profiling, and sensitivity
   analysis](https://whhuan.github.io/PD_Robust/articles/diagnostics-and-sensitivity.md):
+- [Detailed Function
+  Presentation](https://whhuan.github.io/PD_Robust/articles/Functions.md):

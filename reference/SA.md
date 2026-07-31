@@ -36,8 +36,8 @@ SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.1))
 
 ## Value
 
-An `SA` object containing tidy and wide estimates, convergence
-diagnostics, and plots.
+An `SA` object containing rounded tidy and wide estimates,
+full-precision estimating diagnostics, consolidated warnings, and plots.
 
 ## Details
 
@@ -52,7 +52,9 @@ bounded-link estimating equation as
 [`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md).
 
 All three prediction models are refitted internally; no fitted model is
-cached or reused across calls.
+cached or reused across calls. Within one scenario, a model fitted to
+the same rows and formula is reused only to obtain the two
+counterfactual treatment predictions.
 
 ## Examples
 
@@ -60,6 +62,8 @@ cached or reused across calls.
 # \donttest{
 data("BiSample", package = "PDRobust")
 map <- Mapping(
+  id = "id", time = "time", treatment = "A",
+  survival = "S", outcome = "Y",
   baseline_time = 0, cutoff_time = 2,
   covariates = c("X1", "X2", "X4"),
   interest_vars = c("X1", "X2"), y_type = "B"
@@ -73,12 +77,12 @@ result <- SA(
   ratiovec = c(0, 0.05)
 )
 head(result$data)
-#>   ratio time      term    estimate
-#> 1     0    0 Intercept  0.08204782
-#> 2     0    0        X1  0.03944098
-#> 3     0    0        X2 -0.12088946
-#> 4     0    1 Intercept  0.39267825
-#> 5     0    1        X1 -0.09638312
-#> 6     0    1        X2 -0.10362649
+#>   ratio time      term estimate
+#> 1     0    0 Intercept    0.225
+#> 2     0    0        X1   -0.041
+#> 3     0    0        X2   -0.070
+#> 4     0    1 Intercept   -0.244
+#> 5     0    1        X1   -0.385
+#> 6     0    1        X2    0.233
 # }
 ```

@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,7 @@
     <li><a class="dropdown-item" href="articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="articles/prediction-models.html">Independent prediction models</a></li>
     <li><a class="dropdown-item" href="articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="articles/Functions.html">Detailed Function Presentation</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -57,332 +58,151 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><hr>
-<p>editor_options: markdown: wrap: 80 —</p>
-<div class="section level1">
-<div class="page-header"><h1 id="pdrobust">PDRobust<a class="anchor" aria-label="anchor" href="#pdrobust"></a>
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="pdrobust-a-novel-analytical-tool-for-evaluating-longitudinal-trajectories-with-truncation-by-death">PDRobust: A Novel Analytical Tool for Evaluating Longitudinal Trajectories with truncation by death.<a class="anchor" aria-label="anchor" href="#pdrobust-a-novel-analytical-tool-for-evaluating-longitudinal-trajectories-with-truncation-by-death"></a>
 </h1></div>
-<p>PDRobust implements principal-stratification analyses for longitudinal outcomes that may be truncated by death. Version 0.3.5 uses an explicit mapping-driven workflow and refits each nuisance prediction model from the data supplied to the current function call.</p>
-<pre class="text"><code>pd_example_data() -&gt; Mapping() -&gt; DataCheck() -&gt; DataStandard()
-                  -&gt; prediction / diagnostic / analysis functions</code></pre>
+<p><img src="reference/figures/fcfigure.png"></p>
+<!-- badges: start -->
+
+<!-- badges: end -->
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="co"># remotes::install_github("whhuan/PD_Robust")</span></span></code></pre></div>
+<p>Real-world data, such as administrative claims and/or electronic health records, is widely used for conducting longitudinal trajectory analyses. However, when investigating the trajectory of the Heterogeneous Treatment Effect (HTE) of an exposure/intervention, traditional methods cannot sufficiently address challenges inherent to the data, including</p>
+<ol style="list-style-type: decimal">
+<li><p>the presence of truncation by death, and</p></li>
+<li><p>the characterization of the unobserved principal stratum of patients who would survive till the specific time point regardless of the exposure occurrence.</p></li>
+</ol>
+<p>Therefore, methodological innovation is required to deal with these two challenges to obtain valid inference and interpretability.</p>
 </div>
 <div class="section level2">
-<h2 id="id_1-load-example-data-with-pd_example_data">1. Load example data with <code>pd_example_data()</code>
-<a class="anchor" aria-label="anchor" href="#id_1-load-example-data-with-pd_example_data"></a>
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p><strong>PDRobust</strong> is a novel analytical tool that incorporates multiple statistical techniques, including propensity score weighting, principal score weighting, conditional outcome mean fitting, and projection methods. It provides a thorough set of analyses, including the triply robust estimate of the HTE with the bootstrap standard deviation, and the diagnosis of nuisance models. The workflow is as follows.</p>
+<pre class="text"><code>data -&gt; Mapping() -&gt; DataCheck() -&gt; DataStandard()
+ -&gt; prediction / diagnostic / analysis functions</code></pre>
+</div>
+<div class="section level2">
+<h2 id="id_1-load-the-built-in-package-data">1. Load the built-in package data<a class="anchor" aria-label="anchor" href="#id_1-load-the-built-in-package-data"></a>
+</h2>
+<p>Both objects are ordinary long-format data frames loaded from the package <code>data/</code> directory. <code>BiSample</code> is the analysis-ready binary example used for the main workflow. <code>ImperfectConSample</code> is a continuous example with deliberately imperfect records for demonstrating validation and explicit subject-level deletion.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/whhuan/PD_Robust" class="external-link">PDRobust</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">binary_raw</span> <span class="op">&lt;-</span> <span class="fu">pd_example_data</span><span class="op">(</span><span class="st">"binary"</span><span class="op">)</span></span>
-<span><span class="va">continuous_raw</span> <span class="op">&lt;-</span> <span class="fu">pd_example_data</span><span class="op">(</span><span class="st">"continuous"</span><span class="op">)</span></span>
-<span><span class="va">imperfect_raw</span> <span class="op">&lt;-</span> <span class="fu">pd_example_data</span><span class="op">(</span><span class="st">"imperfect"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">binary_raw</span><span class="op">)</span>       <span class="co"># "data.frame"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">binary_raw</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">binary_raw</span><span class="op">)</span></span></code></pre></div>
-<p><code>pd_example_data()</code> returns a long-format data frame. The bundled binary data are used below for the main workflow; the continuous data are used for sensitivity analysis with <code><a href="reference/SA.html">SA()</a></code>.</p>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ImperfectConSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">ImperfectConSample</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 599  11</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ImperfectConSample</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   patient_id visit_month alive_status treatment clinical_outcome     X1     X2</span></span>
+<span><span class="co">#&gt; 1    PT-0171           0            1         1            4.598  1.452 -2.075</span></span>
+<span><span class="co">#&gt; 2    PT-0100           6            0         1               NA  1.473 -0.758</span></span>
+<span><span class="co">#&gt; 3    PT-0056           0            1         0            8.806 -2.722 -0.735</span></span>
+<span><span class="co">#&gt; 4    PT-0034           6            1         0           13.851 -1.471  0.278</span></span>
+<span><span class="co">#&gt; 5    PT-0164          12            1         1            9.643 -1.272 -1.881</span></span>
+<span><span class="co">#&gt; 6    PT-0058           0            1         1           10.341 -0.534 -0.842</span></span>
+<span><span class="co">#&gt;       X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1 -0.147  0  1  1</span></span>
+<span><span class="co">#&gt; 2  0.608  0  1  1</span></span>
+<span><span class="co">#&gt; 3  0.424  1  1  0</span></span>
+<span><span class="co">#&gt; 4 -0.158  0  0  0</span></span>
+<span><span class="co">#&gt; 5 -3.333  0  1  0</span></span>
+<span><span class="co">#&gt; 6 -0.092  0  1  0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="id_2-define-roles-and-analysis-settings-with-mapping">2. Define roles and analysis settings with <code>Mapping()</code>
 <a class="anchor" aria-label="anchor" href="#id_2-define-roles-and-analysis-settings-with-mapping"></a>
 </h2>
+<p><code><a href="reference/Mapping.html">Mapping()</a></code> is the sole source of truth for structural column names, raw baseline and cutoff times, all nuisance-model covariates, effect modifiers, and the outcome type.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/Mapping.html">Mapping</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="st">"id"</span>,</span>
-<span>  time <span class="op">=</span> <span class="st">"time"</span>,</span>
-<span>  treatment <span class="op">=</span> <span class="st">"A"</span>,</span>
-<span>  survival <span class="op">=</span> <span class="st">"S"</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"Y"</span>,</span>
+<span>  id <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
+<span>  time <span class="op">=</span> <span class="st">"visit_month"</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="st">"treatment"</span>,</span>
+<span>  survival <span class="op">=</span> <span class="st">"alive_status"</span>,</span>
+<span>  outcome <span class="op">=</span> <span class="st">"clinical_outcome"</span>,</span>
 <span>  baseline_time <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  cutoff_time <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X4"</span><span class="op">)</span>,</span>
+<span>  cutoff_time <span class="op">=</span> <span class="fl">12</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"X4"</span>, <span class="st">"X5"</span>, <span class="st">"X6"</span><span class="op">)</span>,</span>
 <span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>,</span>
-<span>  y_type <span class="op">=</span> <span class="st">"B"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">mapping</span><span class="op">)</span>          <span class="co"># "pd_mapping"</span></span>
-<span><span class="va">mapping</span></span>
-<span><span class="va">mapping</span><span class="op">$</span><span class="va">covariates</span></span>
-<span><span class="va">mapping</span><span class="op">$</span><span class="va">interest_vars</span></span></code></pre></div>
-<p><code><a href="reference/Mapping.html">Mapping()</a></code> returns a <code>pd_mapping</code> object containing the structural column names, raw baseline and cutoff times, all nuisance-model covariates, effect modifiers, and the outcome type.</p>
+<span>  y_type <span class="op">=</span> <span class="st">"C"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="id_3-validate-the-raw-data-with-datacheck">3. Validate the raw data with <code>DataCheck()</code>
 <a class="anchor" aria-label="anchor" href="#id_3-validate-the-raw-data-with-datacheck"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">check</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/DataCheck.html">DataCheck</a></span><span class="op">(</span><span class="va">binary_raw</span>, <span class="va">mapping</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">check</span><span class="op">)</span>                    <span class="co"># "pd_data_check"</span></span>
-<span><span class="va">check</span><span class="op">$</span><span class="va">ready_for_analysis</span></span>
-<span><span class="va">check</span><span class="op">$</span><span class="va">manual_resolution_required</span></span>
-<span><span class="va">check</span><span class="op">$</span><span class="va">checks</span>                    <span class="co"># one row per validation rule</span></span>
-<span><span class="va">check</span><span class="op">$</span><span class="va">diagnostics</span>               <span class="co"># affected rows, IDs, and time summaries</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">check</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="reference/DataCheck.html">DataCheck()</a></code> never modifies the input data. It returns an itemized validation report with pass/fail status, severity, analysis-blocking status, diagnostic details, and recommended handling.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">check</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/DataCheck.html">DataCheck</a></span><span class="op">(</span><span class="va">ImperfectConSample</span>, <span class="va">mapping</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">check</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "valid"                      "ready_for_analysis"        </span></span>
+<span><span class="co">#&gt; [3] "manual_resolution_required" "can_standardize"           </span></span>
+<span><span class="co">#&gt; [5] "checks"                     "settings"                  </span></span>
+<span><span class="co">#&gt; [7] "diagnostics"</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">check</span><span class="op">$</span><span class="va">ready_for_analysis</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span>
+<span><span class="va">check</span><span class="op">$</span><span class="va">manual_resolution_required</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span>
+<span><span class="va">check</span><span class="op">$</span><span class="va">can_standardize</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="id_4-standardize-the-panel-with-datastandard">4. Standardize the panel with <code>DataStandard()</code>
 <a class="anchor" aria-label="anchor" href="#id_4-standardize-the-panel-with-datastandard"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">binary_raw</span>, <span class="va">mapping</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span>                  <span class="co"># c("pd_data", "data.frame")</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_mapping"</span><span class="op">)</span>     <span class="co"># standardized mapping</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_original_mapping"</span><span class="op">)</span></span>
-<span><span class="va">standardization</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_standardization"</span><span class="op">)</span></span>
-<span><span class="va">standardization</span><span class="op">$</span><span class="va">time_map</span></span>
-<span><span class="va">standardization</span><span class="op">$</span><span class="va">id_map</span></span>
-<span><span class="va">standardization</span><span class="op">$</span><span class="va">attrition</span></span></code></pre></div>
 <p><code><a href="reference/DataStandard.html">DataStandard()</a></code> returns a sorted <code>pd_data</code> data frame. It safely converts explicit binary encodings, maps IDs to consecutive integers, maps the observed analysis-time grid to consecutive integers, and attaches mapping and audit attributes. Use <code>drop = TRUE</code> only when the reported subject-level exclusions are intended.</p>
-</div>
-<div class="section level2">
-<h2 id="model-formulas-used-below">Model formulas used below<a class="anchor" aria-label="anchor" href="#model-formulas-used-below"></a>
-</h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ps_fo</span> <span class="op">&lt;-</span> <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span></span>
-<span><span class="va">prin_fo</span> <span class="op">&lt;-</span> <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">A</span> <span class="op">+</span> <span class="va">time</span></span>
-<span><span class="va">out_fo</span> <span class="op">&lt;-</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">A</span></span>
-<span><span class="va">standardized_mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_mapping"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="id_5-prediction-functions">5. Prediction functions<a class="anchor" aria-label="anchor" href="#id_5-prediction-functions"></a>
-</h2>
-<div class="section level3">
-<h3 id="pspred">
-<code>PSPred()</code><a class="anchor" aria-label="anchor" href="#pspred"></a>
-</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/PSPred.html">PSPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">ps_fo</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">standardized_mapping</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span>               <span class="co"># c("pd_prediction", "numeric")</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span>              <span class="co"># nrow(pd_data)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/PSPred.html">PSPred()</a></code> fits a baseline logistic treatment model and returns one propensity prediction for every row of <code>pred_dat</code>.</p>
-</div>
-<div class="section level3">
-<h3 id="prinpred">
-<code>PrinPred()</code><a class="anchor" aria-label="anchor" href="#prinpred"></a>
-</h3>
+<code class="sourceCode R"><span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">ImperfectConSample</span>, <span class="va">mapping</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/PrinPred.html">PrinPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">prin_fo</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  treatment <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">standardized_mapping</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/PrinPred.html">PrinPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">prin_fo</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  treatment <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">standardized_mapping</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">p0</span><span class="op">)</span>               <span class="co"># c("pd_prediction", "numeric")</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"time"</span><span class="op">)</span><span class="op">]</span>, <span class="va">p0</span>, <span class="va">p1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/PrinPred.html">PrinPred()</a></code> returns cumulative principal-survival probabilities under the requested treatment. In longitudinal data it fits on post-baseline rows whose subjects survived the immediately preceding observed time. In a single-time analysis it uses all complete rows and does not construct an at-risk indicator.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   patient_id visit_month alive_status treatment clinical_outcome     X1     X2</span></span>
+<span><span class="co">#&gt; 1          1           0            1         1           10.803  0.168  0.421</span></span>
+<span><span class="co">#&gt; 2          1           1            1         1           12.006  0.168  0.421</span></span>
+<span><span class="co">#&gt; 3          1           2            1         1            7.833  0.168  0.421</span></span>
+<span><span class="co">#&gt; 4          2           0            1         0            4.101 -2.400 -0.324</span></span>
+<span><span class="co">#&gt; 5          2           1            1         0            5.508 -2.400 -0.324</span></span>
+<span><span class="co">#&gt; 6          2           2            0         0               NA -2.400 -0.324</span></span>
+<span><span class="co">#&gt;       X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1 -0.557  1  1  1</span></span>
+<span><span class="co">#&gt; 2 -0.557  1  1  1</span></span>
+<span><span class="co">#&gt; 3 -0.557  1  1  1</span></span>
+<span><span class="co">#&gt; 4 -0.391  0  0  0</span></span>
+<span><span class="co">#&gt; 5 -0.391  0  0  0</span></span>
+<span><span class="co">#&gt; 6 -0.391  0  0  0</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="outpred">
-<code>OutPred()</code><a class="anchor" aria-label="anchor" href="#outpred"></a>
-</h3>
+<div class="section level2">
+<h2 id="id_4-run-analysis-and-diagnostic-functions">4. Run analysis and diagnostic functions<a class="anchor" aria-label="anchor" href="#id_4-run-analysis-and-diagnostic-functions"></a>
+</h2>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">outcome_fit_data</span> <span class="op">&lt;-</span> <span class="va">pd_data</span><span class="op">[</span><span class="va">pd_data</span><span class="op">$</span><span class="va">S</span> <span class="op">==</span> <span class="fl">1</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">mu0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/OutPred.html">OutPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">out_fo</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">outcome_fit_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  a <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">standardized_mapping</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">mu1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/OutPred.html">OutPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">out_fo</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">outcome_fit_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  a <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">standardized_mapping</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">)</span>              <span class="co"># c("pd_prediction", "numeric")</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">mu0</span>, <span class="va">mu1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/OutPred.html">OutPred()</a></code> returns predicted outcomes after setting treatment to <code>a</code> and survival to one in <code>pred_dat</code>. It uses linear regression for <code>y_type = "C"</code> and logistic regression for <code>y_type = "B"</code>.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="id_6-diagnostics">6. Diagnostics<a class="anchor" aria-label="anchor" href="#id_6-diagnostics"></a>
-</h2>
-<div class="section level3">
-<h3 id="psdiag">
-<code>PSDiag()</code><a class="anchor" aria-label="anchor" href="#psdiag"></a>
-</h3>
+<code class="sourceCode R"><span><span class="va">ps_fo</span> <span class="op">&lt;-</span> <span class="va">treatment</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span></span>
+<span><span class="va">prin_fo</span> <span class="op">&lt;-</span> <span class="va">alive_status</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span> </span>
+<span><span class="va">out_fo</span> <span class="op">&lt;-</span> <span class="va">clinical_outcome</span> <span class="op">~</span> <span class="op">(</span><span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span><span class="op">)</span> <span class="op">*</span> <span class="va">treatment</span> </span></code></pre></div>
+<p><code><a href="reference/HTESepT.html">HTESepT()</a></code> returns an estimate for each requested observed standardized time and each mapped effect modifier, plus the intercept. <code>target_time</code> controls reported outcome-analysis times only. Set <code>B &gt; 0</code> for subject-level bootstrap standard errors and Wald confidence intervals.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ps_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/PSDiag.html">PSDiag</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="va">ps_fo</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">ps_diagnostic</span><span class="op">)</span>            <span class="co"># c("pd_exposure_diagnostic", "PSDiag")</span></span>
-<span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">smd_before</span></span>
-<span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">smd_after</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">weights</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">propensity</span><span class="op">)</span> <span class="co"># always within 0.01 and 0.99</span></span>
-<span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ps_diagnostic</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/PSDiag.html">PSDiag()</a></code> returns unadjusted and IPTW-adjusted standardized mean differences, ordinary IPTW weights, clipped propensity scores, plotting data, and a ggplot. The propensity scores are always truncated internally by <code>pmin(pmax(pi, 0.01), 0.99)</code> before weights are calculated.</p>
-</div>
-<div class="section level3">
-<h3 id="prinsdiag">
-<code>PrinSDiag()</code><a class="anchor" aria-label="anchor" href="#prinsdiag"></a>
-</h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">principal_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/PrinSDiag.html">PrinSDiag</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="va">ps_fo</span>, <span class="va">prin_fo</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">principal_diagnostic</span><span class="op">)</span>       <span class="co"># c("pd_principal_diagnostic", "PrinSDiag")</span></span>
-<span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">statistics</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">propensity</span><span class="op">)</span> <span class="co"># always within 0.01 and 0.99</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">p0</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">p1</span><span class="op">)</span></span>
-<span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">principal_diagnostic</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/PrinSDiag.html">PrinSDiag()</a></code> returns cutoff-aligned standardized balance statistics, clipped propensity scores, cumulative principal scores under treatment 0 and 1, plotting data, and a ggplot.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="id_7-principal-stratum-profiling-with-qr">7. Principal-stratum profiling with <code>QR()</code>
-<a class="anchor" aria-label="anchor" href="#id_7-principal-stratum-profiling-with-qr"></a>
-</h2>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">principal_profile</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/QR.html">QR</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
-<span>  <span class="va">prin_fo</span>,</span>
-<span>  quantile_level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">principal_profile</span><span class="op">)</span>       <span class="co"># c("pd_principal_summary", "QR")</span></span>
-<span><span class="va">principal_profile</span><span class="op">$</span><span class="va">mean</span></span>
-<span><span class="va">principal_profile</span><span class="op">$</span><span class="va">quantile</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">principal_profile</span><span class="op">$</span><span class="va">weights</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">principal_profile</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/QR.html">QR()</a></code> returns principal-score-weighted means and weighted quantiles of the mapped interest variables at cutoff, together with the weights and mapping.</p>
-</div>
-<div class="section level2">
-<h2 id="id_8-treatment-group-odds-ratios-with-orci">8. Treatment-group odds ratios with <code>ORCI()</code>
-<a class="anchor" aria-label="anchor" href="#id_8-treatment-group-odds-ratios-with-orci"></a>
-</h2>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">or_control</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ORCI.html">ORCI</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
-<span>  <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span>,</span>
-<span>  treatment_group <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">or_treated</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ORCI.html">ORCI</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
-<span>  <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span>,</span>
-<span>  treatment_group <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">or_control</span><span class="op">)</span>              <span class="co"># c("pd_odds_ratios", "odds_ratios")</span></span>
-<span><span class="va">or_control</span><span class="op">$</span><span class="va">forestplotdat</span>       <span class="co"># OR, lower bound, upper bound</span></span>
-<span><span class="va">or_control</span><span class="op">$</span><span class="va">model</span>               <span class="co"># fitted cutoff logistic model</span></span>
-<span><span class="va">or_control</span><span class="op">$</span><span class="va">analysis_data</span></span>
-<span><span class="va">or_control</span><span class="op">$</span><span class="va">plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">or_control</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/ORCI.html">ORCI()</a></code> returns treatment-group-specific cutoff odds ratios and confidence intervals, the fitted logistic model, analysis data, settings, and a forest plot.</p>
-</div>
-<div class="section level2">
-<h2 id="id_9-time-specific-htes-with-htesept">9. Time-specific HTEs with <code>HTESepT()</code>
-<a class="anchor" aria-label="anchor" href="#id_9-time-specific-htes-with-htesept"></a>
-</h2>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">separate_hte</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/HTESepT.html">HTESepT</a></span><span class="op">(</span></span>
 <span>  <span class="va">pd_data</span>,</span>
 <span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
 <span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
 <span>  out_fo <span class="op">=</span> <span class="va">out_fo</span>,</span>
 <span>  target_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>  B <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  B <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">separate_hte</span><span class="op">)</span>            <span class="co"># "pd_hte_timevarying"</span></span>
-<span><span class="va">separate_hte</span><span class="op">$</span><span class="va">summary</span>           <span class="co"># time, term, estimate, SD, CI</span></span>
-<span><span class="va">separate_hte</span><span class="op">$</span><span class="va">target_time</span></span>
-<span><span class="va">separate_hte</span><span class="op">$</span><span class="va">convergence</span></span>
-<span><span class="va">separate_hte</span><span class="op">$</span><span class="va">bootstrap_info</span></span>
-<span><span class="va">separate_hte</span><span class="op">$</span><span class="va">boot_mat</span></span>
-<span><span class="va">separate_hte</span><span class="op">$</span><span class="va">forest_plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">separate_hte</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/HTESepT.html">HTESepT()</a></code> returns an HTE estimate for each requested observed standardized time and each mapped effect modifier, plus the intercept. <code>target_time</code> controls reported outcome-analysis times only; principal scores still accumulate over the full baseline-to-cutoff grid. Set <code>B &gt; 0</code> for subject-level bootstrap standard errors and Wald confidence intervals.</p>
-</div>
-<div class="section level2">
-<h2 id="id_10-pooled-htes-with-hteallt">10. Pooled HTEs with <code>HTEAllT()</code>
-<a class="anchor" aria-label="anchor" href="#id_10-pooled-htes-with-hteallt"></a>
-</h2>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pooled_hte</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/HTEAllT.html">HTEAllT</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
-<span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
-<span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
-<span>  out_fo <span class="op">=</span> <span class="va">out_fo</span>,</span>
-<span>  B <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">pooled_hte</span><span class="op">)</span>              <span class="co"># "pd_hte_pooled"</span></span>
-<span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">summary</span>             <span class="co"># term, estimate, SD, CI</span></span>
-<span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">analysis_times</span></span>
-<span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">time_effect_estimable</span></span>
-<span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">convergence</span></span>
-<span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">bootstrap_info</span></span>
-<span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">boot_mat</span></span>
-<span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">forest_plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pooled_hte</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/HTEAllT.html">HTEAllT()</a></code> always pools every observed standardized time from baseline through cutoff. For a single analysis time it omits the time-effect term and records that the time effect is not estimable.</p>
-</div>
-<div class="section level2">
-<h2 id="id_11-continuous-outcome-sensitivity-analysis-with-sa">11. Continuous-outcome sensitivity analysis with <code>SA()</code>
-<a class="anchor" aria-label="anchor" href="#id_11-continuous-outcome-sensitivity-analysis-with-sa"></a>
-</h2>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">continuous_mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/Mapping.html">Mapping</a></span><span class="op">(</span></span>
-<span>  baseline_time <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  cutoff_time <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X4"</span><span class="op">)</span>,</span>
-<span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>,</span>
-<span>  y_type <span class="op">=</span> <span class="st">"C"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">continuous_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">continuous_raw</span>, <span class="va">continuous_mapping</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">20260728</span><span class="op">)</span></span>
-<span><span class="va">sensitivity</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/SA.html">SA</a></span><span class="op">(</span></span>
-<span>  <span class="va">continuous_data</span>,</span>
-<span>  <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span>,</span>
-<span>  <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">A</span> <span class="op">+</span> <span class="va">time</span>,</span>
-<span>  <span class="va">Y</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">A</span>,</span>
-<span>  ratiovec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">sensitivity</span><span class="op">)</span>             <span class="co"># c("pd_sensitivity", "SA")</span></span>
-<span><span class="va">sensitivity</span><span class="op">$</span><span class="va">data</span>               <span class="co"># tidy ratio-time-term estimates</span></span>
-<span><span class="va">sensitivity</span><span class="op">$</span><span class="va">beta_df_wide</span>       <span class="co"># one row per ratio and time</span></span>
-<span><span class="va">sensitivity</span><span class="op">$</span><span class="va">variance_by_time</span></span>
-<span><span class="va">sensitivity</span><span class="op">$</span><span class="va">plot</span>               <span class="co"># named list of ggplots</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sensitivity</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/SA.html">SA()</a></code> is restricted to continuous outcomes. It returns HTE estimates under each specified outcome-noise variance ratio, the observed outcome variance by time, and one sensitivity plot per mapped interest variable.</p>
+<span><span class="co">#&gt; Bootstrap: 1/3 successful after 1 attempts.</span></span>
+<span><span class="co">#&gt; Bootstrap: 2/3 successful after 2 attempts.</span></span>
+<span><span class="co">#&gt; Bootstrap: 3/3 successful after 3 attempts.</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">separate_hte</span><span class="op">)</span>   </span>
+<span><span class="co">#&gt;  [1] "summary"           "forest_plot"       "bootstrap_info"   </span></span>
+<span><span class="co">#&gt;  [4] "boot_mat"          "convergence"       "model_diagnostics"</span></span>
+<span><span class="co">#&gt;  [7] "warnings"          "mapping"           "target_time"      </span></span>
+<span><span class="co">#&gt; [10] "formulas"          "settings"          "call"</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">separate_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-13-1.png" width="100%"></p>
+<p>Final user-facing estimates, predictions, diagnostics, and confidence intervals are rounded to three decimal places. Model fitting, probabilities, weights, estimating equations, bootstrap replicates, and confidence-interval calculations retain full numerical precision. If a finite prediction-based logistic fit is unstable, direct prediction calls issue one model warning; analysis calls consolidate repeated point-estimate warnings and store bootstrap warnings and model diagnostics in their returned objects. Within an analysis sample, one fitted nuisance model is reused for its <code>A = 0</code> and <code>A = 1</code> counterfactual predictions when the fitting rows and formula are identical.</p>
 </div>
 <div class="section level2">
 <h2 id="returned-object-summary">Returned object summary<a class="anchor" aria-label="anchor" href="#returned-object-summary"></a>
@@ -399,11 +219,6 @@
 <th>Main components</th>
 </tr></thead>
 <tbody>
-<tr>
-<td><code>pd_example_data()</code></td>
-<td><code>data.frame</code></td>
-<td>Long-format example data</td>
-</tr>
 <tr>
 <td><code><a href="reference/Mapping.html">Mapping()</a></code></td>
 <td><code>pd_mapping</code></td>
@@ -473,7 +288,6 @@
 </table>
 </div>
 </div>
-
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -506,7 +320,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/whhuan/PD_Robust/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/whhuan/PD_Robust/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

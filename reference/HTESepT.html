@@ -15,7 +15,7 @@ defined at the cutoff."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,7 @@ defined at the cutoff."></head><body>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -119,12 +120,20 @@ Baseline is allowed.</p></dd>
     <p>A <code>pd_hte_timevarying</code> object containing time-specific estimates,
 the explicitly requested <code>target_time</code>, and <code>bootstrap_info</code> with requested
 and successful replicates, attempts, completion status, categorized
-failures, and captured warnings.</p>
+failures, warning counts, and model diagnostics. Numeric estimates and
+interval summaries are rounded to three decimals only after inference;
+<code>boot_mat</code> retains full precision.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The propensity, principal-score, and outcome models are refitted internally
-for the point estimate and for every bootstrap sample.</p>
+for the point estimate and for every bootstrap sample. Within one analysis
+sample, a model fitted to the same rows and formula is reused only to obtain
+the two counterfactual treatment predictions.</p>
+<p>Repeated finite-prediction separation or convergence messages are
+consolidated at the analysis boundary. Model-level details remain available
+in <code>model_diagnostics</code>; bootstrap warnings and their counts are stored in
+<code>bootstrap_info</code>.</p>
     </div>
 
     <div class="section level2">
@@ -132,6 +141,8 @@ for the point estimate and for every bootstrap sample.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="Mapping.html">Mapping</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  id <span class="op">=</span> <span class="st">"id"</span>, time <span class="op">=</span> <span class="st">"time"</span>, treatment <span class="op">=</span> <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span>  survival <span class="op">=</span> <span class="st">"S"</span>, outcome <span class="op">=</span> <span class="st">"Y"</span>,</span></span>
 <span class="r-in"><span>  baseline_time <span class="op">=</span> <span class="fl">0</span>, cutoff_time <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X4"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>, y_type <span class="op">=</span> <span class="st">"B"</span></span></span>
@@ -145,13 +156,13 @@ for the point estimate and for every bootstrap sample.</p>
 <span class="r-in"><span>  target_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, B <span class="op">=</span> <span class="fl">0</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span><span class="op">$</span><span class="va">summary</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   time covariate    estimate SD LowerBound UpperBound</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0 Intercept  0.08204782 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0        X1  0.03944098 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0        X2 -0.12088946 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 Intercept  0.02215715 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2        X1 -0.07023692 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2        X2  0.01739805 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   time covariate estimate SD LowerBound UpperBound</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0 Intercept    0.225 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0        X1   -0.041 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0        X2   -0.070 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 Intercept    0.044 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2        X1   -0.019 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2        X2   -0.175 NA         NA         NA</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

@@ -20,7 +20,7 @@ standardized mapping.
 - [`BiSample`](https://whhuan.github.io/PD_Robust/reference/BiSample.md)
   : Binary longitudinal example data
 - [`ImperfectConSample`](https://whhuan.github.io/PD_Robust/reference/ImperfectConSample.md)
-  : Imperfect continuous longitudinal example data
+  : Imperfect Continuous Longitudinal Example Data
 
 ## Independent prediction functions
 
