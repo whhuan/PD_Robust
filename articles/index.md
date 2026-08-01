@@ -12,3 +12,5 @@
   analysis](https://whhuan.github.io/PD_Robust/articles/diagnostics-and-sensitivity.md):
 - [Detailed Function
   Presentation](https://whhuan.github.io/PD_Robust/articles/Functions.md):
+- [Details for function
+  Datacheck](https://whhuan.github.io/PD_Robust/articles/Details-for-Datacheck.md):

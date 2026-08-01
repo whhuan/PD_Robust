@@ -40,6 +40,7 @@
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
+    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
   </ul>
 </li>
       </ul>
@@ -71,12 +72,92 @@
     
     
 <div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>The complete workflow is illustrated as follows. This article focuses
+on the package’s data requirements and the first three steps, including
+functions <code><a href="../reference/Mapping.html">Mapping()</a></code>, <code><a href="../reference/DataCheck.html">DataCheck()</a></code> and
+<code><a href="../reference/DataStandard.html">DataStandard()</a></code>.</p>
+<pre class="text"><code>data -&gt; Mapping() -&gt; DataCheck() -&gt; DataStandard()
+     -&gt; prediction / diagnostic / analysis functions</code></pre>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/whhuan/PD_Robust" class="external-link">PDRobust</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ImperfectConSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span></code></pre></div>
+<p>Two built-in datasets are included with the package. The datasets are
+stored in the <code>data/</code> directory, and the scripts used to
+generate them are provided in the <code>data-raw/</code> directory.</p>
+<p>The first dataset, <code>BiSample</code>, is a standardized
+longitudinal dataset that satisfies the package’s data requirements. It
+contains no nonstructural missing values; outcome values are missing
+only when they are structurally unobservable due to any kind of
+truncation. Each row represents one subject at a specific time. The
+dataset includes a subject identifier (<code>id</code>), assessment time
+(<code>time</code>), survival status (<code>S</code>), treatment
+assignment (<code>A</code>), a binary outcome (<code>Y</code>), and six
+subject-level covariates (<code>X1</code>–<code>X6</code>) .</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">BiSample</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   id time S A Y     X1     X2     X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1  1    0 1 1 0  1.521  0.261  0.649  0  1  0</span></span>
+<span><span class="co">#&gt; 2  1    1 1 1 0  1.521  0.261  0.649  0  1  0</span></span>
+<span><span class="co">#&gt; 3  1    2 1 1 1  1.521  0.261  0.649  0  1  0</span></span>
+<span><span class="co">#&gt; 4  2    0 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span>
+<span><span class="co">#&gt; 5  2    1 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span>
+<span><span class="co">#&gt; 6  2    2 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span></code></pre></div>
+<p>The second one, <code>ImperfectConSample</code>, is designed to
+resemble longitudinal data collected in a clinical trial with repeated
+follow-up assessments. Each row represents a patient observation at a
+scheduled visit. The dataset includes a patient identifier
+(<code>patient_id</code>), visit time (<code>visit_month</code>),
+survival status (<code>alive_status</code>), treatment assignment
+(<code>treatment</code>), a continuous clinical outcome, and six
+patient-level covariates (<code>X1</code>–<code>X6</code>) representing
+relevant clinical and demographic information.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ImperfectConSample</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   patient_id visit_month alive_status treatment clinical_outcome     X1     X2</span></span>
+<span><span class="co">#&gt; 1    PT-0171           0            1         1            4.598  1.452 -2.075</span></span>
+<span><span class="co">#&gt; 2    PT-0100           6            0         1               NA  1.473 -0.758</span></span>
+<span><span class="co">#&gt; 3    PT-0056           0            1         0            8.806 -2.722 -0.735</span></span>
+<span><span class="co">#&gt; 4    PT-0034           6            1         0           13.851 -1.471  0.278</span></span>
+<span><span class="co">#&gt; 5    PT-0164          12            1         1            9.643 -1.272 -1.881</span></span>
+<span><span class="co">#&gt; 6    PT-0058           0            1         1           10.341 -0.534 -0.842</span></span>
+<span><span class="co">#&gt;       X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1 -0.147  0  1  1</span></span>
+<span><span class="co">#&gt; 2  0.608  0  1  1</span></span>
+<span><span class="co">#&gt; 3  0.424  1  1  0</span></span>
+<span><span class="co">#&gt; 4 -0.158  0  0  0</span></span>
+<span><span class="co">#&gt; 5 -3.333  0  1  0</span></span>
+<span><span class="co">#&gt; 6 -0.092  0  1  0</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="mapping-raw-columns-and-times">Mapping raw columns and times<a class="anchor" aria-label="anchor" href="#mapping-raw-columns-and-times"></a>
 </h2>
 <p><code><a href="../reference/Mapping.html">Mapping()</a></code> is the sole source of truth for structural
-columns, the raw analysis window, nuisance-model covariates, effect
-modifiers, and outcome type.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+columns, analysis window on the raw time scale, the covariated used to
+estimate treatment effects, the variables of interest, and the outcome
+type.</p>
+<p>The arguments <code>id, time, treatment, survival, outcome</code>
+specify the corresponding column names in the input dataset.</p>
+<p>The arguments <code>baseline_time</code> and <code>cutoff_time</code>
+define the beginning and end of the analysis window, respectively. Each
+must be specified as a single finite numeric value on the raw time
+scale, with <code>baseline_time &lt; cutoff_time</code>. For example,
+when obeserved time points are (0, 1, …, 4) may be set to 0 or 1,
+whereas the cutoff may be set to a later time point, such as 4. For
+<code>ImperfectConSample</code>, the observed time points are (0, 6,
+12); therefore, the analysis window is defined using
+<code>baseline_time = 0, cutoff_time = 12</code>.</p>
+<p>The argument <code>covariates</code> and <code>interest_vars</code>
+are character vectors containing the column names of the relevant
+covariates. Variables specified in <code>interest_vars</code> must also
+be included in <code>covariates</code> . The argument
+<code>y_type</code> specifies the outcome type. It should be set to
+<code>B</code> for a binary outcome and <code>C</code> for a continuous
+outcome.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Mapping.html">Mapping</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
 <span>  time <span class="op">=</span> <span class="st">"visit_month"</span>,</span>
@@ -87,60 +168,336 @@ modifiers, and outcome type.</p>
 <span>  cutoff_time <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span>,</span>
 <span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>,</span>
-<span>  y_type <span class="op">=</span> <span class="st">"C"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">map</span><span class="op">)</span></span>
-<span><span class="va">map</span></span></code></pre></div>
-<p>Every <code>interest_vars</code> entry must also occur in
-<code>covariates</code>. <code>target_time</code> is not stored in the
-mapping; it is supplied only to <code><a href="../reference/HTESepT.html">HTESepT()</a></code>.</p>
+<span>  y_type <span class="op">=</span> <span class="st">"C"</span> <span class="co"># "B"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Users can inspect the mapping details using <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and
+the <code><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes()</a></code> function may additionally be used to
+inspect object-level metadata, such as its class.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">map</span><span class="op">)</span></span>
+<span><span class="co">#&gt; PDRobust data mapping</span></span>
+<span><span class="co">#&gt;   ID: patient_id</span></span>
+<span><span class="co">#&gt;   Time: visit_month</span></span>
+<span><span class="co">#&gt;   Treatment: treatment</span></span>
+<span><span class="co">#&gt;   Survival: alive_status</span></span>
+<span><span class="co">#&gt;   Outcome: clinical_outcome</span></span>
+<span><span class="co">#&gt;   Baseline time: 0</span></span>
+<span><span class="co">#&gt;   Cutoff time: 12</span></span>
+<span><span class="co">#&gt;   Mapped covariates: X1, X2, X3, X4, X5, X6</span></span>
+<span><span class="co">#&gt;   Interest variables: X1, X2</span></span>
+<span><span class="co">#&gt;   Outcome type: C (continuous)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">map</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $names</span></span>
+<span><span class="co">#&gt;  [1] "id_col"        "time_col"      "A_col"         "S_col"        </span></span>
+<span><span class="co">#&gt;  [5] "Y_col"         "baseline_time" "cutoff_time"   "covariates"   </span></span>
+<span><span class="co">#&gt;  [9] "interest_vars" "y_type"       </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $class</span></span>
+<span><span class="co">#&gt; [1] "pd_mapping"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="validation-without-modification">Validation without modification<a class="anchor" aria-label="anchor" href="#validation-without-modification"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ImperfectConSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
-<span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="va">ImperfectConSample</span></span>
-<span><span class="va">check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataCheck.html">DataCheck</a></span><span class="op">(</span><span class="va">raw</span>, <span class="va">map</span>, strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<p><code><a href="../reference/DataCheck.html">DataCheck()</a></code> evaluates whether the input dataset
+satisfies the structural and analytical requirements of
+<code>PDRobust</code> without altering the data. It identifies potential
+issues, reports their severity and recommended handling, and determines
+whether the dataset is ready for analysis, can be standardized using
+<code><a href="../reference/DataStandard.html">DataStandard()</a></code>, or requires manual resolution.</p>
+<p>Each check includes an action-oriented message. When
+<code>strict = FALSE</code>, which is the default,
+<code><a href="../reference/DataCheck.html">DataCheck()</a></code> returns the complete validation report without
+modifying the input dataset. When <code>strict = TRUE</code>, the
+function raises an error if one or more failed checks are marked as
+analysis-blocking.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataCheck.html">DataCheck</a></span><span class="op">(</span><span class="va">ImperfectConSample</span>, <span class="va">map</span>, strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">check</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $names</span></span>
+<span><span class="co">#&gt; [1] "valid"                      "ready_for_analysis"        </span></span>
+<span><span class="co">#&gt; [3] "manual_resolution_required" "can_standardize"           </span></span>
+<span><span class="co">#&gt; [5] "checks"                     "settings"                  </span></span>
+<span><span class="co">#&gt; [7] "diagnostics"               </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $class</span></span>
+<span><span class="co">#&gt; [1] "pd_data_check"</span></span></code></pre></div>
+<p><code><a href="../reference/DataCheck.html">DataCheck()</a></code> returns an object of class
+<code>pd_data_check</code>. The object contains the following
+components:</p>
+<table class="table">
+<colgroup>
+<col width="39%">
+<col width="60%">
+</colgroup>
+<thead><tr class="header">
+<th>Component</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>valid</code></td>
+<td>Indicates whether all checks with severity <code>"error"</code> have
+passed. Informational messages and warnings do not by themselves make
+the report invalid.</td>
+</tr>
+<tr class="even">
+<td><code>ready_for_analysis</code></td>
+<td>Indicates whether the dataset can be used directly in downstream
+prediction, diagnostic, and analysis functions. It is <code>TRUE</code>
+only when no failed check is marked as analysis-blocking.</td>
+</tr>
+<tr class="odd">
+<td><code>manual_resolution_required</code></td>
+<td>Indicates whether at least one failed check requires manual review
+or correction. Such issues are not automatically resolved by
+<code><a href="../reference/DataStandard.html">DataStandard()</a></code>.</td>
+</tr>
+<tr class="even">
+<td><code>can_standardize</code></td>
+<td>Indicates whether <code><a href="../reference/DataStandard.html">DataStandard()</a></code> may proceed. It is
+<code>TRUE</code> when no failed check requires manual resolution,
+although subject-level deletion may still require
+<code>drop = TRUE</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>checks</code></td>
+<td>A data frame containing the itemized validation results, including
+the status, severity, diagnostic summary, analysis implications, and
+recommended handling for each check.</td>
+</tr>
+<tr class="even">
+<td><code>settings</code></td>
+<td>Records the settings used during validation. The current
+implementation stores the validated mapping object in
+<code>settings$mapping</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>diagnostics</code></td>
+<td>Contains detailed supporting information, such as affected row
+numbers, subject identifiers, missingness summaries, treatment-group
+counts, and problematic covariates.</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">check</span><span class="op">$</span><span class="va">valid</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="va">check</span><span class="op">$</span><span class="va">ready_for_analysis</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="va">check</span><span class="op">$</span><span class="va">manual_resolution_required</span></span>
-<span><span class="va">check</span><span class="op">$</span><span class="va">checks</span></span>
-<span><span class="va">check</span><span class="op">$</span><span class="va">diagnostics</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">check</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/DataCheck.html">DataCheck()</a></code> assesses required columns, type conversion,
-binary encodings, missing IDs or times, duplicated subject-time records,
-treatment consistency, visit completeness, monotone survival, structural
-outcome missingness after death, missing outcomes among survivors,
-covariate completeness, and outcome type. Each check includes an
-action-oriented message. With <code>strict = TRUE</code>, an
-analysis-blocking failure raises an error after the report is
-constructed.</p>
+<span><span class="co">#&gt; [1] FALSE</span></span>
+<span><span class="va">check</span><span class="op">$</span><span class="va">can_standardize</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>The following are diagnostics of check for
+<code>ImperfectConSample</code>. Users can find detailed descriptions of
+all validation items in the article <em>Details-for-DataCheck</em>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">check</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $missing_id_time_rows</span></span>
+<span><span class="co">#&gt; [1] 208</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $duplicate_rows</span></span>
+<span><span class="co">#&gt; integer(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $duplicate_subjects</span></span>
+<span><span class="co">#&gt; character(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $missing_by_time</span></span>
+<span><span class="co">#&gt;   time missing_subjects</span></span>
+<span><span class="co">#&gt; 1    0                0</span></span>
+<span><span class="co">#&gt; 2    6                1</span></span>
+<span><span class="co">#&gt; 3   12                1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $incomplete_subjects</span></span>
+<span><span class="co">#&gt; [1] "PT-0001" "PT-0004"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $treatment_invalid_rows</span></span>
+<span><span class="co">#&gt; integer(0)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="standardization-and-audit-attributes">Standardization and audit attributes<a class="anchor" aria-label="anchor" href="#standardization-and-audit-attributes"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">raw</span>, <span class="va">map</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
+<p><code><a href="../reference/DataStandard.html">DataStandard()</a></code> returns a prepared data for later
+analysis.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">ImperfectConSample</span>, <span class="va">map</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "pd_data"    "data.frame"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   patient_id visit_month alive_status treatment clinical_outcome     X1     X2</span></span>
+<span><span class="co">#&gt; 1          1           0            1         1           10.803  0.168  0.421</span></span>
+<span><span class="co">#&gt; 2          1           1            1         1           12.006  0.168  0.421</span></span>
+<span><span class="co">#&gt; 3          1           2            1         1            7.833  0.168  0.421</span></span>
+<span><span class="co">#&gt; 4          2           0            1         0            4.101 -2.400 -0.324</span></span>
+<span><span class="co">#&gt; 5          2           1            1         0            5.508 -2.400 -0.324</span></span>
+<span><span class="co">#&gt; 6          2           2            0         0               NA -2.400 -0.324</span></span>
+<span><span class="co">#&gt;       X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1 -0.557  1  1  1</span></span>
+<span><span class="co">#&gt; 2 -0.557  1  1  1</span></span>
+<span><span class="co">#&gt; 3 -0.557  1  1  1</span></span>
+<span><span class="co">#&gt; 4 -0.391  0  0  0</span></span>
+<span><span class="co">#&gt; 5 -0.391  0  0  0</span></span>
+<span><span class="co">#&gt; 6 -0.391  0  0  0</span></span></code></pre></div>
+<p>The returned <code>pd_data</code> object contains several attributes
+that document its structure and the transformations applied during
+standardization. These attributes can be inspected using:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "names"               "row.names"           "class"              </span></span>
+<span><span class="co">#&gt; [4] "pd_mapping"          "pd_original_mapping" "pd_check"           </span></span>
+<span><span class="co">#&gt; [7] "pd_standardization"</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="75%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Attribute</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>names</code></td>
+<td align="left">Stores the column names of the standardized data
+frame.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>row.names</code></td>
+<td align="left">Stores the row identifiers used by the data frame.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>class</code></td>
+<td align="left">Identifies the object classes, including its data-frame
+and package-specific classes.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>pd_mapping</code></td>
+<td align="left">Stores the standardized mapping used by subsequent
+package functions, including the standardized column roles and
+analysis-time specification.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pd_original_mapping</code></td>
+<td align="left">Preserves the original user-supplied mapping on the raw
+data scale before identifiers, time points, and encodings were
+standardized.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>pd_check</code></td>
+<td align="left">Stores the validation results associated with the
+standardized dataset, including readiness indicators, detected issues,
+and recommended handling.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pd_standardization</code></td>
+<td align="left">Records the principal transformations performed during
+standardization, such as identifier and time mappings, encoding
+conversions, retained observations, and subject-level exclusions.</td>
+</tr>
+</tbody>
+</table>
+<p>For exmaple, the original and standardized mappings can be compared
+using:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_original_mapping"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; PDRobust data mapping</span></span>
+<span><span class="co">#&gt;   ID: patient_id</span></span>
+<span><span class="co">#&gt;   Time: visit_month</span></span>
+<span><span class="co">#&gt;   Treatment: treatment</span></span>
+<span><span class="co">#&gt;   Survival: alive_status</span></span>
+<span><span class="co">#&gt;   Outcome: clinical_outcome</span></span>
+<span><span class="co">#&gt;   Baseline time: 0</span></span>
+<span><span class="co">#&gt;   Cutoff time: 12</span></span>
+<span><span class="co">#&gt;   Mapped covariates: X1, X2, X3, X4, X5, X6</span></span>
+<span><span class="co">#&gt;   Interest variables: X1, X2</span></span>
+<span><span class="co">#&gt;   Outcome type: C (continuous)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_mapping"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_original_mapping"</span><span class="op">)</span></span>
-<span><span class="va">standardization</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_standardization"</span><span class="op">)</span></span>
-<span><span class="va">standardization</span><span class="op">$</span><span class="va">time_map</span></span>
-<span><span class="va">standardization</span><span class="op">$</span><span class="va">id_map</span></span>
-<span><span class="va">standardization</span><span class="op">$</span><span class="va">attrition</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_check"</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/DataStandard.html">DataStandard()</a></code> retains every actual observed time inside
-the mapped window and maps the ordered time grid to
-<code>0, 1, ..., n</code>. IDs are mapped to consecutive integers,
-explicit binary encodings are converted safely, the panel is sorted, and
-audit information is attached. Subjects must have one usable record at
-each retained time. With <code>drop = TRUE</code>, deletions are
-subject-level and recorded in the attrition report; structural outcome
-missingness after death is not treated as ordinary survivor outcome
-missingness.</p>
+<span><span class="co">#&gt; PDRobust data mapping</span></span>
+<span><span class="co">#&gt;   ID: patient_id</span></span>
+<span><span class="co">#&gt;   Time: visit_month</span></span>
+<span><span class="co">#&gt;   Treatment: treatment</span></span>
+<span><span class="co">#&gt;   Survival: alive_status</span></span>
+<span><span class="co">#&gt;   Outcome: clinical_outcome</span></span>
+<span><span class="co">#&gt;   Baseline time: 0</span></span>
+<span><span class="co">#&gt;   Cutoff time: 2</span></span>
+<span><span class="co">#&gt;   Mapped covariates: X1, X2, X3, X4, X5, X6</span></span>
+<span><span class="co">#&gt;   Interest variables: X1, X2</span></span>
+<span><span class="co">#&gt;   Outcome type: C (continuous)</span></span></code></pre></div>
+<p>Among these attributes, <code>pd_standardization</code> is
+particularly important because it provides the primary audit trail for
+the changes made to the input dataset. It can be inspected directly
+using:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">standardization</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_standardization"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">standardization</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "time_map"      "id_map"        "attrition"     "initial_check"</span></span></code></pre></div>
+<p>It retains all observed assessment times within the analysis window
+defined by the mapping object and transforms the ordered time grid to
+consecutive integers (0, 1, …, n).</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">standardization</span><span class="op">$</span><span class="va">time_map</span></span>
+<span><span class="co">#&gt;   raw_time standardized_time</span></span>
+<span><span class="co">#&gt; 1        0                 0</span></span>
+<span><span class="co">#&gt; 2        6                 1</span></span>
+<span><span class="co">#&gt; 3       12                 2</span></span></code></pre></div>
+<p>Subject identifiers are similarly mapped to consecutive integers,
+explicitly recognized binary encodings are converted safely, and the
+resulting longitudinal dataset is sorted by subject and standardized
+analysis time.</p>
+<p>For a subject to be retained, the dataset must contain one usable
+record at each retained assessment time.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">standardization</span><span class="op">$</span><span class="va">id_map</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    raw_id standardized_id</span></span>
+<span><span class="co">#&gt; 1 PT-0005               1</span></span>
+<span><span class="co">#&gt; 2 PT-0006               2</span></span>
+<span><span class="co">#&gt; 3 PT-0007               3</span></span>
+<span><span class="co">#&gt; 4 PT-0008               4</span></span>
+<span><span class="co">#&gt; 5 PT-0009               5</span></span>
+<span><span class="co">#&gt; 6 PT-0010               6</span></span></code></pre></div>
+<p>When <code>drop = TRUE</code>, exclusions are applied at the subject
+level rather than to individual records, and all exclusions are
+documented in the attrition report. Outcome values that are structurally
+unobservable after death or other trunction are distinguished from
+ordinary missing outcomes among surviving subjects and are therefore
+handled separately during validation and standardization.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">standardization</span><span class="op">$</span><span class="va">attrition</span></span>
+<span><span class="co">#&gt; $original_rows</span></span>
+<span><span class="co">#&gt; [1] 599</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $rows_outside_analysis_window</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $unidentified_rows_removed</span></span>
+<span><span class="co">#&gt; [1] 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $original_subjects</span></span>
+<span><span class="co">#&gt; [1] 200</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $removed_subjects</span></span>
+<span><span class="co">#&gt; [1] "PT-0001" "PT-0004" "PT-0002" "PT-0003"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $removed_subjects_by_reason</span></span>
+<span><span class="co">#&gt;   subject                          reason</span></span>
+<span><span class="co">#&gt; 1 PT-0001          missing_analysis_visit</span></span>
+<span><span class="co">#&gt; 2 PT-0004          missing_analysis_visit</span></span>
+<span><span class="co">#&gt; 3 PT-0002 missing_required_analysis_value</span></span>
+<span><span class="co">#&gt; 4 PT-0003 missing_required_analysis_value</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $retained_subjects</span></span>
+<span><span class="co">#&gt; [1] 196</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $retained_percent</span></span>
+<span><span class="co">#&gt; [1] 98</span></span></code></pre></div>
+<p>Finally, even when a built-in dataset such as <code>BiSample</code>,
+or a user-supplied dataset, already satisfies all <code>PDRobust</code>
+data requirements, it should still be processed through the package’s
+data-preparation workflow before analysis. This ensures that the dataset
+is formally validated, standardized, and supplied with the mapping and
+audit attributes required by downstream functions.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

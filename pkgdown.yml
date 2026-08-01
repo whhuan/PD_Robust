@@ -3,11 +3,12 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   data-requirements: data-requirements.html
+  Details-for-Datacheck: Details-for-Datacheck.html
   diagnostics-and-sensitivity: diagnostics-and-sensitivity.html
   Functions: Functions.html
   getting-started: getting-started.html
   prediction-models: prediction-models.html
-last_built: 2026-07-31T23:08Z
+last_built: 2026-08-01T06:16Z
 urls:
   reference: https://whhuan.github.io/PD_Robust/reference
   article: https://whhuan.github.io/PD_Robust/articles
