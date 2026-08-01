@@ -3,9 +3,27 @@ title: "Independent prediction models"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Independent prediction models}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 80
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE,
+  echo = TRUE,
+  include = TRUE,
+  fig.show = "asis",
+  fig.keep = "high",
+  warning = FALSE,
+  message = FALSE
+)
+
+```
 
 `PSPred()`, `PrinPred()`, and `OutPred()` fit and predict in one call. They do
 not return or cache fitted model objects. Each result is a row-aligned numeric
@@ -43,8 +61,8 @@ ps <- PSPred(
 head(ps)
 ```
 
-The logistic model is fitted only on baseline observations, then used to
-predict every row of `pred_dat`.
+The logistic model is fitted only on baseline observations, then used to predict
+every row of `pred_dat`.
 
 ## Cumulative principal-score prediction
 
@@ -84,9 +102,9 @@ reused for its two counterfactual treatment predictions when its fitting rows
 and formula are identical.
 
 Public prediction vectors are rounded to three decimal places. Analysis
-functions call full-precision internal implementations, so this display
-rounding never enters weights, estimating equations, optimization, bootstrap
-replicates, or confidence-interval calculations.
+functions call full-precision internal implementations, so this display rounding
+never enters weights, estimating equations, optimization, bootstrap replicates,
+or confidence-interval calculations.
 
 ## Outcome prediction
 
@@ -110,5 +128,5 @@ head(cbind(mu0, mu1))
 ```
 
 `OutPred()` removes fitting rows with missing outcomes, sets treatment to the
-requested value and survival to one in prediction data, and uses either a
-linear or logistic outcome model according to `mapping$y_type`.
+requested value and survival to one in prediction data, and uses either a linear
+or logistic outcome model according to `mapping$y_type`.

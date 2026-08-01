@@ -1,0 +1,99 @@
+---
+title: "Details for function Datacheck"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Details for function Datacheck}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 80
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE,
+  echo = TRUE,
+  include = TRUE,
+  fig.show = "asis",
+  fig.keep = "high",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+```{=html}
+<style>
+.validation-check-table table {
+  width: 110%;
+  table-layout: fixed;
+}
+
+.validation-check-table th:nth-child(1),
+.validation-check-table td:nth-child(1) {
+  width: 10%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.validation-check-table th:nth-child(2),
+.validation-check-table td:nth-child(2) {
+  width: 40%;
+}
+
+.validation-check-table th:nth-child(3),
+.validation-check-table td:nth-child(3) {
+  width: 60%;
+}
+
+.validation-check-table th,
+.validation-check-table td {
+  vertical-align: top;
+}
+</style>
+```
+
+### Columns in the itemized checks
+
+The component `check$checks` is a data frame with the following columns:
+
+| Column | Description |
+|:-------------------------|:----------------------------------------------------|
+| `check` | The unique name of the validation check. |
+| `passed` | Indicates whether the dataset passed the corresponding check. |
+| `severity` | Classifies the result as `"error"`, `"warning"`, or `"information"`. |
+| `standardize_can_fix` | Indicates whether the issue can be handled automatically by `DataStandard()`, potentially with `drop = TRUE`. |
+| `requires_manual_resolution` | Indicates whether the issue must be corrected or reviewed manually before standardization or analysis. |
+| `analysis_blocking` | Indicates whether failure of the check prevents the dataset from being considered analysis-ready. |
+| `details` | Provides a concise summary of the observed result, including relevant counts, values, rows, subjects, or time points. |
+| `recommendation` | Describes the recommended action for resolving or interpreting the result. |
+
+### ::: {.validation-check-table}
+
+| Check | What is evaluated | Corresponding report and diagnostics |
+|----|----|----|
+| `required_columns` | Verifies that all structural variables and mapped covariates are present in the input dataset. | Reports the number of required columns or lists the missing columns. Missing columns require manual correction of the data or mapping. |
+| `nonempty_data` | Verifies that the input dataset contains at least one row. | Reports the number of detected rows. An empty dataset requires manual resolution. |
+| `missing_id_or_time` | Identifies records with missing subject identifiers or time values. | Reports the affected original row numbers and stores them in `diagnostics$missing_id_time_rows`. These rows may be removed using `drop = TRUE` when appropriate. |
+| `time_encoding` | Determines whether the time variable is numeric or can be converted unambiguously to numeric values. | Reports the original class and any invalid rows. Unambiguous character or factor encodings can be converted during standardization; ambiguous values require manual correction. |
+| `mapping_time_endpoints` | Verifies that `baseline_time` and `cutoff_time` are observed in the data and that `baseline_time <= cutoff_time`. | Reports the mapped endpoints and all observed time values. Invalid endpoints require correction of the mapping or time coding. |
+| `analysis_time_grid` | Identifies all observed time points within the mapped baseline-to-cutoff window and verifies that both endpoints are included. | Reports the complete retained analysis-time grid. Every observed visit within the mapped window is included in the standardized grid. |
+| `duplicate_id_time_records` | Detects duplicated subject–time combinations. | Reports the number of duplicated rows and affected subjects. Detailed values are stored in `diagnostics$duplicate_rows` and `diagnostics$duplicate_subjects`. Duplicates require a manually specified aggregation or record-selection rule. |
+| `complete_longitudinal_structure` | Determines whether each subject has a usable record at every retained analysis time. Duplicate records are evaluated separately. | Reports the number and percentage of complete subjects, the number of incomplete subjects, and missing-subject counts by time. Details are stored in `diagnostics$incomplete_subjects` and `diagnostics$missing_by_time`. |
+| `treatment_encoding` | Verifies that treatment is completely observed and encoded as binary `0/1`, or through an explicitly convertible binary representation. | Reports the variable class, observed values, missing rows, invalid rows, invalid values, and affected subjects. Detailed results are stored in `diagnostics$treatment_invalid_rows` and `diagnostics$treatment_invalid_subjects`. |
+| `survival_encoding` | Verifies that survival status is completely observed and encoded as binary `0/1`, or through an explicitly convertible binary representation. | Reports the variable class, observed values, missing rows, invalid rows, and invalid values. Invalid-row indices are stored in `diagnostics$survival_invalid_rows`. |
+| `treatment_consistency_within_subject` | Verifies that baseline treatment assignment remains constant within each subject over follow-up. | Reports the number and identifiers of subjects whose treatment value changes. Affected identifiers are stored in `diagnostics$treatment_changes`. |
+| `survival_consistency_within_subject` | Verifies that a subject does not transition from `S = 0` back to `S = 1` at a later time. | Reports the number and identifiers of subjects with impossible survival transitions. Affected identifiers are stored in `diagnostics$impossible_survival_transitions`. |
+| `outcome_type_and_encoding` | Verifies that the outcome agrees with `mapping$y_type`: binary outcomes must use valid binary values, whereas continuous outcomes must contain finite numeric values. | Reports the original class, observed values, and invalid or non-finite rows. Invalid-row indices are stored in `diagnostics$outcome_invalid_rows`. Unambiguous conversions are performed by `DataStandard()`. |
+| `structural_outcome_missingness_after_death` | Counts records for which `S = 0` and `Y = NA`. | Returns an informational result reporting the number and percentage of structurally missing outcomes. These outcomes are expected and should not be imputed or replaced with observed zeros. |
+| `outcome_observed_after_death` | Identifies records for which `S = 0` but the outcome remains observed. | Reports the number and original row numbers of such records. Row indices are stored in `diagnostics$outcome_observed_after_death_rows`. Manual verification is required. |
+| `outcome_missingness_among_survivors` | Identifies ordinary outcome missingness among records with `S = 1`. | Reports the number of missing records, affected subjects, and counts by analysis time. Details are stored in `diagnostics$outcome_missing_alive_rows` and `diagnostics$outcome_missing_alive_by_time`. |
+| `missing_covariates` | Evaluates missingness in every mapped covariate. | Reports, for each covariate, the number of missing records, number of affected subjects, and percentage of affected subjects. The complete summary is stored in `diagnostics$covariate_missing`. |
+| `time_coding_and_order` | Determines whether rows are ordered by subject and time and whether the analysis-time grid already uses consecutive integers beginning at zero. | Reports the observed raw time values and whether records are correctly ordered. `DataStandard()` can sort the records and map the retained time grid to `0, 1, ..., n`. |
+| `id_coding` | Determines whether subject identifiers are consecutive integers and whether records are correctly ordered. | Reports the identifier class, number of unique subjects, and whether the coding is canonical. `DataStandard()` creates an ID audit map and assigns consecutive integer identifiers. |
+| `treatment_group_availability` | Verifies that both treatment groups are represented at baseline. | Reports the number of unique baseline subjects in treatment groups `0` and `1`. Group counts are stored in `diagnostics$treatment_group_counts`. |
+| `covariate_variation` | Identifies mapped covariates that are constant or have near-zero variation. | Reports the names of problematic covariates and stores them in `diagnostics$near_zero_variation_covariates`. This is a nonblocking warning, but the covariates should be reviewed before model fitting. |
+| `retained_sample_after_optional_dropping` | Records the sample size before optional subject-level deletion during standardization. | Initially reports the number of subjects present. After `DataStandard()`, the corresponding report is updated with the original, removed, and retained subject counts and the retained percentage. |

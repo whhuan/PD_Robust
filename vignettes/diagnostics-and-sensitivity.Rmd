@@ -3,9 +3,26 @@ title: "Diagnostics, profiling, and sensitivity analysis"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Diagnostics, profiling, and sensitivity analysis}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 80
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE,
+  echo = TRUE,
+  include = TRUE,
+  fig.show = "asis",
+  fig.keep = "high",
+  warning = FALSE,
+  message = FALSE
+)
+```
 
 ```{r, eval=FALSE}
 library(PDRobust)
@@ -41,8 +58,7 @@ plot(ps_diag)
 
 `PSDiag()` uses the original pooled denominator before weighting and the
 weighted effective-sample-size denominator after ordinary IPTW. Before weights
-are calculated, it always executes
-`pi <- pmin(pmax(pi, 0.01), 0.99)`.
+are calculated, it always executes `pi <- pmin(pmax(pi, 0.01), 0.99)`.
 
 ## Principal-score balance
 

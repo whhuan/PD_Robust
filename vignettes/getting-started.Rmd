@@ -3,17 +3,30 @@ title: "Getting started with PDRobust"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting started with PDRobust}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 80
 ---
 
-```{r, setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = TRUE,
+  echo = TRUE,
+  include = TRUE,
+  fig.show = "asis",
+  fig.keep = "high",
+  warning = FALSE,
+  message = FALSE
+)
 ```
 
 PDRobust follows a mapping-driven workflow:
 
-```text
+``` text
 data("BiSample") -> Mapping() -> DataCheck() -> DataStandard()
                  -> prediction / diagnostic / analysis functions
 ```
@@ -123,9 +136,9 @@ pooled$summary
 pooled$analysis_times
 ```
 
-`HTESepT()` reports estimates at explicitly selected observed times.
-`HTEAllT()` pools the complete observed baseline-to-cutoff grid. Setting `B > 0`
-requests successful subject-level bootstrap replications.
+`HTESepT()` reports estimates at explicitly selected observed times. `HTEAllT()`
+pools the complete observed baseline-to-cutoff grid. Setting `B > 0` requests
+successful subject-level bootstrap replications.
 
 ## Sensitivity analysis for both outcome types
 

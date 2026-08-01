@@ -5,12 +5,19 @@ editor_options:
     wrap: 80
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  dev = "ragg_png",
+  dpi = 192,
+  fig.width = 7,
+  fig.height = 4.5,
+  out.width = "90%",
+  fig.align = "center",
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
