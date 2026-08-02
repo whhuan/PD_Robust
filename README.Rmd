@@ -185,7 +185,7 @@ The following table summarizes the objectives and arguments of all functions
 provided by the package.
 
 | Function and arguments | Objectives and returned results |
-|:-------------------------------|:-----------------------------------------------|
+|:---|:---|
 | `Mapping(id, time, treatment, survival, outcome, baseline_time, cutoff_time, covariates, interest_vars, y_type)` | Defines the structural roles of variables, analysis times, covariates, effect modifiers, and outcome type. |
 | `DataCheck(data, mapping, strict = FALSE)` | Evaluates data readiness and returns dataset-level validation flags, itemized checks, diagnostic details, and recommended handling. |
 | `DataStandard(data, mapping, drop = FALSE)` | Returns a standardized and sorted longitudinal data frame with attached mapping and audit attributes. |
