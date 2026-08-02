@@ -1,6 +1,8 @@
-# PDRobust 0.3.7
+# Changelog
 
-## Interfaces and example data
+## PDRobust 0.3.7
+
+### Interfaces and example data
 
 - All ten
   [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
@@ -14,7 +16,7 @@
   preserved X1-X6 covariate names, and explicitly reported recoverable
   imperfections.
 
-## Model warnings and diagnostics
+### Model warnings and diagnostics
 
 - Logistic warnings are normalized so nonconvergence and separation are
   each reported once per fit instead of duplicating both
@@ -35,7 +37,7 @@
   formula, predictors, rank status, finite-prediction status,
   convergence, and separation.
 
-## Return precision
+### Return precision
 
 - Final user-facing predictions, estimates, diagnostics, confidence
   intervals, odds ratios, weighted summaries, and sensitivity tables are
@@ -47,7 +49,7 @@
 - `generate_data_example()` performs its simulation at full precision
   and rounds only the final generated data frame.
 
-## Validation cleanup
+### Validation cleanup
 
 - Binary conversion and invalid-row detection now share one
   authoritative implementation.
@@ -62,9 +64,9 @@
 - Prepared-data helpers now reuse the validated mapping instead of
   retrieving and validating it multiple times in the same public call.
 
-# PDRobust 0.3.6
+## PDRobust 0.3.6
 
-## Estimation and bootstrap
+### Estimation and bootstrap
 
 - [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) now
   supports continuous and binary outcomes. Continuous analyses retain
@@ -82,7 +84,7 @@
   calculations and may accept a finite root reached at the iteration
   limit when its residual precision satisfies the requested tolerance.
 
-## Prediction and validation
+### Prediction and validation
 
 - [`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md)
   retains the original missing-outcome filtering, treatment and survival
@@ -96,7 +98,7 @@
 - Ill-conditioned but full-rank closed-form estimating systems now warn
   and are accepted only when solving produces finite coefficients.
 
-## Data, documentation, plots, and tests
+### Data, documentation, plots, and tests
 
 - Examples now use the package datasets `BiSample` and
   `ImperfectConSample` through standard
@@ -109,9 +111,9 @@
   bootstrap estimation, categorized bootstrap diagnostics, and plot
   color mappings.
 
-# PDRobust 0.3.5
+## PDRobust 0.3.5
 
-## Model validation
+### Model validation
 
 - Propensity-score, principal-score, outcome, odds-ratio,
   quantile-regression, HTE, and sensitivity-analysis fitting now use
@@ -123,7 +125,7 @@
   contextual PDRobust errors instead of leaking raw model-fitting
   conditions.
 
-## Tests
+### Tests
 
 - Added a deterministic, side-effect-free simulation helper adapted from
   the package’s example-data generator. It creates continuous, binary,
@@ -136,9 +138,9 @@
   separation, convergence, reproducibility, and preservation of user
   data.
 
-# PDRobust 0.3.4
+## PDRobust 0.3.4
 
-## Diagnostics
+### Diagnostics
 
 - [`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md)
   now always truncates internally estimated propensity scores to
@@ -148,7 +150,7 @@
   now applies the same fixed propensity-score truncation before
   evaluating the cutoff principal-score diagnostic equation.
 
-## Tests
+### Tests
 
 - Principal-score prediction fixtures now use a larger probabilistically
   generated panel with non-separated survival outcomes and a full-rank
@@ -157,7 +159,7 @@
   convergence, absence of fitting warnings, and fixed diagnostic
   propensity truncation.
 
-## Documentation
+### Documentation
 
 - The README now demonstrates the complete public workflow and
   identifies the principal returned class and components of every
