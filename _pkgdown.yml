@@ -38,10 +38,10 @@ articles:
 - title: Workflows
   navbar: Workflows
   contents:
-  - '"getting-started"'
   - '"data-requirements"'
   - '"prediction-models"'
-  - '"diagnostics-and-sensitivity"'
+  - '"diagnostics-profiling-sensitivity"'
+  - '"hte"'
   - '"Functions"'
   - '"Details-for-Datacheck"'
 

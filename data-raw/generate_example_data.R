@@ -278,7 +278,7 @@ ConSample <- generate_data_example(
 )$dat
 
 BiSample <- generate_data_example(
-  N = 200,
+  N = 400,
   K = 3,
   cov_mtx = cov_mtx,
   rho_mtx = rho_mtx,

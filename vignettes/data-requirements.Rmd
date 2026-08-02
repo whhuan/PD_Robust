@@ -144,7 +144,7 @@ attributes(check)
 the following components:
 
 | Component | Description |
-|-------------------------------|------------------------------------------------|
+|----|----|
 | `valid` | Indicates whether all checks with severity `"error"` have passed. Informational messages and warnings do not by themselves make the report invalid. |
 | `ready_for_analysis` | Indicates whether the dataset can be used directly in downstream prediction, diagnostic, and analysis functions. It is `TRUE` only when no failed check is marked as analysis-blocking. |
 | `manual_resolution_required` | Indicates whether at least one failed check requires manual review or correction. Such issues are not automatically resolved by `DataStandard()`. |
@@ -187,7 +187,7 @@ names(attributes(pd_data))
 ```
 
 | Attribute | Description |
-|:-------------------|:-----------------------------------------------------------|
+|:---|:---|
 | `names` | Stores the column names of the standardized data frame. |
 | `row.names` | Stores the row identifiers used by the data frame. |
 | `class` | Identifies the object classes, including its data-frame and package-specific classes. |
