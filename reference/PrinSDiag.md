@@ -51,6 +51,6 @@ result <- PrinSDiag(
 )
 result$statistics
 #>     X1     X2     X4 
-#>  0.684 -0.645 -0.284 
+#> -1.182  0.869 -0.074 
 # }
 ```

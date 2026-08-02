@@ -105,11 +105,11 @@ fit <- HTESepT(
 )
 fit$summary
 #>   time covariate estimate SD LowerBound UpperBound
-#> 1    0 Intercept    0.225 NA         NA         NA
-#> 2    0        X1   -0.041 NA         NA         NA
-#> 3    0        X2   -0.070 NA         NA         NA
-#> 4    2 Intercept    0.044 NA         NA         NA
-#> 5    2        X1   -0.019 NA         NA         NA
-#> 6    2        X2   -0.175 NA         NA         NA
+#> 1    0 Intercept    0.066 NA         NA         NA
+#> 2    0        X1    0.035 NA         NA         NA
+#> 3    0        X2    0.053 NA         NA         NA
+#> 4    2 Intercept   -0.028 NA         NA         NA
+#> 5    2        X1    0.516 NA         NA         NA
+#> 6    2        X2   -0.036 NA         NA         NA
 # }
 ```

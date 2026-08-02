@@ -15,13 +15,13 @@ data("BiSample") -> Mapping() -> DataCheck() -> DataStandard() -> prediction / d
 library(PDRobust)
 data("BiSample", package = "PDRobust")
 head(BiSample)
-#>   id time S A Y     X1     X2     X3 X4 X5 X6
-#> 1  1    0 1 1 0  1.521  0.261  0.649  0  1  0
-#> 2  1    1 1 1 0  1.521  0.261  0.649  0  1  0
-#> 3  1    2 1 1 1  1.521  0.261  0.649  0  1  0
-#> 4  2    0 1 1 0 -0.395 -1.241 -0.115  0  1  0
-#> 5  2    1 1 1 0 -0.395 -1.241 -0.115  0  1  0
-#> 6  2    2 1 1 0 -0.395 -1.241 -0.115  0  1  0
+#>   id time S A Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1
 ```
 
 ### 2. Define roles and analysis settings with `Mapping()`
@@ -88,13 +88,13 @@ Detailed check report and diagnostics can be retained by using
 
 pd_data <- DataStandard(BiSample, mapping, drop =TRUE)
 head(pd_data)
-#>   id time S A Y     X1     X2     X3 X4 X5 X6
-#> 1  1    0 1 1 0  1.521  0.261  0.649  0  1  0
-#> 2  1    1 1 1 0  1.521  0.261  0.649  0  1  0
-#> 3  1    2 1 1 1  1.521  0.261  0.649  0  1  0
-#> 4  2    0 1 1 0 -0.395 -1.241 -0.115  0  1  0
-#> 5  2    1 1 1 0 -0.395 -1.241 -0.115  0  1  0
-#> 6  2    2 1 1 0 -0.395 -1.241 -0.115  0  1  0
+#>   id time S A Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1
 ```
 
 #### Imperfect dataset
@@ -187,7 +187,7 @@ ps <- PSPred(
 )
             # nrow(pd_data)
 head(ps)
-#> [1] 0.973 0.973 0.973 0.845 0.845 0.845
+#> [1] 0.987 0.987 0.987 0.873 0.873 0.873
 ```
 
 ``` r
@@ -197,16 +197,16 @@ ps_diagnostic <- PSDiag(pd_data, ps_fo)
 print(ps_diagnostic)
 #> Exposure-model balance diagnostics
 #>  covariate adjustment   smd
-#>         X1     Before 0.758
-#>         X3     Before 0.531
-#>         X4     Before 0.147
-#>         X5     Before 0.221
-#>         X6     Before 0.166
-#>         X1      After 0.111
-#>         X3      After 0.071
-#>         X4      After 0.122
-#>         X5      After 0.027
-#>         X6      After 0.137
+#>         X1     Before 0.679
+#>         X3     Before 0.615
+#>         X4     Before 0.025
+#>         X5     Before 0.545
+#>         X6     Before 0.152
+#>         X1      After 0.081
+#>         X3      After 0.084
+#>         X4      After 0.049
+#>         X5      After 0.153
+#>         X6      After 0.020
 ps_diagnostic$plot
 ```
 
@@ -225,7 +225,7 @@ p0 <- PrinPred(
 )
 
 head(p0)
-#> [1] 1.000 0.936 0.877 1.000 0.831 0.690
+#> [1] 1.000 0.985 0.971 1.000 0.990 0.979
 ```
 
 ``` r
@@ -235,11 +235,11 @@ principal_diagnostic <- PrinSDiag(pd_data, ps_fo, prin_fo)
 print(principal_diagnostic)
 #> Principal-score diagnostics
 #>  covariate statistic
-#>         X1     0.437
-#>         X3     0.129
-#>         X4    -0.362
-#>         X5    -0.247
-#>         X6     0.160
+#>         X1    -0.575
+#>         X3    -0.511
+#>         X4    -0.374
+#>         X5     1.006
+#>         X6     0.656
 principal_diagnostic$plo
 ```
 
@@ -258,7 +258,7 @@ mu1 <- OutPred(
 )
 
 head(mu1)
-#> [1] 0.176 0.176 0.176 0.139 0.139 0.139
+#> [1] 0.228 0.228 0.228 0.255 0.255 0.255
 ```
 
 ``` r
@@ -273,12 +273,12 @@ sensitivity <- SA(
 print(sensitivity)
 #> Sensitivity analysis
 #>  ratiovec time Intercept     X1     X3
-#>         1    0     0.154  0.088 -0.176
-#>         2    0     0.324  0.102  0.274
-#>         1    1    -0.078 -0.038  0.449
-#>         2    1     1.117 -0.393  0.810
-#>         1    2    -0.270 -0.178 -0.186
-#>         2    2     0.044 -0.264 -0.546
+#>         1    0    -0.491 -0.057 -0.195
+#>         2    0    -0.041 -0.649  0.113
+#>         1    1     0.433 -0.073  0.023
+#>         2    1    -0.026  0.162 -0.299
+#>         1    2    -0.152 -0.022  0.070
+#>         2    2    -0.070  0.218  0.370
 #>   Scenarios: 2
 sensitivity$plot
 #> $X1
@@ -304,16 +304,16 @@ principal_profile <- QR(
 print(principal_profile)
 #> Principal-stratum weighted means
 #>     X1     X3 
-#>  0.301 -0.075 
+#>  0.117 -0.136 
 #> 
 #> Weighted quantiles (NA for binary variables)
 #> $X1
 #>  q0.25  q0.50  q0.75 
-#> -0.303  0.254  0.905 
+#> -0.517  0.130  0.728 
 #> 
 #> $X3
 #>  q0.25  q0.50  q0.75 
-#> -0.815 -0.123  0.586
+#> -0.766 -0.168  0.514
 principal_profile$plot
 #> NULL
 ```
@@ -332,9 +332,9 @@ or_control <- ORCI(
 print(or_control)             
 #> Odds ratios and confidence intervals
 #>  covname estcoef lowerbd upperbd
-#>       X1   2.100   0.947   4.659
-#>       X3   0.922   0.376   2.257
-#>       X4   1.574   0.362   6.845
+#>       X1   2.044   1.111   3.761
+#>       X3   0.565   0.301   1.059
+#>       X4   2.213   0.748   6.549
 or_control$plot
 ```
 
@@ -358,12 +358,12 @@ separate_hte <- HTESepT(
 
 separate_hte$summary
 #>   time covariate estimate    SD LowerBound UpperBound
-#> 1    1 Intercept    0.099 0.207     -0.306      0.504
-#> 2    1        X1   -0.165 0.117     -0.394      0.064
-#> 3    1        X3    0.182 0.149     -0.111      0.475
-#> 4    2 Intercept   -0.329 0.381     -1.075      0.417
-#> 5    2        X1   -0.158 0.331     -0.808      0.491
-#> 6    2        X3   -0.335 0.243     -0.811      0.141
+#> 1    1 Intercept    0.149 0.130     -0.105      0.403
+#> 2    1        X1   -0.055 0.290     -0.624      0.513
+#> 3    1        X3   -0.086 0.060     -0.204      0.031
+#> 4    2 Intercept   -0.046 0.113     -0.267      0.174
+#> 5    2        X1    0.170 0.148     -0.121      0.460
+#> 6    2        X3    0.083 0.116     -0.144      0.311
 separate_hte$forest_plot
 ```
 
@@ -372,12 +372,12 @@ separate_hte$forest_plot
 ``` r
 
 head(separate_hte$boot_mat)
-#>        1_Intercept        1_X1        1_X3 2_Intercept        2_X1       2_X3
-#> boot1 -0.239502284 -0.16918743 -0.03419992  -0.7679871  0.60398101 -0.6951968
-#> boot2  0.297857667 -0.26516751  0.27038474   0.1359330 -0.01942559 -0.1461297
-#> boot3 -0.005750345  0.04934144  0.15954443  -0.6483584 -0.10432988 -0.6986111
-#> boot4  0.199079892 -0.18688483 -0.01701149  -0.6677521 -0.25887365 -0.4621126
-#> boot5  0.032666711 -0.12884115  0.27212344  -0.2286360 -0.04681124 -0.3016708
+#>        1_Intercept        1_X1        1_X3 2_Intercept        2_X1        2_X3
+#> boot1 -0.002837554  0.32787677 -0.11567219  0.08236993 0.293685504  0.20850251
+#> boot2  0.089917523 -0.21039598 -0.07384792  0.04290495 0.145095130  0.09995193
+#> boot3 -0.061198107 -0.41489252 -0.23299372 -0.08366673 0.386013037 -0.10471565
+#> boot4  0.130192824  0.12985426 -0.12872406 -0.18597109 0.001129353  0.09134539
+#> boot5  0.274580370  0.01420872 -0.10971745  0.04842490 0.257943774  0.13251115
 ```
 
 ``` r
@@ -392,10 +392,10 @@ pooled_hte <- HTEAllT(
 )
 pooled_hte$summary
 #>          term estimate SD LowerBound UpperBound
-#> 1   Intercept    0.161 NA         NA         NA
-#> 2          X1   -0.100 NA         NA         NA
-#> 3          X3   -0.051 NA         NA         NA
-#> 4 Time Effect   -0.142 NA         NA         NA
+#> 1   Intercept    0.026 NA         NA         NA
+#> 2          X1    0.020 NA         NA         NA
+#> 3          X3    0.031 NA         NA         NA
+#> 4 Time Effect    0.004 NA         NA         NA
 pooled_hte$forest_plot
 ```
 

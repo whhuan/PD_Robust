@@ -42,6 +42,6 @@ pd_dat <- DataStandard(BiSample, map)
 result <- PSDiag(pd_dat, A ~ X1 + X2 + X4)
 result$smd_after
 #>     X1     X2     X4 
-#>  0.203 -0.095 -0.019 
+#> -0.197 -0.047  0.056 
 # }
 ```

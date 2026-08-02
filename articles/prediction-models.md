@@ -1,18 +1,24 @@
-# Independent prediction models
+# Prediction models
 
+## Introduction
+
+The complete workflow is illustrated as follows. This article focuses on
+the package’s prediction models, including three nuisance models
 [`PSPred()`](https://whhuan.github.io/PD_Robust/reference/PSPred.md),
-[`PrinPred()`](https://whhuan.github.io/PD_Robust/reference/PrinPred.md),
+[`PrinPred()`](https://whhuan.github.io/PD_Robust/reference/PrinPred.md)
 and
-[`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md)
-fit and predict in one call. They do not return or cache fitted model
-objects. Each result is a row-aligned numeric vector with class
-`pd_prediction`.
+[`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md).
+
+``` text
+data -> Mapping() -> DataCheck() -> DataStandard()
+     -> prediction / diagnostic / analysis functions
+```
 
 ``` r
 
 library(PDRobust)
 data("BiSample", package = "PDRobust")
-raw <- BiSample
+
 map <- Mapping(
   id = "id",
   time = "time",
@@ -21,101 +27,131 @@ map <- Mapping(
   outcome = "Y",
   baseline_time = 0,
   cutoff_time = 2,
-  covariates = c("X1", "X2", "X4"),
+  covariates = c("X1", "X2", "X3", "X4", "X5","X6"),
   interest_vars = c("X1", "X2"),
   y_type = "B"
 )
-pd_data <- DataStandard(raw, map)
-map <- attr(pd_data, "pd_mapping")
+
+pd_data <- DataStandard(BiSample, map)
 ```
 
-## Propensity prediction
+``` r
+
+head(pd_data)
+#>   id time S A Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1
+```
+
+``` r
+
+ps_fo <- A ~ X1 + X3 + X4 + X5 + X6
+prin_fo <- S ~ (X1 + X3 + X4 + X5 + X6 ) * A
+out_fo <- Y ~ (X1 + X3 + X4 + X5 + X6) * A 
+```
+
+## Propensity score model
+
+[`PSPred()`](https://whhuan.github.io/PD_Robust/reference/PSPred.md)
+returns a numeric vector of propensity score estimation, which is
+defined as the conditional probability of receiving treatment given the
+specified covariates. The argument `ps_fo` specified the propensity
+score model formula. The argument `fit_dat` provides the dataset to fit
+the mode, whereas `pred_dat` is for propensity score predictions. The
+argument mapping is the original mapping object at the beginning of the
+workflow and supplies the relevant structural variable definitions.
+
+The logistic model is fitted only on baseline observations, then used to
+predict every row of `pred_dat`. Additional arguments supplied through
+`...` are forwarded to the underlying
+[`glm()`](https://rdrr.io/r/stats/glm.html) call, allowing users to
+customize the model-fitting procedure.
 
 ``` r
 
 ps <- PSPred(
-  A ~ X1 + X2 + X4,
+  ps_fo = ps_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   mapping = map
 )
 head(ps)
+#> [1] 0.987 0.987 0.987 0.873 0.873 0.873
 ```
 
-The logistic model is fitted only on baseline observations, then used to
-predict every row of `pred_dat`.
+## Principal score model
 
-## Cumulative principal-score prediction
+[`PrinPred()`](https://whhuan.github.io/PD_Robust/reference/PrinPred.md)
+estimates cumulative principal score under a specified treatment level
+and returns a numeric vector. For longitudinal data with multiple time
+points, the cumulative score combines the estimated survival
+probabilities across the observed post-baseline times. For data
+containing a single observed time point, the model is fitted using the
+complete dataset.
+
+The argument `prin_fo`, `fit_dat`, and `pred_dat` specify the formula,
+data used to fit the model and the observations where predictions are
+generated, respectively. The argument `mapping` is the original argument
+mapping. The argument `a` specifies the treatment group under which the
+principal scores are predicted.
 
 ``` r
 
-p0 <- PrinPred(
-  S ~ X1 + X2 + X4 + A + time,
-  fit_dat = pd_data,
-  pred_dat = pd_data,
-  a = 0,
-  mapping = map
-)
 p1 <- PrinPred(
-  S ~ X1 + X2 + X4 + A + time,
+  prin_fo = prin_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   a = 1,
   mapping = map
 )
-head(cbind(pd_data[c("id", "time")], p0, p1))
+head(p1)
+#> [1] 1.000 0.974 0.949 1.000 0.953 0.909
 ```
 
-For multiple observed times, baseline rows are excluded from the
-principal model’s risk set. A post-baseline row is fitted only when
-survival at the immediately preceding observed time equals one.
-Conditional predictions at baseline are set to one and accumulated
-within subject over the complete baseline-to-cutoff grid. For a single
-observed time, no at-risk indicator is constructed and all complete rows
-are used.
-
-Separation, aliased nuisance coefficients, or extreme fitted
-probabilities may produce warnings. They do not invalidate a prediction
-when the fitted model still returns a complete finite vector. Missing,
-non-finite, or row-misaligned predictions remain errors. Direct
-prediction functions report one normalized warning per fit.
-[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md),
-[`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md),
-and [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md)
-consolidate repeated point-estimate warnings and retain bootstrap
-warnings in returned diagnostics. Within one analysis sample, the same
-fitted principal-score or outcome model is reused for its two
-counterfactual treatment predictions when its fitting rows and formula
-are identical.
-
-Public prediction vectors are rounded to three decimal places. Analysis
-functions call full-precision internal implementations, so this display
-rounding never enters weights, estimating equations, optimization,
-bootstrap replicates, or confidence-interval calculations.
-
-## Outcome prediction
-
-``` r
-
-fit_data <- pd_data[pd_data$S == 1, , drop = FALSE]
-mu0 <- OutPred(
-  Y ~ X1 + X2 + A,
-  fit_dat = fit_data,
-  pred_dat = pd_data,
-  a = 0,
-  mapping = map
-)
-mu1 <- OutPred(
-  Y ~ X1 + X2 + A,
-  fit_dat = fit_data,
-  pred_dat = pd_data,
-  a = 1,
-  mapping = map
-)
-head(cbind(mu0, mu1))
-```
+## Outcome prediction model
 
 [`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md)
-removes fitting rows with missing outcomes, sets treatment to the
-requested value and survival to one in prediction data, and uses either
-a linear or logistic outcome model according to `mapping$y_type`.
+estimates potential outcomes under a specified treatment level and
+returns the predictions as a row-aligned numeric vector.
+
+The argument `out_fo`, `fit_dat`, `pre_dat` is the outcome model
+formula, data used to fit the model and data in which predictions are
+generated, respectively. The argument `mapping` is the original argument
+mapping. The argument `a` specifies the treatment group under which the
+outcomes are predicted.
+
+The model-fitting procedure depends on the outcome type specified in
+mapping. For a continuous outcome,
+[`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md)
+fits a linear regression model and returns the conditional means. For a
+binary outcome, it fits a logistic regression model.
+
+``` r
+
+mu0 <- OutPred(
+  out_fo = out_fo,
+  fit_dat = pd_data,
+  pred_dat = pd_data,
+  a = 0,
+  mapping = map
+)
+
+head(mu0)
+#> [1] 0.100 0.100 0.100 0.247 0.247 0.247
+```
+
+**Tips:**
+
+Model-fitting issues such as complete or quasi-complete separation,
+aliased nuisance-model coefficients, or extreme fitted probabilities may
+generate warnings. These conditions do not necessarily invalidate the
+predictions, provided that the fitted model returns a complete, finite,
+and correctly aligned prediction vector.
+
+In contrast, missing, non-finite, or row-misaligned predictions are
+treated as errors. Each direct prediction function reports a single
+standardized warning for each model fit.

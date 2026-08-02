@@ -50,8 +50,8 @@ result <- ORCI(
 )
 result$forestplotdat
 #>    covname estcoef lowerbd upperbd
-#> X1      X1   1.784   0.739   4.306
-#> X2      X2   1.307   0.609   2.806
-#> X4      X4   1.506   0.359   6.319
+#> X1      X1   1.788   1.021   3.132
+#> X2      X2   1.834   0.988   3.404
+#> X4      X4   2.028   0.677   6.076
 # }
 ```

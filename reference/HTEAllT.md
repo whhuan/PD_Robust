@@ -100,9 +100,9 @@ fit <- HTEAllT(
 )
 fit$summary
 #>          term estimate SD LowerBound UpperBound
-#> 1   Intercept    0.107 NA         NA         NA
-#> 2          X1   -0.137 NA         NA         NA
-#> 3          X2   -0.008 NA         NA         NA
-#> 4 Time Effect   -0.097 NA         NA         NA
+#> 1   Intercept    0.114 NA         NA         NA
+#> 2          X1    0.156 NA         NA         NA
+#> 3          X2   -0.025 NA         NA         NA
+#> 4 Time Effect   -0.029 NA         NA         NA
 # }
 ```

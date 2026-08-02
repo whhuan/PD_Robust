@@ -59,5 +59,5 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 mu1 <- OutPred(Y ~ X1 + X2 + A + S, pd_dat, pd_dat, a = 1, mapping = map)
 head(mu1)
-#> [1] 0.287 0.287 0.287 0.147 0.147 0.147
+#> [1] 0.230 0.230 0.230 0.222 0.222 0.222
 ```

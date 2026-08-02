@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Independent prediction models • PDRobust</title>
+<title>Prediction models • PDRobust</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Independent prediction models">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Prediction models">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -35,10 +35,10 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
-    <li><a class="dropdown-item" href="../articles/getting-started.html">Getting started with PDRobust</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
-    <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
-    <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
+    <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/hte.html">Estimate the heterogeneous treatment effect</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
     <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
   </ul>
@@ -62,7 +62,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Independent prediction models</h1>
+      <h1>Prediction models</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/whhuan/PD_Robust/blob/main/vignettes/prediction-models.Rmd" class="external-link"><code>vignettes/prediction-models.Rmd</code></a></small>
@@ -71,14 +71,19 @@
 
     
     
-<p><code><a href="../reference/PSPred.html">PSPred()</a></code>, <code><a href="../reference/PrinPred.html">PrinPred()</a></code>, and
-<code><a href="../reference/OutPred.html">OutPred()</a></code> fit and predict in one call. They do not return
-or cache fitted model objects. Each result is a row-aligned numeric
-vector with class <code>pd_prediction</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>The complete workflow is illustrated as follows. This article focuses
+on the package’s prediction models, including three nuisance models
+<code><a href="../reference/PSPred.html">PSPred()</a></code>, <code><a href="../reference/PrinPred.html">PrinPred()</a></code> and
+<code><a href="../reference/OutPred.html">OutPred()</a></code>.</p>
+<pre class="text"><code>data -&gt; Mapping() -&gt; DataCheck() -&gt; DataStandard()
+     -&gt; prediction / diagnostic / analysis functions</code></pre>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/whhuan/PD_Robust" class="external-link">PDRobust</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
-<span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="va">BiSample</span></span>
+<span></span>
 <span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Mapping.html">Mapping</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="st">"id"</span>,</span>
 <span>  time <span class="op">=</span> <span class="st">"time"</span>,</span>
@@ -87,93 +92,114 @@ vector with class <code>pd_prediction</code>.</p>
 <span>  outcome <span class="op">=</span> <span class="st">"Y"</span>,</span>
 <span>  baseline_time <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  cutoff_time <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X4"</span><span class="op">)</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"X4"</span>, <span class="st">"X5"</span>,<span class="st">"X6"</span><span class="op">)</span>,</span>
 <span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>,</span>
 <span>  y_type <span class="op">=</span> <span class="st">"B"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">raw</span>, <span class="va">map</span><span class="op">)</span></span>
-<span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_mapping"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level2">
-<h2 id="propensity-prediction">Propensity prediction<a class="anchor" aria-label="anchor" href="#propensity-prediction"></a>
-</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PSPred.html">PSPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">map</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span></code></pre></div>
-<p>The logistic model is fitted only on baseline observations, then used
-to predict every row of <code>pred_dat</code>.</p>
-</div>
-<div class="section level2">
-<h2 id="cumulative-principal-score-prediction">Cumulative principal-score prediction<a class="anchor" aria-label="anchor" href="#cumulative-principal-score-prediction"></a>
-</h2>
+<span></span>
+<span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">BiSample</span>, <span class="va">map</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PrinPred.html">PrinPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">A</span> <span class="op">+</span> <span class="va">time</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  a <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">map</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PrinPred.html">PrinPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">A</span> <span class="op">+</span> <span class="va">time</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  a <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  mapping <span class="op">=</span> <span class="va">map</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"time"</span><span class="op">)</span><span class="op">]</span>, <span class="va">p0</span>, <span class="va">p1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>For multiple observed times, baseline rows are excluded from the
-principal model’s risk set. A post-baseline row is fitted only when
-survival at the immediately preceding observed time equals one.
-Conditional predictions at baseline are set to one and accumulated
-within subject over the complete baseline-to-cutoff grid. For a single
-observed time, no at-risk indicator is constructed and all complete rows
-are used.</p>
-<p>Separation, aliased nuisance coefficients, or extreme fitted
-probabilities may produce warnings. They do not invalidate a prediction
-when the fitted model still returns a complete finite vector. Missing,
-non-finite, or row-misaligned predictions remain errors. Direct
-prediction functions report one normalized warning per fit.
-<code><a href="../reference/HTESepT.html">HTESepT()</a></code>, <code><a href="../reference/HTEAllT.html">HTEAllT()</a></code>, and <code><a href="../reference/SA.html">SA()</a></code>
-consolidate repeated point-estimate warnings and retain bootstrap
-warnings in returned diagnostics. Within one analysis sample, the same
-fitted principal-score or outcome model is reused for its two
-counterfactual treatment predictions when its fitting rows and formula
-are identical.</p>
-<p>Public prediction vectors are rounded to three decimal places.
-Analysis functions call full-precision internal implementations, so this
-display rounding never enters weights, estimating equations,
-optimization, bootstrap replicates, or confidence-interval
-calculations.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   id time S A Y    X1     X2     X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ps_fo</span> <span class="op">&lt;-</span> <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span></span>
+<span><span class="va">prin_fo</span> <span class="op">&lt;-</span> <span class="va">S</span> <span class="op">~</span> <span class="op">(</span><span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span> <span class="op">)</span> <span class="op">*</span> <span class="va">A</span></span>
+<span><span class="va">out_fo</span> <span class="op">&lt;-</span> <span class="va">Y</span> <span class="op">~</span> <span class="op">(</span><span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span><span class="op">)</span> <span class="op">*</span> <span class="va">A</span> </span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="outcome-prediction">Outcome prediction<a class="anchor" aria-label="anchor" href="#outcome-prediction"></a>
+<h2 id="propensity-score-model">Propensity score model<a class="anchor" aria-label="anchor" href="#propensity-score-model"></a>
 </h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit_data</span> <span class="op">&lt;-</span> <span class="va">pd_data</span><span class="op">[</span><span class="va">pd_data</span><span class="op">$</span><span class="va">S</span> <span class="op">==</span> <span class="fl">1</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
-<span><span class="va">mu0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutPred.html">OutPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">Y</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">A</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">fit_data</span>,</span>
+<p><code><a href="../reference/PSPred.html">PSPred()</a></code> returns a numeric vector of propensity score
+estimation, which is defined as the conditional probability of receiving
+treatment given the specified covariates. The argument
+<code>ps_fo</code> specified the propensity score model formula. The
+argument <code>fit_dat</code> provides the dataset to fit the mode,
+whereas <code>pred_dat</code> is for propensity score predictions. The
+argument mapping is the original mapping object at the beginning of the
+workflow and supplies the relevant structural variable definitions.</p>
+<p>The logistic model is fitted only on baseline observations, then used
+to predict every row of <code>pred_dat</code>. Additional arguments
+supplied through <code>...</code> are forwarded to the underlying
+<code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm()</a></code> call, allowing users to customize the model-fitting
+procedure.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PSPred.html">PSPred</a></span><span class="op">(</span></span>
+<span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
+<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
-<span>  a <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="va">map</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">mu1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutPred.html">OutPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">Y</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">A</span>,</span>
-<span>  fit_dat <span class="op">=</span> <span class="va">fit_data</span>,</span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.987 0.987 0.987 0.873 0.873 0.873</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="principal-score-model">Principal score model<a class="anchor" aria-label="anchor" href="#principal-score-model"></a>
+</h2>
+<p><code><a href="../reference/PrinPred.html">PrinPred()</a></code> estimates cumulative principal score under a
+specified treatment level and returns a numeric vector. For longitudinal
+data with multiple time points, the cumulative score combines the
+estimated survival probabilities across the observed post-baseline
+times. For data containing a single observed time point, the model is
+fitted using the complete dataset.</p>
+<p>The argument <code>prin_fo</code>, <code>fit_dat</code>, and
+<code>pred_dat</code> specify the formula, data used to fit the model
+and the observations where predictions are generated, respectively. The
+argument <code>mapping</code> is the original argument mapping. The
+argument <code>a</code> specifies the treatment group under which the
+principal scores are predicted.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PrinPred.html">PrinPred</a></span><span class="op">(</span></span>
+<span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
+<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  a <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="va">map</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">mu0</span>, <span class="va">mu1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/OutPred.html">OutPred()</a></code> removes fitting rows with missing outcomes,
-sets treatment to the requested value and survival to one in prediction
-data, and uses either a linear or logistic outcome model according to
-<code>mapping$y_type</code>.</p>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">p1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1.000 0.974 0.949 1.000 0.953 0.909</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="outcome-prediction-model">Outcome prediction model<a class="anchor" aria-label="anchor" href="#outcome-prediction-model"></a>
+</h2>
+<p><code><a href="../reference/OutPred.html">OutPred()</a></code> estimates potential outcomes under a specified
+treatment level and returns the predictions as a row-aligned numeric
+vector.</p>
+<p>The argument <code>out_fo</code>, <code>fit_dat</code>,
+<code>pre_dat</code> is the outcome model formula, data used to fit the
+model and data in which predictions are generated, respectively. The
+argument <code>mapping</code> is the original argument mapping. The
+argument <code>a</code> specifies the treatment group under which the
+outcomes are predicted.</p>
+<p>The model-fitting procedure depends on the outcome type specified in
+mapping. For a continuous outcome, <code><a href="../reference/OutPred.html">OutPred()</a></code> fits a linear
+regression model and returns the conditional means. For a binary
+outcome, it fits a logistic regression model.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mu0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutPred.html">OutPred</a></span><span class="op">(</span></span>
+<span>  out_fo <span class="op">=</span> <span class="va">out_fo</span>,</span>
+<span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
+<span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
+<span>  a <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  mapping <span class="op">=</span> <span class="va">map</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mu0</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.100 0.100 0.100 0.247 0.247 0.247</span></span></code></pre></div>
+<p><strong>Tips:</strong></p>
+<p>Model-fitting issues such as complete or quasi-complete separation,
+aliased nuisance-model coefficients, or extreme fitted probabilities may
+generate warnings. These conditions do not necessarily invalidate the
+predictions, provided that the fitted model returns a complete, finite,
+and correctly aligned prediction vector.</p>
+<p>In contrast, missing, non-finite, or row-misaligned predictions are
+treated as errors. Each direct prediction function reports a single
+standardized warning for each model fit.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

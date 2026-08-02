@@ -78,11 +78,11 @@ result <- SA(
 )
 head(result$data)
 #>   ratio time      term estimate
-#> 1     0    0 Intercept    0.225
-#> 2     0    0        X1   -0.041
-#> 3     0    0        X2   -0.070
-#> 4     0    1 Intercept   -0.244
-#> 5     0    1        X1   -0.385
-#> 6     0    1        X2    0.233
+#> 1     0    0 Intercept    0.066
+#> 2     0    0        X1    0.035
+#> 3     0    0        X2    0.053
+#> 4     0    1 Intercept    0.220
+#> 5     0    1        X1   -0.039
+#> 6     0    1        X2   -0.091
 # }
 ```

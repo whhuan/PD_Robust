@@ -24,10 +24,10 @@ the mapped survival column is set to one, exactly as in the original method."></
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
-    <li><a class="dropdown-item" href="../articles/getting-started.html">Getting started with PDRobust</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
-    <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
-    <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
+    <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/hte.html">Estimate the heterogeneous treatment effect</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
     <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
   </ul></li>
@@ -106,7 +106,7 @@ logistic regression.</p></dd>
 <span class="r-in"><span><span class="va">pd_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">BiSample</span>, <span class="va">map</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mu1</span> <span class="op">&lt;-</span> <span class="fu">OutPred</span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">A</span> <span class="op">+</span> <span class="va">S</span>, <span class="va">pd_dat</span>, <span class="va">pd_dat</span>, a <span class="op">=</span> <span class="fl">1</span>, mapping <span class="op">=</span> <span class="va">map</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.287 0.287 0.287 0.147 0.147 0.147</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.230 0.230 0.230 0.222 0.222 0.222</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

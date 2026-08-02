@@ -53,5 +53,5 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 ps <- PSPred(A ~ X1 + X2 + X4, pd_dat, pd_dat, map)
 head(ps)
-#> [1] 0.971 0.971 0.971 0.933 0.933 0.933
+#> [1] 0.942 0.942 0.942 0.863 0.863 0.863
 ```

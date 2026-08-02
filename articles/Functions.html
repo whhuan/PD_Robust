@@ -35,10 +35,10 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
-    <li><a class="dropdown-item" href="../articles/getting-started.html">Getting started with PDRobust</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
-    <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
-    <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
+    <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/hte.html">Estimate the heterogeneous treatment effect</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
     <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
   </ul>
@@ -83,13 +83,13 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/whhuan/PD_Robust" class="external-link">PDRobust</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">BiSample</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   id time S A Y     X1     X2     X3 X4 X5 X6</span></span>
-<span><span class="co">#&gt; 1  1    0 1 1 0  1.521  0.261  0.649  0  1  0</span></span>
-<span><span class="co">#&gt; 2  1    1 1 1 0  1.521  0.261  0.649  0  1  0</span></span>
-<span><span class="co">#&gt; 3  1    2 1 1 1  1.521  0.261  0.649  0  1  0</span></span>
-<span><span class="co">#&gt; 4  2    0 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span>
-<span><span class="co">#&gt; 5  2    1 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span>
-<span><span class="co">#&gt; 6  2    2 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span></code></pre></div>
+<span><span class="co">#&gt;   id time S A Y    X1     X2     X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="define-roles-and-analysis-settings-with-mapping">2. Define roles and analysis settings with
@@ -151,13 +151,13 @@ respectively.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">BiSample</span>, <span class="va">mapping</span>, drop <span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   id time S A Y     X1     X2     X3 X4 X5 X6</span></span>
-<span><span class="co">#&gt; 1  1    0 1 1 0  1.521  0.261  0.649  0  1  0</span></span>
-<span><span class="co">#&gt; 2  1    1 1 1 0  1.521  0.261  0.649  0  1  0</span></span>
-<span><span class="co">#&gt; 3  1    2 1 1 1  1.521  0.261  0.649  0  1  0</span></span>
-<span><span class="co">#&gt; 4  2    0 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span>
-<span><span class="co">#&gt; 5  2    1 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span>
-<span><span class="co">#&gt; 6  2    2 1 1 0 -0.395 -1.241 -0.115  0  1  0</span></span></code></pre></div>
+<span><span class="co">#&gt;   id time S A Y    X1     X2     X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="imperfect-dataset">Imperfect dataset<a class="anchor" aria-label="anchor" href="#imperfect-dataset"></a>
 </h4>
@@ -236,23 +236,23 @@ respectively.</p>
 <span><span class="op">)</span></span>
 <span>            <span class="co"># nrow(pd_data)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.973 0.973 0.973 0.845 0.845 0.845</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.987 0.987 0.987 0.873 0.873 0.873</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PSDiag.html">PSDiag</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="va">ps_fo</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ps_diagnostic</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Exposure-model balance diagnostics</span></span>
 <span><span class="co">#&gt;  covariate adjustment   smd</span></span>
-<span><span class="co">#&gt;         X1     Before 0.758</span></span>
-<span><span class="co">#&gt;         X3     Before 0.531</span></span>
-<span><span class="co">#&gt;         X4     Before 0.147</span></span>
-<span><span class="co">#&gt;         X5     Before 0.221</span></span>
-<span><span class="co">#&gt;         X6     Before 0.166</span></span>
-<span><span class="co">#&gt;         X1      After 0.111</span></span>
-<span><span class="co">#&gt;         X3      After 0.071</span></span>
-<span><span class="co">#&gt;         X4      After 0.122</span></span>
-<span><span class="co">#&gt;         X5      After 0.027</span></span>
-<span><span class="co">#&gt;         X6      After 0.137</span></span>
+<span><span class="co">#&gt;         X1     Before 0.679</span></span>
+<span><span class="co">#&gt;         X3     Before 0.615</span></span>
+<span><span class="co">#&gt;         X4     Before 0.025</span></span>
+<span><span class="co">#&gt;         X5     Before 0.545</span></span>
+<span><span class="co">#&gt;         X6     Before 0.152</span></span>
+<span><span class="co">#&gt;         X1      After 0.081</span></span>
+<span><span class="co">#&gt;         X3      After 0.084</span></span>
+<span><span class="co">#&gt;         X4      After 0.049</span></span>
+<span><span class="co">#&gt;         X5      After 0.153</span></span>
+<span><span class="co">#&gt;         X6      After 0.020</span></span>
 <span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <p><img src="Functions_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
@@ -269,18 +269,18 @@ respectively.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">p0</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.000 0.936 0.877 1.000 0.831 0.690</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.000 0.985 0.971 1.000 0.990 0.979</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">principal_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PrinSDiag.html">PrinSDiag</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="va">ps_fo</span>, <span class="va">prin_fo</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">principal_diagnostic</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Principal-score diagnostics</span></span>
 <span><span class="co">#&gt;  covariate statistic</span></span>
-<span><span class="co">#&gt;         X1     0.437</span></span>
-<span><span class="co">#&gt;         X3     0.129</span></span>
-<span><span class="co">#&gt;         X4    -0.362</span></span>
-<span><span class="co">#&gt;         X5    -0.247</span></span>
-<span><span class="co">#&gt;         X6     0.160</span></span>
+<span><span class="co">#&gt;         X1    -0.575</span></span>
+<span><span class="co">#&gt;         X3    -0.511</span></span>
+<span><span class="co">#&gt;         X4    -0.374</span></span>
+<span><span class="co">#&gt;         X5     1.006</span></span>
+<span><span class="co">#&gt;         X6     0.656</span></span>
 <span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">plo</span></span></code></pre></div>
 <p><img src="Functions_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
@@ -297,7 +297,7 @@ respectively.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.176 0.176 0.176 0.139 0.139 0.139</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.228 0.228 0.228 0.255 0.255 0.255</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sensitivity</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SA.html">SA</a></span><span class="op">(</span></span>
 <span>  <span class="va">pd_data</span>,</span>
@@ -309,12 +309,12 @@ respectively.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sensitivity</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sensitivity analysis</span></span>
 <span><span class="co">#&gt;  ratiovec time Intercept     X1     X3</span></span>
-<span><span class="co">#&gt;         1    0     0.154  0.088 -0.176</span></span>
-<span><span class="co">#&gt;         2    0     0.324  0.102  0.274</span></span>
-<span><span class="co">#&gt;         1    1    -0.078 -0.038  0.449</span></span>
-<span><span class="co">#&gt;         2    1     1.117 -0.393  0.810</span></span>
-<span><span class="co">#&gt;         1    2    -0.270 -0.178 -0.186</span></span>
-<span><span class="co">#&gt;         2    2     0.044 -0.264 -0.546</span></span>
+<span><span class="co">#&gt;         1    0    -0.491 -0.057 -0.195</span></span>
+<span><span class="co">#&gt;         2    0    -0.041 -0.649  0.113</span></span>
+<span><span class="co">#&gt;         1    1     0.433 -0.073  0.023</span></span>
+<span><span class="co">#&gt;         2    1    -0.026  0.162 -0.299</span></span>
+<span><span class="co">#&gt;         1    2    -0.152 -0.022  0.070</span></span>
+<span><span class="co">#&gt;         2    2    -0.070  0.218  0.370</span></span>
 <span><span class="co">#&gt;   Scenarios: 2</span></span>
 <span><span class="va">sensitivity</span><span class="op">$</span><span class="va">plot</span></span>
 <span><span class="co">#&gt; $X1</span></span></code></pre></div>
@@ -336,16 +336,16 @@ respectively.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">principal_profile</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Principal-stratum weighted means</span></span>
 <span><span class="co">#&gt;     X1     X3 </span></span>
-<span><span class="co">#&gt;  0.301 -0.075 </span></span>
+<span><span class="co">#&gt;  0.117 -0.136 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Weighted quantiles (NA for binary variables)</span></span>
 <span><span class="co">#&gt; $X1</span></span>
 <span><span class="co">#&gt;  q0.25  q0.50  q0.75 </span></span>
-<span><span class="co">#&gt; -0.303  0.254  0.905 </span></span>
+<span><span class="co">#&gt; -0.517  0.130  0.728 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $X3</span></span>
 <span><span class="co">#&gt;  q0.25  q0.50  q0.75 </span></span>
-<span><span class="co">#&gt; -0.815 -0.123  0.586</span></span>
+<span><span class="co">#&gt; -0.766 -0.168  0.514</span></span>
 <span><span class="va">principal_profile</span><span class="op">$</span><span class="va">plot</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
 </div>
@@ -363,9 +363,9 @@ respectively.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">or_control</span><span class="op">)</span>             </span>
 <span><span class="co">#&gt; Odds ratios and confidence intervals</span></span>
 <span><span class="co">#&gt;  covname estcoef lowerbd upperbd</span></span>
-<span><span class="co">#&gt;       X1   2.100   0.947   4.659</span></span>
-<span><span class="co">#&gt;       X3   0.922   0.376   2.257</span></span>
-<span><span class="co">#&gt;       X4   1.574   0.362   6.845</span></span>
+<span><span class="co">#&gt;       X1   2.044   1.111   3.761</span></span>
+<span><span class="co">#&gt;       X3   0.565   0.301   1.059</span></span>
+<span><span class="co">#&gt;       X4   2.213   0.748   6.549</span></span>
 <span><span class="va">or_control</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <p><img src="Functions_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
@@ -388,22 +388,22 @@ respectively.</p>
 <span></span>
 <span><span class="va">separate_hte</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt;   time covariate estimate    SD LowerBound UpperBound</span></span>
-<span><span class="co">#&gt; 1    1 Intercept    0.099 0.207     -0.306      0.504</span></span>
-<span><span class="co">#&gt; 2    1        X1   -0.165 0.117     -0.394      0.064</span></span>
-<span><span class="co">#&gt; 3    1        X3    0.182 0.149     -0.111      0.475</span></span>
-<span><span class="co">#&gt; 4    2 Intercept   -0.329 0.381     -1.075      0.417</span></span>
-<span><span class="co">#&gt; 5    2        X1   -0.158 0.331     -0.808      0.491</span></span>
-<span><span class="co">#&gt; 6    2        X3   -0.335 0.243     -0.811      0.141</span></span>
+<span><span class="co">#&gt; 1    1 Intercept    0.149 0.130     -0.105      0.403</span></span>
+<span><span class="co">#&gt; 2    1        X1   -0.055 0.290     -0.624      0.513</span></span>
+<span><span class="co">#&gt; 3    1        X3   -0.086 0.060     -0.204      0.031</span></span>
+<span><span class="co">#&gt; 4    2 Intercept   -0.046 0.113     -0.267      0.174</span></span>
+<span><span class="co">#&gt; 5    2        X1    0.170 0.148     -0.121      0.460</span></span>
+<span><span class="co">#&gt; 6    2        X3    0.083 0.116     -0.144      0.311</span></span>
 <span><span class="va">separate_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
 <p><img src="Functions_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">separate_hte</span><span class="op">$</span><span class="va">boot_mat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        1_Intercept        1_X1        1_X3 2_Intercept        2_X1       2_X3</span></span>
-<span><span class="co">#&gt; boot1 -0.239502284 -0.16918743 -0.03419992  -0.7679871  0.60398101 -0.6951968</span></span>
-<span><span class="co">#&gt; boot2  0.297857667 -0.26516751  0.27038474   0.1359330 -0.01942559 -0.1461297</span></span>
-<span><span class="co">#&gt; boot3 -0.005750345  0.04934144  0.15954443  -0.6483584 -0.10432988 -0.6986111</span></span>
-<span><span class="co">#&gt; boot4  0.199079892 -0.18688483 -0.01701149  -0.6677521 -0.25887365 -0.4621126</span></span>
-<span><span class="co">#&gt; boot5  0.032666711 -0.12884115  0.27212344  -0.2286360 -0.04681124 -0.3016708</span></span></code></pre></div>
+<span><span class="co">#&gt;        1_Intercept        1_X1        1_X3 2_Intercept        2_X1        2_X3</span></span>
+<span><span class="co">#&gt; boot1 -0.002837554  0.32787677 -0.11567219  0.08236993 0.293685504  0.20850251</span></span>
+<span><span class="co">#&gt; boot2  0.089917523 -0.21039598 -0.07384792  0.04290495 0.145095130  0.09995193</span></span>
+<span><span class="co">#&gt; boot3 -0.061198107 -0.41489252 -0.23299372 -0.08366673 0.386013037 -0.10471565</span></span>
+<span><span class="co">#&gt; boot4  0.130192824  0.12985426 -0.12872406 -0.18597109 0.001129353  0.09134539</span></span>
+<span><span class="co">#&gt; boot5  0.274580370  0.01420872 -0.10971745  0.04842490 0.257943774  0.13251115</span></span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pooled_hte</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HTEAllT.html">HTEAllT</a></span><span class="op">(</span></span>
 <span>  <span class="va">pd_data</span>,</span>
@@ -415,10 +415,10 @@ respectively.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt;          term estimate SD LowerBound UpperBound</span></span>
-<span><span class="co">#&gt; 1   Intercept    0.161 NA         NA         NA</span></span>
-<span><span class="co">#&gt; 2          X1   -0.100 NA         NA         NA</span></span>
-<span><span class="co">#&gt; 3          X3   -0.051 NA         NA         NA</span></span>
-<span><span class="co">#&gt; 4 Time Effect   -0.142 NA         NA         NA</span></span>
+<span><span class="co">#&gt; 1   Intercept    0.026 NA         NA         NA</span></span>
+<span><span class="co">#&gt; 2          X1    0.020 NA         NA         NA</span></span>
+<span><span class="co">#&gt; 3          X3    0.031 NA         NA         NA</span></span>
+<span><span class="co">#&gt; 4 Time Effect    0.004 NA         NA         NA</span></span>
 <span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
 <p><img src="Functions_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
