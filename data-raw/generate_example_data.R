@@ -242,7 +242,7 @@ generate_data_example <- function(
 
   # Round only the final returned dataset.
   numeric_columns <- c(
-    "Y",
+    "Y", "Pi",
     paste0("X", seq_len(n_covariates))
   )
 
