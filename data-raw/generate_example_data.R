@@ -230,8 +230,10 @@ generate_data_example <- function(
     c(
       "id",
       "time",
+      "Pi",
+      "S1","S0",
       "S",
-      "A",
+      "A","Y1","Y0",
       "Y",
       paste0("X", seq_len(n_covariates))
     ),
@@ -291,7 +293,8 @@ BiSample <- generate_data_example(
 
 
 # ====================== Imperfect Clinical Dataset ======================
-ImperfectConSample <- as.data.frame(ConSample)
+ImperfectConSample <- as.data.frame(ConSample[,c("id","time","S","A","Y", paste0("X", 1:6))])
+
 # Only rename structural variables.
 # Covariate names X1-X6 remain unchanged.
 rename_map <- c(

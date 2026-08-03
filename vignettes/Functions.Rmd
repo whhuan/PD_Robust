@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
   fig.height = 4.5,
   out.width = "90%",
   fig.align = "center",
+  fig.path = "man/figures/functions-",
   warning = FALSE,
   message = FALSE
 )
@@ -136,7 +137,7 @@ ps <- PSPred(
 head(ps)
 ```
 
-```{r}
+```{r ps_dgn}
 ps_diagnostic <- PSDiag(pd_data, ps_fo)
 
 print(ps_diagnostic)
@@ -157,7 +158,7 @@ p0 <- PrinPred(
 head(p0)
 ```
 
-```{r}
+```{r pps_dgn}
 principal_diagnostic <- PrinSDiag(pd_data, ps_fo, prin_fo)
 
 print(principal_diagnostic)
@@ -178,7 +179,7 @@ mu1 <- OutPred(
 head(mu1)
 ```
 
-```{r}
+```{r sa}
 sensitivity <- SA(
   pd_data,
   ps_fo,
@@ -192,7 +193,7 @@ sensitivity$plot
 
 ### Principal-stratum profiling with `QR()`
 
-```{r}
+```{r qr}
 principal_profile <- QR(
   pd_data,
   prin_fo,
@@ -205,7 +206,7 @@ principal_profile$plot
 
 ### Treatment-group odds ratios
 
-```{r}
+```{r or_ci}
 or_control <- ORCI(
   pd_data,
   S ~ X1 + X3 + X4,
@@ -219,7 +220,7 @@ or_control$plot
 
 ## 5.2 Heterogeneous treatment effect
 
-```{r}
+```{r htesept}
 separate_hte <- HTESepT(
   pd_data,
   ps_fo = ps_fo,
@@ -240,7 +241,7 @@ separate_hte$forest_plot
 head(separate_hte$boot_mat)
 ```
 
-```{r}
+```{r hteallt}
 pooled_hte <- HTEAllT(
   pd_data,
   ps_fo = ps_fo,

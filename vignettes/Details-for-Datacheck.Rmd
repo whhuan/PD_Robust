@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   fig.show = "asis",
   fig.keep = "high",
   warning = FALSE,
+  fig.path = "man/figures/details-",
   message = FALSE
 )
 ```
@@ -61,7 +62,7 @@ knitr::opts_chunk$set(
 The component `check$checks` is a data frame with the following columns:
 
 | Column | Description |
-|:-------------------------|:----------------------------------------------------|
+|:---|:---|
 | `check` | The unique name of the validation check. |
 | `passed` | Indicates whether the dataset passed the corresponding check. |
 | `severity` | Classifies the result as `"error"`, `"warning"`, or `"information"`. |

@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   fig.height = 4.5,
   out.width = "90%",
   fig.align = "center",
+  fig.path = "man/figures/diag-",
   warning = FALSE,
   message = FALSE
 )
@@ -111,7 +112,7 @@ ps_diag$weight_type
 
 ## Principal score, covariate-specific balance statistic
 
-`PrinSDiag()` computes a standardized The statistic is obtained by comparing the
+`PrinSDiag()` computes a standardized statistic obtained by comparing the
 weighted covariates contribution of surviving subjects across both treatment
 groups, using both propensity score model and principal score model.
 
@@ -150,8 +151,8 @@ head(prin_diag$p1)
 
 `SA()` evaluates the sensitivity of the estimated heterogeneous treatment
 effects to additional unexplained variation in the outcome. This function
-estimates how the estimated intercept and effect-modification coefficients
-change when random outcome noise is introduced.
+estimates how the estimated effect-modification coefficients change when random
+outcome noise is introduced.
 
 The argument `data` specifies the standardized dataset used in the sensitivity
 analysis. The arguments `ps_fo`, `prin_fo`, and `out_fo` specify the propensity
@@ -222,8 +223,8 @@ names(profile)
 ```
 
 The primary outputs are principal-score-weighted means and quantiles. For each
-selected variables, `QR()` calculate weighted means at the cutoff time. For
-non-binary variables, it additionaly calculates the weighted quantile using an
+selected variables, `QR()` calculates weighted means at the cutoff time. For
+non-binary variables, it additionally calculates the weighted quantile using an
 intercept-only weighted quantile regression model.
 
 ```{r}
