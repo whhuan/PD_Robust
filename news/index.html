@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,16 @@
       <small>Source: <a href="https://github.com/whhuan/PD_Robust/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.7.2" id="pdrobust-0372">PDRobust 0.3.7.2<a class="anchor" aria-label="anchor" href="#pdrobust-0372"></a></h2>
+<div class="section level3">
+<h3 id="live-bootstrap-progress-0-3-7-2">Live bootstrap progress<a class="anchor" aria-label="anchor" href="#live-bootstrap-progress-0-3-7-2"></a></h3>
+<ul><li>
+<code><a href="../reference/HTEAllT.html">HTEAllT()</a></code> and <code><a href="../reference/HTESepT.html">HTESepT()</a></code> accept an optional <code>progress_callback</code> without changing their estimands, fitting logic, bootstrap acceptance rules, or returned numerical results.</li>
+<li>The callback receives structured updates before model fitting, after the point estimate, after every bootstrap attempt, and at completion. Updates report successful replications, total and failed attempts, elapsed time, and the last worker-update time.</li>
+<li>A callback error produces one warning and disables monitoring for that run; it does not interrupt or alter the scientific calculation.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.7" id="pdrobust-037">PDRobust 0.3.7<a class="anchor" aria-label="anchor" href="#pdrobust-037"></a></h2>
 <div class="section level3">

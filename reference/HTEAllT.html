@@ -17,7 +17,7 @@ reused only to obtain the two counterfactual treatment predictions."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,8 @@ reused only to obtain the two counterfactual treatment predictions.</p>
 <span>  <span class="va">B</span>,</span>
 <span>  conf_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  max_attempts <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  progress_callback <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -111,6 +112,16 @@ reused only to obtain the two counterfactual treatment predictions.</p>
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Emit bootstrap progress messages.</p></dd>
+
+
+<dt id="arg-progress-callback">progress_callback<a class="anchor" aria-label="anchor" href="#arg-progress-callback"></a></dt>
+<dd><p>Optional function called with one named progress
+list before model fitting, after the point estimate, after every bootstrap
+attempt, and when bootstrap processing completes. The list contains
+<code>stage</code>, <code>successful</code>, <code>requested</code>, <code>attempts</code>, <code>max_attempts</code>,
+<code>failed_attempts</code>, <code>complete</code>, <code>elapsed_seconds</code>, and <code>updated_at</code>.
+Callback errors warn once and disable further updates without changing the
+analysis.</p></dd>
 
 </dl></div>
     <div class="section level2">

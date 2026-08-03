@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -230,16 +230,17 @@ respectively.</p>
 </h4>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PSPred.html">PSPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">ps_fo</span>,</span>
+<span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
 <span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  mapping <span class="op">=</span> <span class="va">mapping</span></span>
 <span><span class="op">)</span></span>
-<span>            <span class="co"># nrow(pd_data)</span></span>
+<span>           </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.987 0.987 0.987 0.873 0.873 0.873</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ps_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PSDiag.html">PSDiag</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="va">ps_fo</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ps_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PSDiag.html">PSDiag</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">pd_data</span>,</span>
+<span>                        ps_fo <span class="op">=</span> <span class="va">ps_fo</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ps_diagnostic</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Exposure-model balance diagnostics</span></span>
@@ -255,14 +256,14 @@ respectively.</p>
 <span><span class="co">#&gt;         X5      After 0.153</span></span>
 <span><span class="co">#&gt;         X6      After 0.020</span></span>
 <span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="reference/figures/functions-ps_dgn-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/ps_dgn-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="principal-score-model">Principal score model<a class="anchor" aria-label="anchor" href="#principal-score-model"></a>
 </h4>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PrinPred.html">PrinPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">prin_fo</span>,</span>
+<span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
 <span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  a <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -272,7 +273,10 @@ respectively.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">p0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.000 0.985 0.971 1.000 0.990 0.979</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">principal_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PrinSDiag.html">PrinSDiag</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="va">ps_fo</span>, <span class="va">prin_fo</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">principal_diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PrinSDiag.html">PrinSDiag</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">pd_data</span>, </span>
+<span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>, </span>
+<span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">principal_diagnostic</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Principal-score diagnostics</span></span>
@@ -282,15 +286,15 @@ respectively.</p>
 <span><span class="co">#&gt;         X4    -0.374</span></span>
 <span><span class="co">#&gt;         X5     1.006</span></span>
 <span><span class="co">#&gt;         X6     0.656</span></span>
-<span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">plo</span></span></code></pre></div>
-<p><img src="reference/figures/functions-pps_dgn-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<p><img src="Functions_files/figure-html/pps_dgn-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="outcome-model">Outcome model<a class="anchor" aria-label="anchor" href="#outcome-model"></a>
 </h4>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mu1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutPred.html">OutPred</a></span><span class="op">(</span></span>
-<span>  <span class="va">out_fo</span>,</span>
+<span>  out_fo <span class="op">=</span> <span class="va">out_fo</span>,</span>
 <span>  fit_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  pred_dat <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  a <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -300,37 +304,38 @@ respectively.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.228 0.228 0.228 0.255 0.255 0.255</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sensitivity</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SA.html">SA</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
-<span>  <span class="va">ps_fo</span>,</span>
-<span>  <span class="va">prin_fo</span>,</span>
-<span>  <span class="va">out_fo</span>,</span>
-<span>  ratiovec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
+<span><span class="va">sensitivity</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SA.html">SA</a></span><span class="op">(</span></span>
+<span>  data  <span class="op">=</span> <span class="va">pd_data</span>,</span>
+<span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
+<span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
+<span>  out_fo <span class="op">=</span> <span class="va">out_fo</span>,</span>
+<span>  ratiovec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sensitivity</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sensitivity analysis</span></span>
 <span><span class="co">#&gt;  ratiovec time Intercept     X1     X3</span></span>
-<span><span class="co">#&gt;         1    0    -0.491 -0.057 -0.195</span></span>
-<span><span class="co">#&gt;         2    0    -0.041 -0.649  0.113</span></span>
-<span><span class="co">#&gt;         1    1     0.433 -0.073  0.023</span></span>
-<span><span class="co">#&gt;         2    1    -0.026  0.162 -0.299</span></span>
-<span><span class="co">#&gt;         1    2    -0.152 -0.022  0.070</span></span>
-<span><span class="co">#&gt;         2    2    -0.070  0.218  0.370</span></span>
-<span><span class="co">#&gt;   Scenarios: 2</span></span>
+<span><span class="co">#&gt;      0.05    0    -0.045 -0.094  0.093</span></span>
+<span><span class="co">#&gt;      0.10    0    -0.098 -0.082  0.050</span></span>
+<span><span class="co">#&gt;      0.20    0    -0.015 -0.111  0.153</span></span>
+<span><span class="co">#&gt;      0.05    1     0.139 -0.057 -0.040</span></span>
+<span><span class="co">#&gt;      0.10    1     0.235 -0.060 -0.105</span></span>
+<span><span class="co">#&gt;      0.20    1     0.244  0.112 -0.118</span></span>
+<span><span class="co">#&gt;   Scenarios: 3</span></span>
 <span><span class="va">sensitivity</span><span class="op">$</span><span class="va">plot</span></span>
 <span><span class="co">#&gt; $X1</span></span></code></pre></div>
-<p><img src="reference/figures/functions-sa-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/sa-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $X3</span></span></code></pre>
-<p><img src="reference/figures/functions-sa-2.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/sa-2.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="principal-stratum-profiling-with-qr">Principal-stratum profiling with <code>QR()</code><a class="anchor" aria-label="anchor" href="#principal-stratum-profiling-with-qr"></a>
 </h4>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">principal_profile</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/QR.html">QR</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
-<span>  <span class="va">prin_fo</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">pd_data</span>,</span>
+<span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
 <span>  quantile_level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -355,8 +360,8 @@ respectively.</p>
 </h4>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">or_control</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ORCI.html">ORCI</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
-<span>  <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">pd_data</span>,</span>
+<span>  fomula <span class="op">=</span> <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span>,</span>
 <span>  a <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  conf_level <span class="op">=</span> <span class="fl">0.95</span></span>
 <span><span class="op">)</span></span>
@@ -368,15 +373,16 @@ respectively.</p>
 <span><span class="co">#&gt;       X3   0.565   0.301   1.059</span></span>
 <span><span class="co">#&gt;       X4   2.213   0.748   6.549</span></span>
 <span><span class="va">or_control</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="reference/figures/functions-or_ci-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/or_ci-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="heterogeneous-treatment-effect">5.2 Heterogeneous treatment effect<a class="anchor" aria-label="anchor" href="#heterogeneous-treatment-effect"></a>
 </h3>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">separate_hte</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HTESepT.html">HTESepT</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
+<span><span class="va">separate_hte</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HTESepT.html">HTESepT</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
 <span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
 <span>  out_fo <span class="op">=</span> <span class="va">out_fo</span>,</span>
@@ -389,25 +395,25 @@ respectively.</p>
 <span></span>
 <span><span class="va">separate_hte</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt;   time covariate estimate    SD LowerBound UpperBound</span></span>
-<span><span class="co">#&gt; 1    1 Intercept    0.149 0.130     -0.105      0.403</span></span>
-<span><span class="co">#&gt; 2    1        X1   -0.055 0.290     -0.624      0.513</span></span>
-<span><span class="co">#&gt; 3    1        X3   -0.086 0.060     -0.204      0.031</span></span>
-<span><span class="co">#&gt; 4    2 Intercept   -0.046 0.113     -0.267      0.174</span></span>
-<span><span class="co">#&gt; 5    2        X1    0.170 0.148     -0.121      0.460</span></span>
-<span><span class="co">#&gt; 6    2        X3    0.083 0.116     -0.144      0.311</span></span>
+<span><span class="co">#&gt; 1    1 Intercept    0.149 0.062      0.027      0.271</span></span>
+<span><span class="co">#&gt; 2    1        X1   -0.055 0.272     -0.589      0.479</span></span>
+<span><span class="co">#&gt; 3    1        X3   -0.086 0.209     -0.497      0.324</span></span>
+<span><span class="co">#&gt; 4    2 Intercept   -0.046 0.248     -0.533      0.440</span></span>
+<span><span class="co">#&gt; 5    2        X1    0.170 0.131     -0.086      0.426</span></span>
+<span><span class="co">#&gt; 6    2        X3    0.083 0.199     -0.307      0.474</span></span>
 <span><span class="va">separate_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
-<p><img src="reference/figures/functions-htesept-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/htesept-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">separate_hte</span><span class="op">$</span><span class="va">boot_mat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        1_Intercept        1_X1        1_X3 2_Intercept        2_X1        2_X3</span></span>
-<span><span class="co">#&gt; boot1 -0.002837554  0.32787677 -0.11567219  0.08236993 0.293685504  0.20850251</span></span>
-<span><span class="co">#&gt; boot2  0.089917523 -0.21039598 -0.07384792  0.04290495 0.145095130  0.09995193</span></span>
-<span><span class="co">#&gt; boot3 -0.061198107 -0.41489252 -0.23299372 -0.08366673 0.386013037 -0.10471565</span></span>
-<span><span class="co">#&gt; boot4  0.130192824  0.12985426 -0.12872406 -0.18597109 0.001129353  0.09134539</span></span>
-<span><span class="co">#&gt; boot5  0.274580370  0.01420872 -0.10971745  0.04842490 0.257943774  0.13251115</span></span></code></pre></div>
+<span><span class="co">#&gt;       1_Intercept       1_X1        1_X3 2_Intercept        2_X1       2_X3</span></span>
+<span><span class="co">#&gt; boot1  0.15753353  0.2290715 -0.13673408 -0.24449491  0.11106612 -0.1794279</span></span>
+<span><span class="co">#&gt; boot2  0.24092663 -0.1103065  0.37406426 -0.41292665 -0.00301342 -0.1142041</span></span>
+<span><span class="co">#&gt; boot3  0.22982461  0.1537350  0.23565340 -0.49775542 -0.03054196 -0.1849731</span></span>
+<span><span class="co">#&gt; boot4  0.13987791 -0.4202748 -0.05162735 -0.06794426  0.11749858  0.2599216</span></span>
+<span><span class="co">#&gt; boot5  0.09411466  0.1793230  0.04375399  0.10963763  0.30037793  0.1173508</span></span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pooled_hte</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HTEAllT.html">HTEAllT</a></span><span class="op">(</span></span>
-<span>  <span class="va">pd_data</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
 <span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
 <span>  out_fo <span class="op">=</span> <span class="va">out_fo</span>,</span>
@@ -421,7 +427,7 @@ respectively.</p>
 <span><span class="co">#&gt; 3          X3    0.031 NA         NA         NA</span></span>
 <span><span class="co">#&gt; 4 Time Effect    0.004 NA         NA         NA</span></span>
 <span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
-<p><img src="reference/figures/functions-hteallt-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/hteallt-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

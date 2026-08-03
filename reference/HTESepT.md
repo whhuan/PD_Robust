@@ -18,7 +18,8 @@ HTESepT(
   B,
   conf_level = 0.95,
   max_attempts = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  progress_callback = NULL
 )
 ```
 
@@ -61,6 +62,16 @@ HTESepT(
 - verbose:
 
   Emit bootstrap progress messages.
+
+- progress_callback:
+
+  Optional function called with one named progress list before model
+  fitting, after the point estimate, after every bootstrap attempt, and
+  when bootstrap processing completes. The list contains `stage`,
+  `successful`, `requested`, `attempts`, `max_attempts`,
+  `failed_attempts`, `complete`, `elapsed_seconds`, and `updated_at`.
+  Callback errors warn once and disable further updates without changing
+  the analysis.
 
 ## Value
 

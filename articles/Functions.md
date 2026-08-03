@@ -180,19 +180,20 @@ out_fo <- Y ~ (X1 + X3 + X4 + X5 + X6) * A + S
 ``` r
 
 ps <- PSPred(
-  ps_fo,
+  ps_fo = ps_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   mapping = mapping
 )
-            # nrow(pd_data)
+           
 head(ps)
 #> [1] 0.987 0.987 0.987 0.873 0.873 0.873
 ```
 
 ``` r
 
-ps_diagnostic <- PSDiag(pd_data, ps_fo)
+ps_diagnostic <- PSDiag(data = pd_data,
+                        ps_fo = ps_fo)
 
 print(ps_diagnostic)
 #> Exposure-model balance diagnostics
@@ -210,14 +211,14 @@ print(ps_diagnostic)
 ps_diagnostic$plot
 ```
 
-![](reference/figures/functions-ps_dgn-1.png)
+![](Functions_files/figure-html/ps_dgn-1.png)
 
 #### Principal score model
 
 ``` r
 
 p0 <- PrinPred(
-  prin_fo,
+  prin_fo = prin_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   a = 0,
@@ -230,7 +231,10 @@ head(p0)
 
 ``` r
 
-principal_diagnostic <- PrinSDiag(pd_data, ps_fo, prin_fo)
+principal_diagnostic <- PrinSDiag(
+  data = pd_data, 
+  ps_fo = ps_fo, 
+  prin_fo = prin_fo)
 
 print(principal_diagnostic)
 #> Principal-score diagnostics
@@ -240,17 +244,17 @@ print(principal_diagnostic)
 #>         X4    -0.374
 #>         X5     1.006
 #>         X6     0.656
-principal_diagnostic$plo
+principal_diagnostic$plot
 ```
 
-![](reference/figures/functions-pps_dgn-1.png)
+![](Functions_files/figure-html/pps_dgn-1.png)
 
 #### Outcome model
 
 ``` r
 
 mu1 <- OutPred(
-  out_fo,
+  out_fo = out_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   a = 1,
@@ -263,41 +267,42 @@ head(mu1)
 
 ``` r
 
+set.seed(12345)
 sensitivity <- SA(
-  pd_data,
-  ps_fo,
-  prin_fo,
-  out_fo,
-  ratiovec = c(1, 2)
+  data  = pd_data,
+  ps_fo = ps_fo,
+  prin_fo = prin_fo,
+  out_fo = out_fo,
+  ratiovec = c(0.05,0.1, 0.2)
 )
 print(sensitivity)
 #> Sensitivity analysis
 #>  ratiovec time Intercept     X1     X3
-#>         1    0    -0.491 -0.057 -0.195
-#>         2    0    -0.041 -0.649  0.113
-#>         1    1     0.433 -0.073  0.023
-#>         2    1    -0.026  0.162 -0.299
-#>         1    2    -0.152 -0.022  0.070
-#>         2    2    -0.070  0.218  0.370
-#>   Scenarios: 2
+#>      0.05    0    -0.045 -0.094  0.093
+#>      0.10    0    -0.098 -0.082  0.050
+#>      0.20    0    -0.015 -0.111  0.153
+#>      0.05    1     0.139 -0.057 -0.040
+#>      0.10    1     0.235 -0.060 -0.105
+#>      0.20    1     0.244  0.112 -0.118
+#>   Scenarios: 3
 sensitivity$plot
 #> $X1
 ```
 
-![](reference/figures/functions-sa-1.png)
+![](Functions_files/figure-html/sa-1.png)
 
     #> 
     #> $X3
 
-![](reference/figures/functions-sa-2.png)
+![](Functions_files/figure-html/sa-2.png)
 
 #### Principal-stratum profiling with `QR()`
 
 ``` r
 
 principal_profile <- QR(
-  pd_data,
-  prin_fo,
+  data = pd_data,
+  prin_fo = prin_fo,
   quantile_level = c(0.25, 0.50, 0.75)
 )
 
@@ -323,8 +328,8 @@ principal_profile$plot
 ``` r
 
 or_control <- ORCI(
-  pd_data,
-  S ~ X1 + X3 + X4,
+  data = pd_data,
+  fomula = S ~ X1 + X3 + X4,
   a = 0,
   conf_level = 0.95
 )
@@ -338,14 +343,15 @@ print(or_control)
 or_control$plot
 ```
 
-![](reference/figures/functions-or_ci-1.png)
+![](Functions_files/figure-html/or_ci-1.png)
 
 ### 5.2 Heterogeneous treatment effect
 
 ``` r
 
+set.seed(12345)
 separate_hte <- HTESepT(
-  pd_data,
+  data = pd_data,
   ps_fo = ps_fo,
   prin_fo = prin_fo,
   out_fo = out_fo,
@@ -358,32 +364,32 @@ separate_hte <- HTESepT(
 
 separate_hte$summary
 #>   time covariate estimate    SD LowerBound UpperBound
-#> 1    1 Intercept    0.149 0.130     -0.105      0.403
-#> 2    1        X1   -0.055 0.290     -0.624      0.513
-#> 3    1        X3   -0.086 0.060     -0.204      0.031
-#> 4    2 Intercept   -0.046 0.113     -0.267      0.174
-#> 5    2        X1    0.170 0.148     -0.121      0.460
-#> 6    2        X3    0.083 0.116     -0.144      0.311
+#> 1    1 Intercept    0.149 0.062      0.027      0.271
+#> 2    1        X1   -0.055 0.272     -0.589      0.479
+#> 3    1        X3   -0.086 0.209     -0.497      0.324
+#> 4    2 Intercept   -0.046 0.248     -0.533      0.440
+#> 5    2        X1    0.170 0.131     -0.086      0.426
+#> 6    2        X3    0.083 0.199     -0.307      0.474
 separate_hte$forest_plot
 ```
 
-![](reference/figures/functions-htesept-1.png)
+![](Functions_files/figure-html/htesept-1.png)
 
 ``` r
 
 head(separate_hte$boot_mat)
-#>        1_Intercept        1_X1        1_X3 2_Intercept        2_X1        2_X3
-#> boot1 -0.002837554  0.32787677 -0.11567219  0.08236993 0.293685504  0.20850251
-#> boot2  0.089917523 -0.21039598 -0.07384792  0.04290495 0.145095130  0.09995193
-#> boot3 -0.061198107 -0.41489252 -0.23299372 -0.08366673 0.386013037 -0.10471565
-#> boot4  0.130192824  0.12985426 -0.12872406 -0.18597109 0.001129353  0.09134539
-#> boot5  0.274580370  0.01420872 -0.10971745  0.04842490 0.257943774  0.13251115
+#>       1_Intercept       1_X1        1_X3 2_Intercept        2_X1       2_X3
+#> boot1  0.15753353  0.2290715 -0.13673408 -0.24449491  0.11106612 -0.1794279
+#> boot2  0.24092663 -0.1103065  0.37406426 -0.41292665 -0.00301342 -0.1142041
+#> boot3  0.22982461  0.1537350  0.23565340 -0.49775542 -0.03054196 -0.1849731
+#> boot4  0.13987791 -0.4202748 -0.05162735 -0.06794426  0.11749858  0.2599216
+#> boot5  0.09411466  0.1793230  0.04375399  0.10963763  0.30037793  0.1173508
 ```
 
 ``` r
 
 pooled_hte <- HTEAllT(
-  pd_data,
+  data = pd_data,
   ps_fo = ps_fo,
   prin_fo = prin_fo,
   out_fo = out_fo,
@@ -399,4 +405,4 @@ pooled_hte$summary
 pooled_hte$forest_plot
 ```
 
-![](reference/figures/functions-hteallt-1.png)
+![](Functions_files/figure-html/hteallt-1.png)
