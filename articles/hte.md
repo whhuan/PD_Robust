@@ -36,13 +36,13 @@ map <- Mapping(
 
 pd_data <- DataStandard(BiSample, map)
 head(pd_data)
-#>   id time S A Y    X1     X2     X3 X4 X5 X6
-#> 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1
+#>   id time        Pi S1 S0 S A Y1 Y0 Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 0.9867302  1  1 1 1  0  1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
 ```
 
 ``` r
@@ -157,7 +157,7 @@ separate$summary
 separate$forest_plot
 ```
 
-![](hte_files/figure-html/unnamed-chunk-7-1.png)
+![](reference/figures/hte-unnamed-chunk-7-1.png)
 
 Supplementary components include `bootstrap_info`, which summarizes the
 requested and successful replications, total attempts, completion
@@ -291,7 +291,7 @@ pooled$summary
 pooled$forest_plot
 ```
 
-![](hte_files/figure-html/unnamed-chunk-11-1.png)
+![](reference/figures/hte-unnamed-chunk-11-1.png)
 
 Additional components include `analysis_times`, which identifies the
 time points included in the pooled analysis, and

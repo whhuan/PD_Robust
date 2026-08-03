@@ -102,13 +102,13 @@ including five functions <code><a href="../reference/PSDiag.html">PSDiag()</a></
 <span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">BiSample</span>, <span class="va">map</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   id time S A Y    X1     X2     X3 X4 X5 X6</span></span>
-<span><span class="co">#&gt; 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
-<span><span class="co">#&gt; 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
-<span><span class="co">#&gt; 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
-<span><span class="co">#&gt; 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
-<span><span class="co">#&gt; 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
-<span><span class="co">#&gt; 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1</span></span></code></pre></div>
+<span><span class="co">#&gt;   id time        Pi S1 S0 S A Y1 Y0 Y    X1     X2     X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1  1    0 0.9867302  1  1 1 1  0  1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 2  1    1 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 3  1    2 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 4  2    0 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 5  2    1 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 6  2    2 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps_fo</span> <span class="op">&lt;-</span> <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span></span>
 <span><span class="va">prin_fo</span> <span class="op">&lt;-</span> <span class="va">S</span> <span class="op">~</span> <span class="op">(</span><span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span> <span class="op">)</span> <span class="op">*</span> <span class="va">A</span></span>
@@ -159,7 +159,7 @@ eliminate the possibility of unmeasured confounding.</p>
 <span><span class="co">#&gt;         X5      After 0.153</span></span>
 <span><span class="co">#&gt;         X6      After 0.020</span></span>
 <span><span class="va">ps_diag</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/diag-unnamed-chunk-6-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <p>Additional components provide further information about the
 diagnostic procedure. For example, <code>ps_diag$weights</code> contains
 the calculated inverse probability weights, and
@@ -172,10 +172,10 @@ used.</p>
 <div class="section level2">
 <h2 id="principal-score-covariate-specific-balance-statistic">Principal score, covariate-specific balance statistic<a class="anchor" aria-label="anchor" href="#principal-score-covariate-specific-balance-statistic"></a>
 </h2>
-<p><code><a href="../reference/PrinSDiag.html">PrinSDiag()</a></code> computes a standardized The statistic is
-obtained by comparing the weighted covariates contribution of surviving
-subjects across both treatment groups, using both propensity score model
-and principal score model.</p>
+<p><code><a href="../reference/PrinSDiag.html">PrinSDiag()</a></code> computes a standardized statistic obtained
+by comparing the weighted covariates contribution of surviving subjects
+across both treatment groups, using both propensity score model and
+principal score model.</p>
 <p>The argument <code>data</code> specifies the standardized dataset
 used for the diagnostic analysis, <code>ps_fo</code> specifies the
 propensity score model formula and <code>prin_fo</code> specifies the
@@ -203,7 +203,7 @@ of the principal score model and propensity score model.</p>
 <span><span class="co">#&gt;         X5     1.006</span></span>
 <span><span class="co">#&gt;         X6     0.656</span></span>
 <span><span class="va">prin_diag</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/diag-unnamed-chunk-9-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also provides additional diagnostic components,
 such as the cumulative principal scores under treatment levels 0 and
 1.</p>
@@ -218,7 +218,7 @@ such as the cumulative principal scores under treatment levels 0 and
 </h2>
 <p><code><a href="../reference/SA.html">SA()</a></code> evaluates the sensitivity of the estimated
 heterogeneous treatment effects to additional unexplained variation in
-the outcome. This function estimates how the estimated intercept and
+the outcome. This function estimates how the estimated
 effect-modification coefficients change when random outcome noise is
 introduced.</p>
 <p>The argument <code>data</code> specifies the standardized dataset
@@ -262,10 +262,10 @@ of estimated heterogeneous treatment effects.</p>
 <span><span class="co">#&gt;   Scenarios: 3</span></span>
 <span><span class="va">sa</span><span class="op">$</span><span class="va">plot</span></span>
 <span><span class="co">#&gt; $X1</span></span></code></pre></div>
-<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/diag-unnamed-chunk-12-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $X5</span></span></code></pre>
-<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-2.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/diag-unnamed-chunk-12-2.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also includes supplementary diagnostic
 information. For example, <code>variance_by_time</code> records the
 empirical outcome variance used to scale the perturbation at each
@@ -307,8 +307,8 @@ vector such as <code>c(0.5, 0.95)</code>.</p>
 <span><span class="co">#&gt; [1] "mean"     "quantile" "binary"   "data"     "weights"  "formula"  "mapping" </span></span>
 <span><span class="co">#&gt; [8] "call"</span></span></code></pre></div>
 <p>The primary outputs are principal-score-weighted means and quantiles.
-For each selected variables, <code><a href="../reference/QR.html">QR()</a></code> calculate weighted means
-at the cutoff time. For non-binary variables, it additionaly calculates
+For each selected variables, <code><a href="../reference/QR.html">QR()</a></code> calculates weighted means
+at the cutoff time. For non-binary variables, it additionally calculates
 the weighted quantile using an intercept-only weighted quantile
 regression model.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -384,7 +384,7 @@ overlap, or unstable model estimation within the selected group.</p>
 <span><span class="co">#&gt;       X2   1.834   0.988   3.404</span></span>
 <span><span class="co">#&gt;       X4   2.028   0.677   6.076</span></span>
 <span><span class="va">or0</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/diag-unnamed-chunk-18-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also contains supplementary information, such as
 or0$model_diagnostics, which stores the full-precision fitted logistic
 regression model.</p>

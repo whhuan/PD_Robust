@@ -39,13 +39,13 @@ pd_data <- DataStandard(BiSample, map)
 ``` r
 
 head(pd_data)
-#>   id time S A Y    X1     X2     X3 X4 X5 X6
-#> 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1
+#>   id time        Pi S1 S0 S A Y1 Y0 Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 0.9867302  1  1 1 1  0  1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
 ```
 
 ``` r
@@ -108,7 +108,7 @@ print(ps_diag)
 ps_diag$plot
 ```
 
-![](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-6-1.png)
+![](reference/figures/diag-unnamed-chunk-6-1.png)
 
 Additional components provide further information about the diagnostic
 procedure. For example, `ps_diag$weights` contains the calculated
@@ -124,10 +124,9 @@ ps_diag$weight_type
 ## Principal score, covariate-specific balance statistic
 
 [`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
-computes a standardized The statistic is obtained by comparing the
-weighted covariates contribution of surviving subjects across both
-treatment groups, using both propensity score model and principal score
-model.
+computes a standardized statistic obtained by comparing the weighted
+covariates contribution of surviving subjects across both treatment
+groups, using both propensity score model and principal score model.
 
 The argument `data` specifies the standardized dataset used for the
 diagnostic analysis, `ps_fo` specifies the propensity score model
@@ -163,7 +162,7 @@ print(prin_diag)
 prin_diag$plot
 ```
 
-![](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-9-1.png)
+![](reference/figures/diag-unnamed-chunk-9-1.png)
 
 The returned object also provides additional diagnostic components, such
 as the cumulative principal scores under treatment levels 0 and 1.
@@ -181,8 +180,8 @@ head(prin_diag$p1)
 [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) evaluates
 the sensitivity of the estimated heterogeneous treatment effects to
 additional unexplained variation in the outcome. This function estimates
-how the estimated intercept and effect-modification coefficients change
-when random outcome noise is introduced.
+how the estimated effect-modification coefficients change when random
+outcome noise is introduced.
 
 The argument `data` specifies the standardized dataset used in the
 sensitivity analysis. The arguments `ps_fo`, `prin_fo`, and `out_fo`
@@ -232,12 +231,12 @@ sa$plot
 #> $X1
 ```
 
-![](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png)
+![](reference/figures/diag-unnamed-chunk-12-1.png)
 
     #> 
     #> $X5
 
-![](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-2.png)
+![](reference/figures/diag-unnamed-chunk-12-2.png)
 
 The returned object also includes supplementary diagnostic information.
 For example, `variance_by_time` records the empirical outcome variance
@@ -286,9 +285,9 @@ names(profile)
 
 The primary outputs are principal-score-weighted means and quantiles.
 For each selected variables,
-[`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) calculate
+[`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) calculates
 weighted means at the cutoff time. For non-binary variables, it
-additionaly calculates the weighted quantile using an intercept-only
+additionally calculates the weighted quantile using an intercept-only
 weighted quantile regression model.
 
 ``` r
@@ -380,7 +379,7 @@ print(or0)
 or0$plot
 ```
 
-![](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-18-1.png)
+![](reference/figures/diag-unnamed-chunk-18-1.png)
 
 The returned object also contains supplementary information, such as
 or0\$model_diagnostics, which stores the full-precision fitted logistic

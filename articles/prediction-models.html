@@ -101,13 +101,13 @@ on the package’s prediction models, including three nuisance models
 <span><span class="va">pd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">BiSample</span>, <span class="va">map</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pd_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   id time S A Y    X1     X2     X3 X4 X5 X6</span></span>
-<span><span class="co">#&gt; 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
-<span><span class="co">#&gt; 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
-<span><span class="co">#&gt; 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1</span></span>
-<span><span class="co">#&gt; 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
-<span><span class="co">#&gt; 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1</span></span>
-<span><span class="co">#&gt; 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1</span></span></code></pre></div>
+<span><span class="co">#&gt;   id time        Pi S1 S0 S A Y1 Y0 Y    X1     X2     X3 X4 X5 X6</span></span>
+<span><span class="co">#&gt; 1  1    0 0.9867302  1  1 1 1  0  1 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 2  1    1 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 3  1    2 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1</span></span>
+<span><span class="co">#&gt; 4  2    0 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 5  2    1 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1</span></span>
+<span><span class="co">#&gt; 6  2    2 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps_fo</span> <span class="op">&lt;-</span> <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span></span>
 <span><span class="va">prin_fo</span> <span class="op">&lt;-</span> <span class="va">S</span> <span class="op">~</span> <span class="op">(</span><span class="va">X1</span> <span class="op">+</span> <span class="va">X3</span> <span class="op">+</span> <span class="va">X4</span> <span class="op">+</span> <span class="va">X5</span> <span class="op">+</span> <span class="va">X6</span> <span class="op">)</span> <span class="op">*</span> <span class="va">A</span></span>

@@ -191,22 +191,19 @@
 <span>  target_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  B <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Bootstrap: 1/3 successful after 1 attempts.</span></span>
-<span><span class="co">#&gt; Bootstrap: 2/3 successful after 2 attempts.</span></span>
-<span><span class="co">#&gt; Bootstrap: 3/3 successful after 3 attempts.</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">separate_hte</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt;   time covariate estimate    SD LowerBound UpperBound</span></span>
-<span><span class="co">#&gt; 1    1 Intercept    3.300 3.173     -2.919      9.520</span></span>
-<span><span class="co">#&gt; 2    1        X1    0.371 4.541     -8.530      9.272</span></span>
-<span><span class="co">#&gt; 3    1        X2   -1.274 2.387     -5.953      3.405</span></span>
-<span><span class="co">#&gt; 4    2 Intercept    0.835 3.015     -5.074      6.744</span></span>
-<span><span class="co">#&gt; 5    2        X1   -0.094 3.594     -7.137      6.950</span></span>
-<span><span class="co">#&gt; 6    2        X2    0.106 1.728     -3.282      3.494</span></span></code></pre></div>
+<span><span class="co">#&gt; 1    1 Intercept    3.300 1.739     -0.107      6.708</span></span>
+<span><span class="co">#&gt; 2    1        X1    0.371 1.425     -2.421      3.163</span></span>
+<span><span class="co">#&gt; 3    1        X2   -1.274 0.420     -2.098     -0.450</span></span>
+<span><span class="co">#&gt; 4    2 Intercept    0.835 0.833     -0.797      2.467</span></span>
+<span><span class="co">#&gt; 5    2        X1   -0.094 0.466     -1.006      0.819</span></span>
+<span><span class="co">#&gt; 6    2        X2    0.106 1.130     -2.109      2.321</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">separate_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-13-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-12-1.png" width="90%" style="display: block; margin: auto;"></p>
 <p>The following table summarizes the objectives and arguments of all functions provided by the package.</p>
 <table class="table">
 <colgroup>

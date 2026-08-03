@@ -194,21 +194,18 @@ separate_hte <- HTESepT(
   B = 3,
   verbose = TRUE
 )
-#> Bootstrap: 1/3 successful after 1 attempts.
-#> Bootstrap: 2/3 successful after 2 attempts.
-#> Bootstrap: 3/3 successful after 3 attempts.
 ```
 
 ``` r
 
 separate_hte$summary
 #>   time covariate estimate    SD LowerBound UpperBound
-#> 1    1 Intercept    3.300 3.173     -2.919      9.520
-#> 2    1        X1    0.371 4.541     -8.530      9.272
-#> 3    1        X2   -1.274 2.387     -5.953      3.405
-#> 4    2 Intercept    0.835 3.015     -5.074      6.744
-#> 5    2        X1   -0.094 3.594     -7.137      6.950
-#> 6    2        X2    0.106 1.728     -3.282      3.494
+#> 1    1 Intercept    3.300 1.739     -0.107      6.708
+#> 2    1        X1    0.371 1.425     -2.421      3.163
+#> 3    1        X2   -1.274 0.420     -2.098     -0.450
+#> 4    2 Intercept    0.835 0.833     -0.797      2.467
+#> 5    2        X1   -0.094 0.466     -1.006      0.819
+#> 6    2        X2    0.106 1.130     -2.109      2.321
 ```
 
 ``` r
@@ -216,7 +213,7 @@ separate_hte$summary
 separate_hte$forest_plot
 ```
 
-![](reference/figures/README-unnamed-chunk-13-1.png)
+![](reference/figures/README-unnamed-chunk-12-1.png)
 
 The following table summarizes the objectives and arguments of all
 functions provided by the package.

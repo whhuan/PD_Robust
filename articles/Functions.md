@@ -15,13 +15,13 @@ data("BiSample") -> Mapping() -> DataCheck() -> DataStandard() -> prediction / d
 library(PDRobust)
 data("BiSample", package = "PDRobust")
 head(BiSample)
-#>   id time S A Y    X1     X2     X3 X4 X5 X6
-#> 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1
+#>   id time        Pi S1 S0 S A Y1 Y0 Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 0.9867302  1  1 1 1  0  1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
 ```
 
 ### 2. Define roles and analysis settings with `Mapping()`
@@ -88,13 +88,13 @@ Detailed check report and diagnostics can be retained by using
 
 pd_data <- DataStandard(BiSample, mapping, drop =TRUE)
 head(pd_data)
-#>   id time S A Y    X1     X2     X3 X4 X5 X6
-#> 1  1    0 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 2  1    1 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 3  1    2 1 1 0 1.479 -0.168  0.873  0  1  1
-#> 4  2    0 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 5  2    1 1 1 0 0.267  0.350 -1.438  1  1  1
-#> 6  2    2 1 1 0 0.267  0.350 -1.438  1  1  1
+#>   id time        Pi S1 S0 S A Y1 Y0 Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 0.9867302  1  1 1 1  0  1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 0.9867302  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 0.7766017  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
 ```
 
 #### Imperfect dataset
@@ -210,7 +210,7 @@ print(ps_diagnostic)
 ps_diagnostic$plot
 ```
 
-![](Functions_files/figure-html/unnamed-chunk-13-1.png)
+![](reference/figures/functions-ps_dgn-1.png)
 
 #### Principal score model
 
@@ -243,7 +243,7 @@ print(principal_diagnostic)
 principal_diagnostic$plo
 ```
 
-![](Functions_files/figure-html/unnamed-chunk-15-1.png)
+![](reference/figures/functions-pps_dgn-1.png)
 
 #### Outcome model
 
@@ -284,12 +284,12 @@ sensitivity$plot
 #> $X1
 ```
 
-![](Functions_files/figure-html/unnamed-chunk-17-1.png)
+![](reference/figures/functions-sa-1.png)
 
     #> 
     #> $X3
 
-![](Functions_files/figure-html/unnamed-chunk-17-2.png)
+![](reference/figures/functions-sa-2.png)
 
 #### Principal-stratum profiling with `QR()`
 
@@ -338,7 +338,7 @@ print(or_control)
 or_control$plot
 ```
 
-![](Functions_files/figure-html/unnamed-chunk-19-1.png)
+![](reference/figures/functions-or_ci-1.png)
 
 ### 5.2 Heterogeneous treatment effect
 
@@ -367,7 +367,7 @@ separate_hte$summary
 separate_hte$forest_plot
 ```
 
-![](Functions_files/figure-html/unnamed-chunk-20-1.png)
+![](reference/figures/functions-htesept-1.png)
 
 ``` r
 
@@ -399,4 +399,4 @@ pooled_hte$summary
 pooled_hte$forest_plot
 ```
 
-![](Functions_files/figure-html/unnamed-chunk-22-1.png)
+![](reference/figures/functions-hteallt-1.png)
