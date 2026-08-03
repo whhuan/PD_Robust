@@ -1,3 +1,17 @@
+# PDRobust 0.3.7.2
+
+## Live bootstrap progress
+
+* `HTEAllT()` and `HTESepT()` accept an optional `progress_callback` without
+  changing their estimands, fitting logic, bootstrap acceptance rules, or
+  returned numerical results.
+* The callback receives structured updates before model fitting, after the
+  point estimate, after every bootstrap attempt, and at completion. Updates
+  report successful replications, total and failed attempts, elapsed time, and
+  the last worker-update time.
+* A callback error produces one warning and disables monitoring for that run;
+  it does not interrupt or alter the scientific calculation.
+
 # PDRobust 0.3.7
 
 ## Interfaces and example data

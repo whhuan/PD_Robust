@@ -1,6 +1,6 @@
 Package: PDRobust
 Title: Robust Longitudinal Treatment Effect Estimation Under Truncation by Death
-Version: 0.3.7
+Version: 0.3.7.2
 Authors@R: c(
     person(
         given = "Huan",

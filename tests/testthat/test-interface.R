@@ -16,6 +16,10 @@ test_that("the public interface follows the independent-prediction design", {
   expect_false("target_time" %in% map_args)
   expect_true("target_time" %in% names(formals(HTESepT)))
   expect_false("target_time" %in% names(formals(HTEAllT)))
+  expect_identical(tail(names(formals(HTESepT)), 1L), "progress_callback")
+  expect_identical(tail(names(formals(HTEAllT)), 1L), "progress_callback")
+  expect_identical(formals(HTESepT)$progress_callback, NULL)
+  expect_identical(formals(HTEAllT)$progress_callback, NULL)
   expect_false("target_time" %in% names(formals(SA)))
   expect_false("target_time" %in% names(formals(PrinPred)))
   expect_identical(

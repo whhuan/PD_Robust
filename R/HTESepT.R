@@ -26,6 +26,13 @@
 #' @param conf_level Confidence level for Wald intervals based on bootstrap SDs.
 #' @param max_attempts Maximum bootstrap attempts. `NULL` uses `10 * B`.
 #' @param verbose Emit bootstrap progress messages.
+#' @param progress_callback Optional function called with one named progress
+#'   list before model fitting, after the point estimate, after every bootstrap
+#'   attempt, and when bootstrap processing completes. The list contains
+#'   `stage`, `successful`, `requested`, `attempts`, `max_attempts`,
+#'   `failed_attempts`, `complete`, `elapsed_seconds`, and `updated_at`.
+#'   Callback errors warn once and disable further updates without changing the
+#'   analysis.
 #'
 #' @return A `pd_hte_timevarying` object containing time-specific estimates,
 #'   the explicitly requested `target_time`, and `bootstrap_info` with requested
@@ -57,7 +64,8 @@
 HTESepT <- function(data, ps_fo, prin_fo, out_fo, target_time, B,
                     conf_level = 0.95,
                     max_attempts = NULL,
-                    verbose = TRUE) {
+                    verbose = TRUE,
+                    progress_callback = NULL) {
   .pd_require_prepared_data(data, "HTESepT")
   if (length(verbose) != 1L || is.na(verbose) || !is.logical(verbose)) {
     .pd_stop("`verbose` must be TRUE or FALSE.")
@@ -76,6 +84,17 @@ HTESepT <- function(data, ps_fo, prin_fo, out_fo, target_time, B,
     .pd_stop("`max_attempts` must be an integer greater than or equal to `B`.")
   }
   max_attempts <- as.integer(max_attempts)
+  progress_callback <- .pd_validate_progress_callback(progress_callback)
+  progress_started_at <- Sys.time()
+  progress_callback <- .pd_emit_bootstrap_progress(
+    progress_callback,
+    stage = "initializing",
+    successful = 0L,
+    requested = B,
+    attempts = 0L,
+    max_attempts = max_attempts,
+    started_at = progress_started_at
+  )
 
   point_capture <- .pd_capture_conditions(
     .pd_htesep_once(data, ps_fo, prin_fo, out_fo, target_time)
@@ -99,6 +118,15 @@ HTESepT <- function(data, ps_fo, prin_fo, out_fo, target_time, B,
   bootstrap_model_diagnostics <- .pd_empty_model_diagnostics()
   successful <- 0L
   attempts <- 0L
+  progress_callback <- .pd_emit_bootstrap_progress(
+    progress_callback,
+    stage = "bootstrap",
+    successful = successful,
+    requested = B,
+    attempts = attempts,
+    max_attempts = max_attempts,
+    started_at = progress_started_at
+  )
 
   while (successful < B && attempts < max_attempts) {
     attempts <- attempts + 1L
@@ -171,6 +199,15 @@ HTESepT <- function(data, ps_fo, prin_fo, out_fo, target_time, B,
         " successful after ", attempts, " attempts."
       )
     }
+    progress_callback <- .pd_emit_bootstrap_progress(
+      progress_callback,
+      stage = "bootstrap",
+      successful = successful,
+      requested = B,
+      attempts = attempts,
+      max_attempts = max_attempts,
+      started_at = progress_started_at
+    )
   }
 
   flat_estimate <- as.numeric(t(estimate))
@@ -205,6 +242,15 @@ HTESepT <- function(data, ps_fo, prin_fo, out_fo, target_time, B,
       " bootstrap replications succeeded after ", attempts, " attempts."
     )
   }
+  progress_callback <- .pd_emit_bootstrap_progress(
+    progress_callback,
+    stage = "completed",
+    successful = successful,
+    requested = B,
+    attempts = attempts,
+    max_attempts = max_attempts,
+    started_at = progress_started_at
+  )
 
   summary_output <- .pd_round_output_columns(
     summary_df, c("estimate", "SD", "LowerBound", "UpperBound")

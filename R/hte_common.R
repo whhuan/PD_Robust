@@ -356,6 +356,67 @@
   )
 }
 
+# Bootstrap progress --------------------------------------------------------
+
+#' Validate an optional bootstrap progress callback
+#'
+#' @param progress_callback `NULL` or a function that accepts one named list.
+#' @return The callback, unchanged, or `NULL`.
+#' @noRd
+.pd_validate_progress_callback <- function(progress_callback) {
+  if (!is.null(progress_callback) && !is.function(progress_callback)) {
+    .pd_stop("`progress_callback` must be NULL or a function.")
+  }
+  progress_callback
+}
+
+#' Emit one nonintrusive bootstrap progress update
+#'
+#' Callback failures must not change the scientific analysis. The first
+#' callback error therefore produces one warning and disables further updates
+#' for that run. Returning the callback lets callers retain or disable it.
+#'
+#' @noRd
+.pd_emit_bootstrap_progress <- function(
+    progress_callback,
+    stage,
+    successful,
+    requested,
+    attempts,
+    max_attempts,
+    started_at) {
+  if (is.null(progress_callback)) return(NULL)
+
+  now <- Sys.time()
+  update <- list(
+    stage = as.character(stage),
+    successful = as.integer(successful),
+    requested = as.integer(requested),
+    attempts = as.integer(attempts),
+    max_attempts = as.integer(max_attempts),
+    failed_attempts = as.integer(attempts - successful),
+    complete = identical(as.character(stage), "completed") &&
+      as.integer(successful) >= as.integer(requested),
+    elapsed_seconds = as.numeric(difftime(now, started_at, units = "secs")),
+    updated_at = now
+  )
+
+  ok <- tryCatch(
+    {
+      progress_callback(update)
+      TRUE
+    },
+    error = function(e) {
+      .pd_warn(
+        "The bootstrap progress callback was disabled after an error: ",
+        conditionMessage(e)
+      )
+      FALSE
+    }
+  )
+  if (isTRUE(ok)) progress_callback else NULL
+}
+
 # Plot helpers ---------------------------------------------------------------
 
 #' @noRd

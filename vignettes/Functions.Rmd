@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   fig.height = 4.5,
   out.width = "90%",
   fig.align = "center",
-  fig.path = "man/figures/functions-",
+  # fig.path = "man/figures/functions-",
   warning = FALSE,
   message = FALSE
 )
@@ -128,17 +128,18 @@ out_fo <- Y ~ (X1 + X3 + X4 + X5 + X6) * A + S
 
 ```{r}
 ps <- PSPred(
-  ps_fo,
+  ps_fo = ps_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   mapping = mapping
 )
-            # nrow(pd_data)
+           
 head(ps)
 ```
 
 ```{r ps_dgn}
-ps_diagnostic <- PSDiag(pd_data, ps_fo)
+ps_diagnostic <- PSDiag(data = pd_data,
+                        ps_fo = ps_fo)
 
 print(ps_diagnostic)
 ps_diagnostic$plot
@@ -148,7 +149,7 @@ ps_diagnostic$plot
 
 ```{r}
 p0 <- PrinPred(
-  prin_fo,
+  prin_fo = prin_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   a = 0,
@@ -159,17 +160,20 @@ head(p0)
 ```
 
 ```{r pps_dgn}
-principal_diagnostic <- PrinSDiag(pd_data, ps_fo, prin_fo)
+principal_diagnostic <- PrinSDiag(
+  data = pd_data, 
+  ps_fo = ps_fo, 
+  prin_fo = prin_fo)
 
 print(principal_diagnostic)
-principal_diagnostic$plo
+principal_diagnostic$plot
 ```
 
 ### Outcome model
 
 ```{r}
 mu1 <- OutPred(
-  out_fo,
+  out_fo = out_fo,
   fit_dat = pd_data,
   pred_dat = pd_data,
   a = 1,
@@ -180,12 +184,13 @@ head(mu1)
 ```
 
 ```{r sa}
+set.seed(12345)
 sensitivity <- SA(
-  pd_data,
-  ps_fo,
-  prin_fo,
-  out_fo,
-  ratiovec = c(1, 2)
+  data  = pd_data,
+  ps_fo = ps_fo,
+  prin_fo = prin_fo,
+  out_fo = out_fo,
+  ratiovec = c(0.05,0.1, 0.2)
 )
 print(sensitivity)
 sensitivity$plot
@@ -195,8 +200,8 @@ sensitivity$plot
 
 ```{r qr}
 principal_profile <- QR(
-  pd_data,
-  prin_fo,
+  data = pd_data,
+  prin_fo = prin_fo,
   quantile_level = c(0.25, 0.50, 0.75)
 )
 
@@ -208,8 +213,8 @@ principal_profile$plot
 
 ```{r or_ci}
 or_control <- ORCI(
-  pd_data,
-  S ~ X1 + X3 + X4,
+  data = pd_data,
+  fomula = S ~ X1 + X3 + X4,
   a = 0,
   conf_level = 0.95
 )
@@ -221,8 +226,9 @@ or_control$plot
 ## 5.2 Heterogeneous treatment effect
 
 ```{r htesept}
+set.seed(12345)
 separate_hte <- HTESepT(
-  pd_data,
+  data = pd_data,
   ps_fo = ps_fo,
   prin_fo = prin_fo,
   out_fo = out_fo,
@@ -243,7 +249,7 @@ head(separate_hte$boot_mat)
 
 ```{r hteallt}
 pooled_hte <- HTEAllT(
-  pd_data,
+  data = pd_data,
   ps_fo = ps_fo,
   prin_fo = prin_fo,
   out_fo = out_fo,

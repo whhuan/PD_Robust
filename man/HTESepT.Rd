@@ -13,7 +13,8 @@ HTESepT(
   B,
   conf_level = 0.95,
   max_attempts = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  progress_callback = NULL
 )
 }
 \arguments{
@@ -35,6 +36,14 @@ Baseline is allowed.}
 \item{max_attempts}{Maximum bootstrap attempts. \code{NULL} uses \code{10 * B}.}
 
 \item{verbose}{Emit bootstrap progress messages.}
+
+\item{progress_callback}{Optional function called with one named progress
+list before model fitting, after the point estimate, after every bootstrap
+attempt, and when bootstrap processing completes. The list contains
+\code{stage}, \code{successful}, \code{requested}, \code{attempts}, \code{max_attempts},
+\code{failed_attempts}, \code{complete}, \code{elapsed_seconds}, and \code{updated_at}.
+Callback errors warn once and disable further updates without changing the
+analysis.}
 }
 \value{
 A \code{pd_hte_timevarying} object containing time-specific estimates,
