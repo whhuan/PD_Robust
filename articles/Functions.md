@@ -37,7 +37,7 @@ mapping <- Mapping(
   baseline_time = 0,
   cutoff_time = 2,
   covariates = c("X1", "X3", "X4", "X5", "X6"),
-  interest_vars = c("X1", "X3"),
+  interest_vars = c("X1", "X4"),
   y_type = "B"
 )
 
@@ -51,7 +51,7 @@ print(mapping)
 #>   Baseline time: 0
 #>   Cutoff time: 2
 #>   Mapped covariates: X1, X3, X4, X5, X6
-#>   Interest variables: X1, X3
+#>   Interest variables: X1, X4
 #>   Outcome type: B (binary)
 ```
 
@@ -136,11 +136,24 @@ con_mapping <- Mapping(
   y_type = "C"
 )
 
-con_data <- DataStandard(ImperfectConSample, con_mapping, drop = TRUE)
+con_check <- DataCheck(ImperfectConSample, con_mapping, strict = FALSE)
 ```
 
 ``` r
 
+con_check$valid
+#> [1] FALSE
+con_check$ready_for_analysis
+#> [1] FALSE
+con_check$manual_resolution_required
+#> [1] FALSE
+con_check$can_standardize
+#> [1] TRUE
+```
+
+``` r
+
+con_data <- DataStandard(ImperfectConSample, con_mapping, drop = TRUE)
 head(con_data)
 #>   patient_id visit_month alive_status treatment clinical_outcome     X1     X2
 #> 1          1           0            1         1           10.803  0.168  0.421
@@ -164,6 +177,32 @@ print(dim(ImperfectConSample))
 #> [1] 599  11
 print(dim(con_data))
 #> [1] 588  11
+```
+
+``` r
+
+names(attributes(con_data))
+#> [1] "names"               "row.names"           "class"              
+#> [4] "pd_mapping"          "pd_original_mapping" "pd_check"           
+#> [7] "pd_standardization"
+```
+
+``` r
+
+attr_standard <- attributes(con_data)
+attr_standard$pd_standardization$time_map
+#>   raw_time standardized_time
+#> 1        0                 0
+#> 2        6                 1
+#> 3       12                 2
+head(attr_standard$pd_standardization$id_map)
+#>    raw_id standardized_id
+#> 1 PT-0005               1
+#> 2 PT-0006               2
+#> 3 PT-0007               3
+#> 4 PT-0008               4
+#> 5 PT-0009               5
+#> 6 PT-0010               6
 ```
 
 ### 5.1 Prediction functions and Diagnostics
@@ -277,13 +316,16 @@ sensitivity <- SA(
 )
 print(sensitivity)
 #> Sensitivity analysis
-#>  ratiovec time Intercept     X1     X3
-#>      0.05    0    -0.045 -0.094  0.093
-#>      0.10    0    -0.098 -0.082  0.050
-#>      0.20    0    -0.015 -0.111  0.153
-#>      0.05    1     0.139 -0.057 -0.040
-#>      0.10    1     0.235 -0.060 -0.105
-#>      0.20    1     0.244  0.112 -0.118
+#>  ratiovec time Intercept     X1     X4
+#>      0.05    0     0.107 -0.083 -0.317
+#>      0.10    0     0.046 -0.085 -0.283
+#>      0.20    0     0.173 -0.084 -0.407
+#>      0.05    1    -0.029 -0.049  0.324
+#>      0.10    1    -0.006 -0.064  0.487
+#>      0.20    1     0.159  0.083  0.203
+#>      0.05    2     0.249  0.153 -0.642
+#>      0.10    2     0.375  0.314 -0.860
+#>      0.20    2     0.084  0.070 -0.322
 #>   Scenarios: 3
 sensitivity$plot
 #> $X1
@@ -292,7 +334,7 @@ sensitivity$plot
 ![](Functions_files/figure-html/sa-1.png)
 
     #> 
-    #> $X3
+    #> $X4
 
 ![](Functions_files/figure-html/sa-2.png)
 
@@ -308,17 +350,17 @@ principal_profile <- QR(
 
 print(principal_profile)
 #> Principal-stratum weighted means
-#>     X1     X3 
-#>  0.117 -0.136 
+#>    X1    X4 
+#> 0.117 0.500 
 #> 
 #> Weighted quantiles (NA for binary variables)
 #> $X1
 #>  q0.25  q0.50  q0.75 
 #> -0.517  0.130  0.728 
 #> 
-#> $X3
-#>  q0.25  q0.50  q0.75 
-#> -0.766 -0.168  0.514
+#> $X4
+#> q0.25 q0.50 q0.75 
+#>    NA    NA    NA
 principal_profile$plot
 #> NULL
 ```
@@ -364,12 +406,12 @@ separate_hte <- HTESepT(
 
 separate_hte$summary
 #>   time covariate estimate    SD LowerBound UpperBound
-#> 1    1 Intercept    0.149 0.062      0.027      0.271
-#> 2    1        X1   -0.055 0.272     -0.589      0.479
-#> 3    1        X3   -0.086 0.209     -0.497      0.324
-#> 4    2 Intercept   -0.046 0.248     -0.533      0.440
-#> 5    2        X1    0.170 0.131     -0.086      0.426
-#> 6    2        X3    0.083 0.199     -0.307      0.474
+#> 1    1 Intercept   -0.019 0.122     -0.259      0.220
+#> 2    1        X1   -0.063 0.280     -0.611      0.486
+#> 3    1        X4    0.345 0.300     -0.243      0.932
+#> 4    2 Intercept    0.212 0.064      0.087      0.338
+#> 5    2        X1    0.166 0.193     -0.213      0.546
+#> 6    2        X4   -0.506 0.556     -1.596      0.584
 separate_hte$forest_plot
 ```
 
@@ -378,12 +420,12 @@ separate_hte$forest_plot
 ``` r
 
 head(separate_hte$boot_mat)
-#>       1_Intercept       1_X1        1_X3 2_Intercept        2_X1       2_X3
-#> boot1  0.15753353  0.2290715 -0.13673408 -0.24449491  0.11106612 -0.1794279
-#> boot2  0.24092663 -0.1103065  0.37406426 -0.41292665 -0.00301342 -0.1142041
-#> boot3  0.22982461  0.1537350  0.23565340 -0.49775542 -0.03054196 -0.1849731
-#> boot4  0.13987791 -0.4202748 -0.05162735 -0.06794426  0.11749858  0.2599216
-#> boot5  0.09411466  0.1793230  0.04375399  0.10963763  0.30037793  0.1173508
+#>       1_Intercept        1_X1      1_X4 2_Intercept        2_X1        2_X4
+#> boot1  0.07044230  0.20360933 0.1404987  0.15163733  0.04579371 -0.73561676
+#> boot2 -0.12408163 -0.02886817 0.6331085  0.20827059 -0.11123892 -1.51657044
+#> boot3  0.07315448  0.20847100 0.1417911  0.04808113 -0.08855529 -0.94695185
+#> boot4 -0.19742717 -0.43617102 0.7375801  0.15990027  0.21257140 -0.60646106
+#> boot5  0.01576182  0.20472683 0.1451984  0.08346920  0.33674388  0.01799855
 ```
 
 ``` r
@@ -398,9 +440,9 @@ pooled_hte <- HTEAllT(
 )
 pooled_hte$summary
 #>          term estimate SD LowerBound UpperBound
-#> 1   Intercept    0.026 NA         NA         NA
+#> 1   Intercept    0.102 NA         NA         NA
 #> 2          X1    0.020 NA         NA         NA
-#> 3          X3    0.031 NA         NA         NA
+#> 3          X4   -0.153 NA         NA         NA
 #> 4 Time Effect    0.004 NA         NA         NA
 pooled_hte$forest_plot
 ```
