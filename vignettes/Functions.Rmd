@@ -51,7 +51,7 @@ mapping <- Mapping(
   baseline_time = 0,
   cutoff_time = 2,
   covariates = c("X1", "X3", "X4", "X5", "X6"),
-  interest_vars = c("X1", "X3"),
+  interest_vars = c("X1", "X4"),
   y_type = "B"
 )
 
@@ -73,6 +73,10 @@ check$can_standardize
 ```
 
 Detailed check report and diagnostics can be retained by using `check$diagnostics` and `check$check`, respectively.
+
+```{r}
+
+```
 
 ## 4. Standardize the panel with `DataStandard()`
 
@@ -104,16 +108,37 @@ con_mapping <- Mapping(
   y_type = "C"
 )
 
-con_data <- DataStandard(ImperfectConSample, con_mapping, drop = TRUE)
+con_check <- DataCheck(ImperfectConSample, con_mapping, strict = FALSE)
+
+
 ```
 
 ```{r}
+con_check$valid
+con_check$ready_for_analysis
+con_check$manual_resolution_required
+con_check$can_standardize
+```
+
+```{r}
+con_data <- DataStandard(ImperfectConSample, con_mapping, drop = TRUE)
 head(con_data)
 ```
 
 ```{r}
 print(dim(ImperfectConSample))
 print(dim(con_data))
+```
+
+```{r}
+names(attributes(con_data))
+
+```
+
+```{r}
+attr_standard <- attributes(con_data)
+attr_standard$pd_standardization$time_map
+head(attr_standard$pd_standardization$id_map)
 ```
 
 ## 5.1 Prediction functions and Diagnostics

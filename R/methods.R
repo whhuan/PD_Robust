@@ -78,7 +78,7 @@ print.QR <- function(x, ...) {
 #' @export
 print.SA <- function(x, ...) {
   cat("Sensitivity analysis\n")
-  print(utils::head(x$beta_df_wide), row.names = FALSE)
+  print(x$beta_df_wide, row.names = FALSE)
   cat("  Scenarios:", length(unique(x$data$ratio)), "\n")
   invisible(x)
 }
