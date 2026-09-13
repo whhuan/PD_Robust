@@ -1072,7 +1072,7 @@
 #' @rdname pd_methods
 #' @export
 print.pd_data_check <- function(x, ...) {
-  cat("PDRobust data validation\n")
+  cat("PDRobust data-validation results and readiness summary.\n")
   cat("  Manual resolution required:",
       if (isTRUE(x$manual_resolution_required)) "YES" else "NO", "\n")
   cat("  Ready for analysis:",

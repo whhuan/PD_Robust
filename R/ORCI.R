@@ -4,9 +4,8 @@
 #' group at the mapped cutoff time.
 #'
 #' @param data A standardized `pd_data` object.
-#' @param fomula Logistic-regression formula with the mapped survival column
-#'   as its response. The spelling `fomula` is retained for compatibility;
-#'   use this spelling when supplying the argument by name.
+#' @param formula Logistic-regression formula with the mapped survival column
+#'   as its response.
 #' @param a Required cutoff treatment group, exactly `0` or `1`.
 #' @param conf_level Confidence level.
 #' @return An `odds_ratios` object containing three-decimal odds-ratio
@@ -28,7 +27,7 @@
 #' result$forestplotdat
 #' }
 #' @export
-ORCI <- function(data, fomula, a, conf_level = 0.95) {
+ORCI <- function(data, formula, a, conf_level = 0.95) {
   mapping <- .pd_require_prepared_data(data, "ORCI")
   if (length(a) != 1L || is.na(a) || !a %in% c(0, 1)) {
     .pd_stop("`a` must be exactly 0 or 1.")
@@ -39,7 +38,7 @@ ORCI <- function(data, fomula, a, conf_level = 0.95) {
   }
 
   data <- .pd_as_data_frame(data)
-  fomula <- .pd_validate_formula(fomula, data, "fomula")
+  formula <- .pd_validate_formula(formula, data, "formula")
   fit_data <- data[
     data[[mapping$time_col]] == mapping$cutoff_time &
       data[[mapping$A_col]] == a,
@@ -51,15 +50,15 @@ ORCI <- function(data, fomula, a, conf_level = 0.95) {
       a, "`."
     )
   }
-  response <- .pd_formula_variables(fomula)[1L]
+  response <- .pd_formula_variables(formula)[1L]
   if (!identical(response, mapping$S_col)) {
     .pd_stop(
-      "`fomula` must use the mapped survival column `",
+      "`formula` must use the mapped survival column `",
       mapping$S_col, "` as its response."
     )
   }
   fit <- .pd_fit_glm_checked(
-    fomula, fit_data,
+    formula, fit_data,
     label = "ORCI cutoff logistic model",
     allow_aliased = TRUE,
     diagnostic_context = list(

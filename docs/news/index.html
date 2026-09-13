@@ -47,6 +47,11 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.8" id="pdrobust-038">PDRobust 0.3.8<a class="anchor" aria-label="anchor" href="#pdrobust-038"></a></h2>
 <div class="section level3">
+<h3 id="interface-correction-and-printed-results-0-3-8">Interface correction and printed results<a class="anchor" aria-label="anchor" href="#interface-correction-and-printed-results-0-3-8"></a></h3>
+<ul><li>Corrected the public <code><a href="../reference/ORCI.html">ORCI()</a></code> argument name from <code>fomula</code> to <code>formula</code> in the function, validation messages, help, examples, vignettes, README, and interface tests. Calls that supplied the former misspelling by name must use <code>formula</code>; positional calls are unchanged.</li>
+<li>Custom print methods now introduce their results with a sentence, display their principal numeric or tabular component, and draw the stored user-facing plot or plots when present. The underlying plot objects and all statistical calculations are unchanged.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="data-validation-and-standardization-0-3-8">Data validation and standardization<a class="anchor" aria-label="anchor" href="#data-validation-and-standardization-0-3-8"></a></h3>
 <ul><li>Replaced repeated subject-level lookups with grouped visit counts, treatment flags, and stable survival ordering. Both validation passes and the existing public interfaces, data ordering, and audit attributes remain.</li>
 <li>Documented all <code><a href="../reference/DataCheck.html">DataCheck()</a></code> return fields and <code><a href="../reference/DataStandard.html">DataStandard()</a></code> attributes, including the distinction between repairability and final analysis readiness. Corrected the data-workflow vignette’s endpoint, row-removal, and metadata descriptions to match the existing implementation.</li>

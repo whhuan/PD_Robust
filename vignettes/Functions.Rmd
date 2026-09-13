@@ -166,7 +166,6 @@ ps_diagnostic <- PSDiag(data = pd_data,
                         ps_fo = ps_fo)
 
 print(ps_diagnostic)
-ps_diagnostic$plot
 ```
 
 ### Principal score model
@@ -190,7 +189,6 @@ principal_diagnostic <- PrinSDiag(
   prin_fo = prin_fo)
 
 print(principal_diagnostic)
-principal_diagnostic$plot
 ```
 
 ### Outcome model
@@ -217,7 +215,6 @@ sensitivity <- SA(
   ratiovec = c(0.05,0.1, 0.2)
 )
 print(sensitivity)
-sensitivity$plot
 ```
 
 ### Principal-stratum profiling with `QR()`
@@ -238,13 +235,12 @@ principal_profile$data
 ```{r or_ci, fig.alt = "Cutoff survival odds ratios and confidence intervals within treatment group zero."}
 or_control <- ORCI(
   data = pd_data,
-  fomula = S ~ X1 + X3 + X4,
+  formula = S ~ X1 + X3 + X4,
   a = 0,
   conf_level = 0.95
 )
 
-print(or_control)             
-or_control$plot
+print(or_control)
 ```
 
 ## 5.2 Heterogeneous treatment effect

@@ -59,8 +59,11 @@ including row and column indices and \code{drop}. For printing and plotting,
 additional arguments are accepted for generic compatibility but ignored.}
 }
 \value{
-Print methods return \code{x} invisibly. Plot methods return the stored
-\code{ggplot} object invisibly. Subsetting returns the selected data; when the
+Print methods display the principal numeric or tabular result and
+return \code{x} invisibly. If the result stores a user-facing plot, its print
+method also draws that same plot; \code{SA} objects draw each stored sensitivity
+plot. Plot methods return the stored \code{ggplot} object invisibly. Subsetting
+returns the selected data; when the
 result is a data frame, mapping and audit attributes and the \code{pd_data}
 class are retained.
 }

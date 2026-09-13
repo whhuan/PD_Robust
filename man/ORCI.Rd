@@ -4,14 +4,13 @@
 \alias{ORCI}
 \title{Estimate treatment-group-specific survival odds ratios at cutoff}
 \usage{
-ORCI(data, fomula, a, conf_level = 0.95)
+ORCI(data, formula, a, conf_level = 0.95)
 }
 \arguments{
 \item{data}{A standardized \code{pd_data} object.}
 
-\item{fomula}{Logistic-regression formula with the mapped survival column
-as its response. The spelling \code{fomula} is retained for compatibility;
-use this spelling when supplying the argument by name.}
+\item{formula}{Logistic-regression formula with the mapped survival column
+as its response.}
 
 \item{a}{Required cutoff treatment group, exactly \code{0} or \code{1}.}
 

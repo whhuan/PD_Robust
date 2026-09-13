@@ -52,3 +52,48 @@ test_that("print methods return objects invisibly", {
   )
   for (object in objects) expect_invisible(print(object))
 })
+
+test_that("print methods introduce results and draw stored user-facing plots", {
+  workflow <- make_pd_workflow()
+  mapping <- workflow$mapping
+  check <- DataCheck(workflow$raw, mapping)
+  diagnostic_ps <- PSDiag(workflow$data, workflow$ps_fo)
+  diagnostic_principal <- PrinSDiag(
+    workflow$data, workflow$ps_fo, workflow$prin_fo
+  )
+  odds <- ORCI(workflow$data, formula = S ~ X1 + X2, a = 0)
+  sensitivity <- SA(
+    workflow$data, workflow$ps_fo, workflow$prin_fo,
+    workflow$out_fo, ratiovec = 0
+  )
+  separate <- HTESepT(
+    workflow$data, workflow$ps_fo, workflow$prin_fo,
+    workflow$out_fo, target_time = 1, B = 0, verbose = FALSE
+  )
+  pooled <- HTEAllT(
+    workflow$data, workflow$ps_fo, workflow$prin_fo,
+    workflow$out_fo, B = 0, verbose = FALSE
+  )
+
+  plot_calls <- 0L
+  original_print_ggplot <- getS3method("print", "ggplot2::ggplot")
+  registerS3method("print", "ggplot2::ggplot", function(x, ...) {
+    plot_calls <<- plot_calls + 1L
+    invisible(x)
+  })
+  on.exit(registerS3method(
+    "print", "ggplot2::ggplot", original_print_ggplot
+  ), add = TRUE)
+
+  expect_output(print(mapping), "mapping and analysis settings[.]", fixed = FALSE)
+  expect_output(print(check), "readiness summary[.]", fixed = FALSE)
+  expect_output(print(diagnostic_ps), "before and after weighting[.]", fixed = FALSE)
+  expect_output(print(diagnostic_principal), "diagnostic statistics[.]", fixed = FALSE)
+  expect_output(print(odds), "confidence intervals[.]", fixed = FALSE)
+  expect_output(print(QR(workflow$data, workflow$prin_fo)),
+                "weighted means and quantiles[.]", fixed = FALSE)
+  expect_output(print(sensitivity), "variance-ratio scenarios[.]", fixed = FALSE)
+  expect_output(print(separate), "treatment-effect estimates[.]", fixed = FALSE)
+  expect_output(print(pooled), "treatment-effect estimates[.]", fixed = FALSE)
+  expect_identical(plot_calls, 5L + length(sensitivity$plot))
+})

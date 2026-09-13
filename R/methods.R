@@ -10,8 +10,11 @@
 #' @param ... For subsetting, arguments passed to the next `[` method,
 #'   including row and column indices and `drop`. For printing and plotting,
 #'   additional arguments are accepted for generic compatibility but ignored.
-#' @return Print methods return `x` invisibly. Plot methods return the stored
-#'   `ggplot` object invisibly. Subsetting returns the selected data; when the
+#' @return Print methods display the principal numeric or tabular result and
+#'   return `x` invisibly. If the result stores a user-facing plot, its print
+#'   method also draws that same plot; `SA` objects draw each stored sensitivity
+#'   plot. Plot methods return the stored `ggplot` object invisibly. Subsetting
+#'   returns the selected data; when the
 #'   result is a data frame, mapping and audit attributes and the `pd_data`
 #'   class are retained.
 #' @details Subsetting copies metadata without recomputing validation or audit
@@ -56,56 +59,62 @@
 #' @rdname pd_methods
 #' @export
 print.pd_hte_timevarying <- function(x, ...) {
-  cat("Time-varying heterogeneous treatment effects\n")
+  cat("Time-varying heterogeneous treatment-effect estimates.\n")
   print(x$summary, row.names = FALSE)
   cat("Bootstrap:", x$bootstrap_info$successful, "/",
       x$bootstrap_info$requested, "successful;",
       x$bootstrap_info$attempts, "attempts\n")
+  print(x$forest_plot)
   invisible(x)
 }
 
 #' @rdname pd_methods
 #' @export
 print.pd_hte_pooled <- function(x, ...) {
-  cat("Pooled heterogeneous treatment effects\n")
+  cat("Pooled heterogeneous treatment-effect estimates.\n")
   print(x$summary, row.names = FALSE)
   cat("Bootstrap:", x$bootstrap_info$successful, "/",
       x$bootstrap_info$requested, "successful;",
       x$bootstrap_info$attempts, "attempts\n")
   if (!is.null(x$note)) cat("Note:", x$note, "\n")
+  print(x$forest_plot)
   invisible(x)
 }
 
 #' @rdname pd_methods
 #' @export
 print.PSDiag <- function(x, ...) {
-  cat("Exposure-model balance diagnostics\n")
+  cat("Exposure-model balance diagnostics before and after weighting.\n")
   print(x$data, row.names = FALSE)
+  print(x$plot)
   invisible(x)
 }
 
 #' @rdname pd_methods
 #' @export
 print.PrinSDiag <- function(x, ...) {
-  cat("Principal-score diagnostics\n")
+  cat("Principal-score standardized diagnostic statistics.\n")
   print(x$pripfigdat, row.names = FALSE)
+  print(x$plot)
   invisible(x)
 }
 
 #' @rdname pd_methods
 #' @export
 print.odds_ratios <- function(x, ...) {
-  cat("Odds ratios and confidence intervals\n")
+  cat("Treatment-group-specific survival odds ratios and confidence intervals.\n")
   print(x$forestplotdat, row.names = FALSE)
+  print(x$plot)
   invisible(x)
 }
 
 #' @rdname pd_methods
 #' @export
 print.QR <- function(x, ...) {
-  cat("Principal-stratum weighted means\n")
+  cat("Principal-stratum weighted means and quantiles.\n")
+  cat("Weighted means:\n")
   print(x$mean)
-  cat("\nWeighted quantiles (NA for binary variables)\n")
+  cat("\nWeighted quantiles (NA for binary variables):\n")
   print(x$quantile)
   invisible(x)
 }
@@ -113,9 +122,10 @@ print.QR <- function(x, ...) {
 #' @rdname pd_methods
 #' @export
 print.SA <- function(x, ...) {
-  cat("Sensitivity analysis\n")
+  cat("Outcome-noise sensitivity estimates across variance-ratio scenarios.\n")
   print(x$beta_df_wide, row.names = FALSE)
   cat("  Scenarios:", length(unique(x$data$ratio)), "\n")
+  for (plot in x$plot) print(plot)
   invisible(x)
 }
 

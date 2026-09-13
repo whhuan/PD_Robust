@@ -119,7 +119,7 @@ Mapping <- function(id, time, treatment,
 #' @rdname pd_methods
 #' @export
 print.pd_mapping <- function(x, ...) {
-  cat("PDRobust data mapping\n")
+  cat("PDRobust data mapping and analysis settings.\n")
   labels <- c(
     id_col = "ID", time_col = "Time", A_col = "Treatment",
     S_col = "Survival", Y_col = "Outcome"

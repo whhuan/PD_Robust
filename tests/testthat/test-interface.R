@@ -31,7 +31,7 @@ test_that("the public interface follows the independent-prediction design", {
 
   expect_identical(
     names(formals(ORCI)),
-    c("data", "fomula", "a", "conf_level")
+    c("data", "formula", "a", "conf_level")
   )
   expect_identical(formals(ORCI)$a, quote(expr = ))
   expect_false("treatment_group" %in% names(formals(ORCI)))
@@ -84,6 +84,14 @@ test_that("ORCI requires explicit a and rejects the obsolete argument", {
   )
   expect_error(
     ORCI(workflow$data, S ~ X1 + X2, treatment_group = 0),
+    "unused argument"
+  )
+  expect_s3_class(
+    ORCI(workflow$data, formula = S ~ X1 + X2, a = 0),
+    "odds_ratios"
+  )
+  expect_error(
+    ORCI(workflow$data, fomula = S ~ X1 + X2, a = 0),
     "unused argument"
   )
 })

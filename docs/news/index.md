@@ -8,6 +8,22 @@
 
 <div class="section level3">
 
+### Interface correction and printed results
+
+-   Corrected the public `ORCI()` argument name from `fomula` to
+    `formula` in the function, validation messages, help, examples,
+    vignettes, README, and interface tests. Calls that supplied the
+    former misspelling by name must use `formula`; positional calls are
+    unchanged.
+-   Custom print methods now introduce their results with a sentence,
+    display their principal numeric or tabular component, and draw the
+    stored user-facing plot or plots when present. The underlying plot
+    objects and all statistical calculations are unchanged.
+
+</div>
+
+<div class="section level3">
+
 ### Data validation and standardization
 
 -   Replaced repeated subject-level lookups with grouped visit counts,
