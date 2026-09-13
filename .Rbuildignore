@@ -15,3 +15,7 @@
 ^doc$
 ^Meta$
 ^pkgdown$
+^sensitivity_analysis\.png$
+^inst/reports$
+^release$
+^vignettes/man$

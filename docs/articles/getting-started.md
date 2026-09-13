@@ -1,3 +1,5 @@
+<div id="main" class="col-md-9" role="main">
+
 # Getting started with PDRobust
 
 PDRobust follows a mapping-driven workflow:
@@ -7,10 +9,13 @@ data("BiSample") -> Mapping() -> DataCheck() -> DataStandard()
                  -> prediction / diagnostic / analysis functions
 ```
 
+<div class="section level2">
+
 ## Prepare the bundled binary data
 
-``` r
+<div id="cb2" class="sourceCode">
 
+``` r
 library(PDRobust)
 
 data("BiSample", package = "PDRobust")
@@ -36,18 +41,22 @@ pd_data <- DataStandard(raw, map)
 standardized_map <- attr(pd_data, "pd_mapping")
 ```
 
-[`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
-returns a `pd_mapping`.
-[`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
-returns a `pd_data_check` report without modifying the data.
-[`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
+</div>
+
+`Mapping()` returns a `pd_mapping`. `DataCheck()` returns a
+`pd_data_check` report without modifying the data. `DataStandard()`
 returns a `pd_data` frame with standardized mapping, ID/time maps,
 readiness checks, and attrition audit stored as attributes.
 
+</div>
+
+<div class="section level2">
+
 ## Prediction functions
 
-``` r
+<div id="cb3" class="sourceCode">
 
+``` r
 ps_fo <- A ~ X1 + X2 + X4
 prin_fo <- S ~ X1 + X2 + X4 + A + time
 out_fo <- Y ~ X1 + X2 + A
@@ -66,13 +75,20 @@ mu1 <- OutPred(
 head(cbind(ps, p0, p1, mu1))
 ```
 
+</div>
+
 Each prediction function refits its model on `fit_dat` and returns a
 numeric `pd_prediction` vector aligned with `pred_dat`.
 
+</div>
+
+<div class="section level2">
+
 ## Diagnostics and profiling
 
-``` r
+<div id="cb4" class="sourceCode">
 
+``` r
 ps_diag <- PSDiag(pd_data, ps_fo)
 prin_diag <- PrinSDiag(pd_data, ps_fo, prin_fo)
 profile <- QR(pd_data, prin_fo, c(0.25, 0.5, 0.75))
@@ -86,17 +102,21 @@ profile$quantile
 odds_ratio$forestplotdat
 ```
 
+</div>
+
 Both diagnostic functions return ggplots. The propensity scores returned
-by [`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md)
-and
-[`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
-are always clipped to `[0.01, 0.99]` before their diagnostic weights or
-denominators are calculated.
+by `PSDiag()` and `PrinSDiag()` are always clipped to `[0.01, 0.99]`
+before their diagnostic weights or denominators are calculated.
+
+</div>
+
+<div class="section level2">
 
 ## Heterogeneous treatment effects
 
-``` r
+<div id="cb5" class="sourceCode">
 
+``` r
 separate <- HTESepT(
   pd_data,
   ps_fo,
@@ -122,16 +142,21 @@ pooled$summary
 pooled$analysis_times
 ```
 
-[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-reports estimates at explicitly selected observed times.
-[`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md)
-pools the complete observed baseline-to-cutoff grid. Setting `B > 0`
-requests successful subject-level bootstrap replications.
+</div>
+
+`HTESepT()` reports estimates at explicitly selected observed times.
+`HTEAllT()` pools the complete observed baseline-to-cutoff grid. Setting
+`B > 0` requests successful subject-level bootstrap replications.
+
+</div>
+
+<div class="section level2">
 
 ## Sensitivity analysis for both outcome types
 
-``` r
+<div id="cb6" class="sourceCode">
 
+``` r
 set.seed(20260728)
 binary_sensitivity <- SA(
   pd_data,
@@ -170,7 +195,12 @@ binary_sensitivity$data
 continuous_sensitivity$data
 ```
 
-[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) derives the
-outcome type from the standardized mapping. It returns tidy and wide
-sensitivity estimates, observed outcome variances by time, and a named
-plot list for the mapped interest variables.
+</div>
+
+`SA()` derives the outcome type from the standardized mapping. It
+returns tidy and wide sensitivity estimates, observed outcome variances
+by time, and a named plot list for the mapped interest variables.
+
+</div>
+
+</div>

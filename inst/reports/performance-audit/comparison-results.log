@@ -1,0 +1,3 @@
+Comparing outcome: continuous 
+Comparing outcome: binary 
+PASS: 2008 exact comparisons (including input immutability and conditions).

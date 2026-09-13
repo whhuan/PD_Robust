@@ -1,4 +1,8 @@
+<div id="main" class="col-md-9" role="main">
+
 # Perform outcome-noise sensitivity analysis
+
+<div class="ref-description section level2">
 
 Restores the original sensitivity-analysis equations and variance
 definition. At each actual observed time from baseline through cutoff,
@@ -6,38 +10,58 @@ the perturbation variance is the ordinary variance of all observed
 outcomes at that time. Both cutoff treatment groups enter the estimating
 equations.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.1))
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- data:
+-   data:
 
-  A standardized continuous- or binary-outcome `pd_data` object.
+    A standardized continuous- or binary-outcome `pd_data` object.
 
-- ps_fo:
+-   ps\_fo:
 
-  Propensity-score formula.
+    Propensity-score formula.
 
-- prin_fo:
+-   prin\_fo:
 
-  Principal-score formula.
+    Principal-score formula.
 
-- out_fo:
+-   out\_fo:
 
-  Outcome-model formula.
+    Outcome-model formula.
 
-- ratiovec:
+-   ratiovec:
 
-  Finite nonnegative outcome-variance ratios.
+    Finite nonnegative outcome-variance ratios.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 An `SA` object containing rounded tidy and wide estimates,
 full-precision estimating diagnostics, consolidated warnings, and plots.
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -48,15 +72,26 @@ perturbations are applied to the estimating-equation outcome while the
 logistic nuisance model is fitted to the original 0/1 outcomes. This
 keeps the outcome model binomial rather than fitting a logistic model to
 invalid pseudo-responses. Binary HTE coefficients use the same
-bounded-link estimating equation as
-[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md).
+bounded-link estimating equation as `HTESepT()`.
+
+This analysis measures sensitivity to the specified random outcome-noise
+perturbation. It does not identify the direction or magnitude of
+arbitrary model misspecification or test the causal identifying
+assumptions. Set an R random seed before calling `SA()` to reproduce its
+perturbations.
 
 All three prediction models are refitted internally; no fitted model is
 cached or reused across calls. Within one scenario, a model fitted to
 the same rows and formula is reused only to obtain the two
 counterfactual treatment predictions.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -69,6 +104,7 @@ map <- Mapping(
   interest_vars = c("X1", "X2"), y_type = "B"
 )
 pd_dat <- DataStandard(BiSample, map)
+set.seed(20260912)
 result <- SA(
   pd_dat,
   A ~ X1 + X2 + X4,
@@ -78,11 +114,17 @@ result <- SA(
 )
 head(result$data)
 #>   ratio time      term estimate
-#> 1     0    0 Intercept    0.225
-#> 2     0    0        X1   -0.041
-#> 3     0    0        X2   -0.070
-#> 4     0    1 Intercept   -0.244
-#> 5     0    1        X1   -0.385
-#> 6     0    1        X2    0.233
+#> 1     0    0 Intercept    0.066
+#> 2     0    0        X1    0.035
+#> 3     0    0        X2    0.053
+#> 4     0    1 Intercept    0.220
+#> 5     0    1        X1   -0.039
+#> 6     0    1        X2   -0.091
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

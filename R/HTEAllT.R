@@ -19,7 +19,7 @@
 #' @param ps_fo Propensity-score formula.
 #' @param prin_fo Principal-score formula.
 #' @param out_fo Outcome-model formula.
-#' @param B Number of successful subject-level bootstrap replications.
+#' @inheritParams HTESepT
 #' @param conf_level Confidence level for Wald intervals based on bootstrap SDs.
 #' @param max_attempts Maximum bootstrap attempts. `NULL` uses `10 * B`.
 #' @param verbose Emit bootstrap progress messages.
@@ -38,6 +38,9 @@
 #'   warning counts, and model diagnostics. Numeric estimates and interval
 #'   summaries are rounded to three decimals only after inference; `boot_mat`
 #'   retains full precision.
+#' @inheritSection HTESepT Numerical safeguards
+#' @inheritSection PDRobust-package Treatment coding
+#' @seealso [PDRobust-package], [pd_methods]
 #' @examples
 #' \donttest{
 #' data("BiSample", package = "PDRobust")

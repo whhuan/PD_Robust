@@ -1,0 +1,4 @@
+"version","n","rows","fun","replicate","elapsed","input_MiB","output_MiB","heap_highwater_MiB","heap_increment_MiB"
+"new",10000,30000,"Mapping",1,0,2.97919464111328,0.0028076171875,37.5,0.0999999999999943
+"new",10000,30000,"DataCheck",1,0.236,2.97919464111328,0.0218429565429688,91.9,53.1
+"new",10000,30000,"DataStandard",1,0.557,2.97919464111328,3.68258666992188,102.7,63.7

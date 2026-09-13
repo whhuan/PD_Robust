@@ -1,7 +1,10 @@
+<div id="main" class="col-md-9" role="main">
+
 # Diagnostics, profiling, and sensitivity analysis
 
-``` r
+<div id="cb1" class="sourceCode">
 
+``` r
 library(PDRobust)
 data("BiSample", package = "PDRobust")
 raw <- BiSample
@@ -22,10 +25,15 @@ ps_fo <- A ~ X1 + X2 + X4
 prin_fo <- S ~ X1 + X2 + X4 + A + time
 ```
 
+</div>
+
+<div class="section level2">
+
 ## Propensity-score balance
 
-``` r
+<div id="cb2" class="sourceCode">
 
+``` r
 ps_diag <- PSDiag(pd_data, ps_fo)
 ps_diag$smd_before
 ps_diag$smd_after
@@ -34,15 +42,22 @@ ps_diag$propensity
 plot(ps_diag)
 ```
 
-[`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md)
-uses the original pooled denominator before weighting and the weighted
-effective-sample-size denominator after ordinary IPTW. Before weights
-are calculated, it always executes `pi <- pmin(pmax(pi, 0.01), 0.99)`.
+</div>
+
+`PSDiag()` uses the original pooled denominator before weighting and the
+weighted effective-sample-size denominator after ordinary IPTW. Before
+weights are calculated, it always executes
+`pi <- pmin(pmax(pi, 0.01), 0.99)`.
+
+</div>
+
+<div class="section level2">
 
 ## Principal-score balance
 
-``` r
+<div id="cb3" class="sourceCode">
 
+``` r
 prin_diag <- PrinSDiag(pd_data, ps_fo, prin_fo)
 prin_diag$statistics
 prin_diag$p0
@@ -51,15 +66,22 @@ prin_diag$propensity
 plot(prin_diag)
 ```
 
-[`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
-evaluates the original diagnostic equation at cutoff using cumulative
-principal probabilities. Its propensity scores are also always clipped
-to `[0.01, 0.99]` before the diagnostic denominators are formed.
+</div>
+
+`PrinSDiag()` evaluates the original diagnostic equation at cutoff using
+cumulative principal probabilities. Its propensity scores are also
+always clipped to `[0.01, 0.99]` before the diagnostic denominators are
+formed.
+
+</div>
+
+<div class="section level2">
 
 ## Principal-stratum summaries
 
-``` r
+<div id="cb4" class="sourceCode">
 
+``` r
 profile <- QR(
   pd_data,
   prin_fo,
@@ -70,15 +92,21 @@ profile$quantile
 profile$weights
 ```
 
-[`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) uses cutoff
-principal-score weights. Means are weighted directly, and quantiles are
-estimated using weighted intercept-only
-[`quantreg::rq()`](https://rdrr.io/pkg/quantreg/man/rq.html) models.
+</div>
+
+`QR()` uses cutoff principal-score weights. Means are weighted directly,
+and quantiles are estimated using weighted intercept-only
+`quantreg::rq()` models.
+
+</div>
+
+<div class="section level2">
 
 ## Treatment-group odds ratios
 
-``` r
+<div id="cb5" class="sourceCode">
 
+``` r
 or0 <- ORCI(pd_data, S ~ X1 + X2 + X4, a = 0)
 or1 <- ORCI(pd_data, S ~ X1 + X2 + X4, a = 1)
 or0$forestplotdat
@@ -86,15 +114,21 @@ or0$model
 plot(or0)
 ```
 
-[`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md) fits a
-cutoff logistic model within the selected treatment group and returns
-exponentiated coefficients, confidence intervals, the fitted model,
-analysis data, settings, and a forest plot.
+</div>
+
+`ORCI()` fits a cutoff logistic model within the selected treatment
+group and returns exponentiated coefficients, confidence intervals, the
+fitted model, analysis data, settings, and a forest plot.
+
+</div>
+
+<div class="section level2">
 
 ## Binary- and continuous-outcome sensitivity analysis
 
-``` r
+<div id="cb6" class="sourceCode">
 
+``` r
 set.seed(20260728)
 binary_sa <- SA(
   pd_data,
@@ -133,9 +167,14 @@ binary_sa$data
 continuous_sa$data
 ```
 
-At each observed time,
-[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) defines
-perturbation variance using the ordinary variance of all observed
-outcomes at that time. Binary analyses retain a binomial logistic
-nuisance model and use the bounded-link HTE equation; continuous
-analyses retain the original linear-model and closed-form equations.
+</div>
+
+At each observed time, `SA()` defines perturbation variance using the
+ordinary variance of all observed outcomes at that time. Binary analyses
+retain a binomial logistic nuisance model and use the bounded-link HTE
+equation; continuous analyses retain the original linear-model and
+closed-form equations.
+
+</div>
+
+</div>

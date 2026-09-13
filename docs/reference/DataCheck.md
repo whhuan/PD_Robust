@@ -1,30 +1,49 @@
+<div id="main" class="col-md-9" role="main">
+
 # Validate longitudinal principal-stratification data
+
+<div class="ref-description section level2">
 
 Uses the column roles, baseline and cutoff endpoints, mapped covariates,
 effect modifiers, and outcome type stored in `mapping`. Every actual
 observed time within the mapped window belongs to the analysis grid.
 Input data are never modified.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 DataCheck(data, mapping, strict = FALSE)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- data:
+-   data:
 
-  A long-format data frame.
+    A long-format data frame.
 
-- mapping:
+-   mapping:
 
-  A `pd_mapping` object returned by
-  [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md).
+    A `pd_mapping` object returned by `Mapping()`.
 
-- strict:
+-   strict:
 
-  Stop when any analysis-blocking check fails.
+    Stop when any analysis-blocking check fails.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
@@ -34,7 +53,13 @@ detailed diagnostics. Calculated display diagnostics are rounded to
 three decimals; counts, row indices, identifiers, and logical flags
 retain their types.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 data("BiSample", package = "PDRobust")
@@ -49,3 +74,9 @@ check <- DataCheck(BiSample, map)
 check$ready_for_analysis
 #> [1] TRUE
 ```
+
+</div>
+
+</div>
+
+</div>

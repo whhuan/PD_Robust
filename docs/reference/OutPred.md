@@ -1,51 +1,75 @@
+<div id="main" class="col-md-9" role="main">
+
 # Estimate outcome predictions
+
+<div class="ref-description section level2">
 
 Refits the outcome model on every call and predicts on all rows of
 `pred_dat`. During prediction the mapped treatment column is set to `a`
 and the mapped survival column is set to one, exactly as in the original
 method.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- out_fo:
+-   out\_fo:
 
-  Outcome-model formula.
+    Outcome-model formula.
 
-- fit_dat:
+-   fit\_dat:
 
-  Data used to fit the outcome model.
+    Data used to fit the outcome model.
 
-- pred_dat:
+-   pred\_dat:
 
-  Data on which to predict.
+    Data on which to predict.
 
-- a:
+-   a:
 
-  Treatment value, either `0` or `1`.
+    Treatment value, either `0` or `1`.
 
-- mapping:
+-   mapping:
 
-  A `pd_mapping` object. `mapping$y_type` selects linear or logistic
-  regression.
+    A `pd_mapping` object. `mapping$y_type` selects linear or logistic
+    regression.
 
-- ...:
+-   ...:
 
-  Additional arguments passed to
-  [`stats::lm()`](https://rdrr.io/r/stats/lm.html) or
-  [`stats::glm()`](https://rdrr.io/r/stats/glm.html).
+    Additional arguments passed to `stats::lm()` or `stats::glm()`.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`,
 rounded to three decimal places after prediction.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 data("BiSample", package = "PDRobust")
@@ -59,5 +83,11 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 mu1 <- OutPred(Y ~ X1 + X2 + A + S, pd_dat, pd_dat, a = 1, mapping = map)
 head(mu1)
-#> [1] 0.287 0.287 0.287 0.147 0.147 0.147
+#> [1] 0.230 0.230 0.230 0.222 0.222 0.222
 ```
+
+</div>
+
+</div>
+
+</div>

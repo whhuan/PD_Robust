@@ -7,7 +7,9 @@ home:
     death.
 reference:
 - title: Package overview
-  contents: PDRobust-package
+  contents:
+  - PDRobust-package
+  - pd_methods
 - title: Mapping and prepared data
   desc: Define the data-layout contract, validate raw data, and attach the standardized
     mapping.
@@ -38,10 +40,10 @@ articles:
 - title: Workflows
   navbar: Workflows
   contents:
+  - '"method-and-coding"'
   - '"data-requirements"'
   - '"prediction-models"'
   - '"diagnostics-profiling-sensitivity"'
   - '"hte"'
   - '"Functions"'
   - '"Details-for-Datacheck"'
-

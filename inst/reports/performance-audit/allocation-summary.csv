@@ -1,0 +1,13 @@
+"version","n","fun","minimum_bytes","allocated_MiB","allocations","new_page_events"
+"old",3000,"Mapping",0,0,0,0
+"old",3000,"DataCheck",0,12.3757019042969,412,2578
+"old",3000,"DataStandard",0,31.824462890625,991,2587
+"new",3000,"Mapping",0,0,0,0
+"new",3000,"DataCheck",0,13.7935485839844,456,0
+"new",3000,"DataStandard",0,35.4738006591797,1103,392
+"old",10000,"Mapping",1000,0,0,0
+"old",10000,"DataCheck",1000,37.464485168457,375,2743
+"old",10000,"DataStandard",1000,97.4047622680664,918,4702
+"new",10000,"Mapping",1000,0,0,0
+"new",10000,"DataCheck",1000,42.2073669433594,420,146
+"new",10000,"DataStandard",1000,109.600074768066,1032,148

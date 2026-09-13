@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
   fig.height = 4.5,
   out.width = "90%",
   fig.align = "center",
-  fig.path = "man/figures/diag-",
   warning = FALSE,
   message = FALSE
 )
@@ -96,7 +95,7 @@ residual imbalance. However, satisfactory covariate balance **does not** by
 itself establish that the propensity score model is correctly specified or
 eliminate the possibility of unmeasured confounding.
 
-```{r}
+```{r, fig.alt = "Absolute standardized mean differences before and after propensity-score weighting."}
 print(ps_diag)
 ps_diag$plot
 ```
@@ -134,7 +133,7 @@ residual discrepancies; values between -1.96 to 1.96 are also acceptable. Values
 outside that range warrant further examination of the principal score model and
 propensity score model.
 
-```{r}
+```{r, fig.alt = "Standardized principal-score balance statistics for the selected covariates."}
 print(prin_diag)
 prin_diag$plot
 ```
@@ -181,7 +180,11 @@ Greater similarity in the magnitude and direction of estimated coeffcients
 across increasing noise levels indicates greater robustness of estimated
 heterogeneous treatment effects.
 
-```{r}
+This comparison concerns the specified random outcome-noise perturbations.
+It does not test the causal identifying assumptions or implement the
+principal-ignorability sensitivity parameter in the methodological paper.
+
+```{r, fig.alt = "Estimated effect-modification coefficients over time at different outcome-noise variance ratios."}
 print(sa)
 sa$plot
 ```
@@ -282,7 +285,7 @@ association remains uncertain. Very wide intervals may indicate limited
 information, sparse outcome events, poor covariate overlap, or unstable model
 estimation within the selected group.
 
-```{r}
+```{r, fig.alt = "Cutoff survival odds ratios and confidence intervals within treatment group zero."}
 print(or0)
 or0$plot
 ```

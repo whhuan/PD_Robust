@@ -1,45 +1,70 @@
+<div id="main" class="col-md-9" role="main">
+
 # Estimate propensity scores
+
+<div class="ref-description section level2">
 
 Fits a logistic propensity-score model on baseline observations from
 `fit_dat` and predicts on every row of `pred_dat`. The model is refitted
 on every call; no fitted object or cache is retained.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 PSPred(ps_fo, fit_dat, pred_dat, mapping, ...)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- ps_fo:
+-   ps\_fo:
 
-  Propensity-score formula.
+    Propensity-score formula.
 
-- fit_dat:
+-   fit\_dat:
 
-  Data used to fit the model.
+    Data used to fit the model.
 
-- pred_dat:
+-   pred\_dat:
 
-  Data on which to predict.
+    Data on which to predict.
 
-- mapping:
+-   mapping:
 
-  A `pd_mapping` object. It supplies column names and `baseline_time`
-  only; it never supplies data.
+    A `pd_mapping` object. It supplies column names and `baseline_time`
+    only; it never supplies data.
 
-- ...:
+-   ...:
 
-  Additional arguments passed to
-  [`stats::glm()`](https://rdrr.io/r/stats/glm.html).
+    Additional arguments passed to `stats::glm()`.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`,
 rounded to three decimal places after prediction.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 data("BiSample", package = "PDRobust")
@@ -53,5 +78,11 @@ map <- Mapping(
 pd_dat <- DataStandard(BiSample, map)
 ps <- PSPred(A ~ X1 + X2 + X4, pd_dat, pd_dat, map)
 head(ps)
-#> [1] 0.971 0.971 0.971 0.933 0.933 0.933
+#> [1] 0.942 0.942 0.942 0.863 0.863 0.863
 ```
+
+</div>
+
+</div>
+
+</div>

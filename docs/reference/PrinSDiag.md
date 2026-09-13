@@ -1,4 +1,8 @@
+<div id="main" class="col-md-9" role="main">
+
 # Diagnose principal-score balance
+
+<div class="ref-description section level2">
 
 Refits the propensity and principal-score models internally. Estimated
 propensity scores are always clipped to `[0.01, 0.99]`. Cumulative
@@ -6,32 +10,54 @@ principal scores use all actual observed times from baseline through
 cutoff, and the diagnostic equation is evaluated at cutoff using the
 original algorithm.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 PrinSDiag(data, ps_fo, prin_fo)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- data:
+-   data:
 
-  A standardized `pd_data` object.
+    A standardized `pd_data` object.
 
-- ps_fo:
+-   ps\_fo:
 
-  Propensity-score formula; its numeric covariates are diagnosed.
+    Propensity-score formula; its numeric covariates are diagnosed.
 
-- prin_fo:
+-   prin\_fo:
 
-  Principal-score formula.
+    Principal-score formula.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 A `PrinSDiag` object containing three-decimal standardized statistics
 and plots; nuisance probabilities retain full precision.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -51,6 +77,12 @@ result <- PrinSDiag(
 )
 result$statistics
 #>     X1     X2     X4 
-#>  0.684 -0.645 -0.284 
+#> -1.182  0.869 -0.074 
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

@@ -1,55 +1,102 @@
+<div id="main" class="col-md-9" role="main">
+
 # Package index
+
+<div class="section level2">
 
 ## Package overview
 
-- [`PDRobust`](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md)
-  [`PDRobust-package`](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md)
-  : PDRobust: Principal-stratification treatment-effect estimation
+</div>
+
+<div class="section level2">
+
+-   `PDRobust` `PDRobust-package` : PDRobust: Principal-stratification
+    treatment-effect estimation
+-   `print(<pd_mapping>)` `print(<pd_data_check>)` `` `[`(<pd_data>) ``
+    `print(<pd_hte_timevarying>)` `print(<pd_hte_pooled>)`
+    `print(<PSDiag>)` `print(<PrinSDiag>)` `print(<odds_ratios>)`
+    `print(<QR>)` `print(<SA>)` `plot(<pd_hte_timevarying>)`
+    `plot(<pd_hte_pooled>)` `plot(<PSDiag>)` `plot(<PrinSDiag>)`
+    `plot(<odds_ratios>)` : Display and subset PDRobust objects
+
+</div>
+
+<div class="section level2">
 
 ## Mapping and prepared data
+
+<div class="section-desc">
 
 Define the data-layout contract, validate raw data, and attach the
 standardized mapping.
 
-- [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
-  : Define the PDRobust data mapping
-- [`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
-  : Validate longitudinal principal-stratification data
-- [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
-  : Standardize longitudinal principal-stratification data
-- [`BiSample`](https://whhuan.github.io/PD_Robust/reference/BiSample.md)
-  : Binary longitudinal example data
-- [`ImperfectConSample`](https://whhuan.github.io/PD_Robust/reference/ImperfectConSample.md)
-  : Imperfect Continuous Longitudinal Example Data
+</div>
+
+</div>
+
+<div class="section level2">
+
+-   `Mapping()` : Define the PDRobust data mapping
+-   `DataCheck()` : Validate longitudinal principal-stratification data
+-   `DataStandard()` : Standardize longitudinal principal-stratification
+    data
+-   `BiSample` : Binary longitudinal example data
+-   `ImperfectConSample` : Imperfect Continuous Longitudinal Example
+    Data
+
+</div>
+
+<div class="section level2">
 
 ## Independent prediction functions
+
+<div class="section-desc">
 
 Refit and predict independently on every call without cached fitted
 models.
 
-- [`PSPred()`](https://whhuan.github.io/PD_Robust/reference/PSPred.md) :
-  Estimate propensity scores
-- [`PrinPred()`](https://whhuan.github.io/PD_Robust/reference/PrinPred.md)
-  : Estimate cumulative principal scores
-- [`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md)
-  : Estimate outcome predictions
+</div>
+
+</div>
+
+<div class="section level2">
+
+-   `PSPred()` : Estimate propensity scores
+-   `PrinPred()` : Estimate cumulative principal scores
+-   `OutPred()` : Estimate outcome predictions
+
+</div>
+
+<div class="section level2">
 
 ## Heterogeneous treatment effects
 
-- [`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-  : Estimate time-specific heterogeneous treatment effects
-- [`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md)
-  : Estimate pooled heterogeneous treatment effects across all times
+</div>
+
+<div class="section level2">
+
+-   `HTESepT()` : Estimate time-specific heterogeneous treatment effects
+-   `HTEAllT()` : Estimate pooled heterogeneous treatment effects across
+    all times
+
+</div>
+
+<div class="section level2">
 
 ## Diagnostics and supporting analyses
 
-- [`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md) :
-  Diagnose propensity-score covariate balance
-- [`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
-  : Diagnose principal-score balance
-- [`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) :
-  Summarize cutoff covariates in the always-survivor principal stratum
-- [`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md) :
-  Estimate treatment-group-specific survival odds ratios at cutoff
-- [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) : Perform
-  outcome-noise sensitivity analysis
+</div>
+
+<div class="section level2">
+
+-   `PSDiag()` : Diagnose propensity-score covariate balance
+-   `PrinSDiag()` : Diagnose principal-score balance
+-   `QR()` : Summarize cutoff covariates in the always-survivor
+    principal stratum
+-   `ORCI()` : Estimate treatment-group-specific survival odds ratios at
+    cutoff
+-   `SA()` : Perform outcome-noise sensitivity analysis
+
+</div>
+
+</div>

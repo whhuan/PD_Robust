@@ -1,56 +1,76 @@
+<div id="main" class="col-md-9" role="main">
+
 # Imperfect Continuous Longitudinal Example Data
 
+<div class="ref-description section level2">
+
 A deliberately imperfect continuous-outcome longitudinal data set
-derived from the analysis-ready `ConSample` data. The data mimic common
+derived from a simulated continuous-outcome panel. The data mimic common
 issues encountered in raw clinical data exports while remaining
-recoverable using
-[`DataCheck`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
-and
-[`DataStandard`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
-with `drop = TRUE`.
+recoverable using `DataCheck` and `DataStandard` with `drop = TRUE`.
+
+</div>
+
+<div class="section level2">
 
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 ImperfectConSample
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Format
 
-A data frame in long format with one row per subject and visit,
-containing the following variables:
+A data frame with 599 rows and 11 variables in long format, with one row
+per recorded subject and visit:
 
-- `patient_id`:
+-   `patient_id`:
 
-  Noncanonical character subject identifier.
+    Noncanonical character subject identifier.
 
-- `visit_month`:
+-   `visit_month`:
 
-  Character-encoded visit time in months.
+    Character-encoded visit time in months.
 
-- `treatment`:
+-   `treatment`:
 
-  Character-encoded binary treatment assignment.
+    Character-encoded binary treatment assignment.
 
-- `alive_status`:
+-   `alive_status`:
 
-  Character-encoded binary survival or intermediate status.
+    Character-encoded binary survival or intermediate status.
 
-- X1, X2, X3:
+-   X1, X2, X3:
 
-  Continuous baseline covariates.
+    Continuous baseline covariates.
 
-- X4, X5, X6:
+-   X4, X5, X6:
 
-  Binary baseline covariates.
+    Binary baseline covariates.
 
-- `clinical_outcome`:
+-   `clinical_outcome`:
 
-  Continuous longitudinal clinical outcome.
+    Continuous longitudinal clinical outcome.
+
+</div>
+
+<div class="section level2">
 
 ## Source
 
 Simulated for package examples.
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -61,7 +81,13 @@ outcome among survivors, and a record with a missing subject identifier.
 Structural outcome missingness for records with `alive_status = 0` is
 retained.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 data("ImperfectConSample", package = "PDRobust")
@@ -81,3 +107,9 @@ head(ImperfectConSample)
 #> 5 -3.333  0  1  0
 #> 6 -0.092  0  1  0
 ```
+
+</div>
+
+</div>
+
+</div>

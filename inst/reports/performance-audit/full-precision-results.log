@@ -1,0 +1,10 @@
+PASS unrounded ps outcome C 
+PASS unrounded prin outcome C 
+PASS unrounded out outcome C 
+PASS unrounded all outcome C 
+PASS unrounded sep outcome C 
+PASS unrounded ps outcome B 
+PASS unrounded prin outcome B 
+PASS unrounded out outcome B 
+PASS unrounded all outcome B 
+PASS unrounded sep outcome B 

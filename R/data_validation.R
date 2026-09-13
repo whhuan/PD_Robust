@@ -98,6 +98,41 @@
   frequency_ratio >= 19 && percent_unique <= 10
 }
 
+# Count distinct subject/visit pairs using the same numeric equality as `%in%`.
+# Integer group codes come from factor(character keys), just as in split().
+# No subject-by-time matrix or list of one object per subject is needed.
+.pd_panel_visits <- function(group, time, required_times, n_groups,
+                             unique_pairs = FALSE) {
+  visit <- match(time, required_times)
+  rows <- which(!is.na(group) & !is.na(visit))
+  if (!unique_pairs) {
+    rows <- rows[order(group[rows], visit[rows])]
+    if (length(rows) > 1L) {
+      previous <- rows[-length(rows)]
+      current <- rows[-1L]
+      rows <- rows[c(TRUE, group[current] != group[previous] |
+                      visit[current] != visit[previous])]
+    }
+  }
+  list(
+    complete = tabulate(group[rows], nbins = n_groups) == length(required_times),
+    missing = n_groups - tabulate(visit[rows], nbins = length(required_times))
+  )
+}
+
+# Keep ordering temporaries local so later diagnostics can reuse their memory.
+.pd_survival_increases <- function(group, time, status, n_groups) {
+  rows <- which(!is.na(group) & !is.na(status))
+  # Stable numeric ordering preserves original row order for tied/missing times.
+  rows <- rows[order(group[rows], time[rows], na.last = TRUE)]
+  if (length(rows) <= 1L) return(rep(FALSE, n_groups))
+  previous <- rows[-length(rows)]
+  current <- rows[-1L]
+  increases <- group[current] == group[previous] &
+    status[current] > status[previous]
+  tabulate(group[current[increases]], nbins = n_groups) > 0L
+}
+
 .pd_check_data_impl <- function(data, mapping, strict = FALSE) {
   mapping <- .pd_validate_mapping(mapping)
   if (length(strict) != 1L || is.na(strict) || !is.logical(strict)) {
@@ -308,26 +343,41 @@
   )
 
   valid_id_rows <- which(!is.na(data[[id_col]]))
-  id_values <- unique(.pd_key(data[[id_col]][valid_id_rows]))
-  id_groups <- split(valid_id_rows, .pd_key(data[[id_col]][valid_id_rows]))
+  valid_id_keys <- .pd_key(data[[id_col]][valid_id_rows])
+  id_values <- unique(valid_id_keys)
+  id_factor <- factor(valid_id_keys)
+  group_names <- levels(id_factor)
+  group <- rep(NA_integer_, nrow(data))
+  group[valid_id_rows] <- as.integer(id_factor)
+  n_subjects <- length(group_names)
   complete_subject <- stats::setNames(rep(FALSE, length(id_values)), id_values)
   missing_by_time <- data.frame(
     time = analysis_times,
     missing_subjects = integer(length(analysis_times)),
     stringsAsFactors = FALSE
   )
-  if (length(analysis_times) && length(id_groups)) {
-    for (subject in names(id_groups)) {
-      observed <- unique(numeric_time[id_groups[[subject]]])
-      complete_subject[[subject]] <- all(analysis_times %in% observed)
+  if (length(analysis_times) && n_subjects) {
+    if (any(!nzchar(group_names))) {
+      # Preserve legacy named-[[ behavior for the accepted empty-string ID.
+      id_groups <- split(valid_id_rows, valid_id_keys)
+      for (subject in names(id_groups)) {
+        observed <- unique(numeric_time[id_groups[[subject]]])
+        complete_subject[[subject]] <- all(analysis_times %in% observed)
+      }
+      missing_by_time$missing_subjects <- vapply(analysis_times, function(t) {
+        sum(!vapply(id_groups, function(idx) t %in% numeric_time[idx], logical(1)))
+      }, integer(1))
+    } else {
+      visits <- .pd_panel_visits(
+        group, numeric_time, analysis_times, n_subjects,
+        unique_pairs = !length(duplicate_rows)
+      )
+      complete_subject[match(group_names, id_values)] <- visits$complete
+      missing_by_time$missing_subjects <- visits$missing
     }
-    missing_by_time$missing_subjects <- vapply(analysis_times, function(t) {
-      sum(!vapply(id_groups, function(idx) t %in% numeric_time[idx], logical(1)))
-    }, integer(1))
   }
   diagnostics$missing_by_time <- missing_by_time
   diagnostics$incomplete_subjects <- names(complete_subject)[!complete_subject]
-  n_subjects <- length(id_groups)
   n_complete <- sum(complete_subject)
   add_check(
     "complete_longitudinal_structure",
@@ -435,10 +485,10 @@
     rep(NA_integer_, nrow(data))
 
   treatment_changes <- character()
-  if (length(id_groups) && treatment_conversion$ok) {
-    treatment_changes <- names(id_groups)[vapply(id_groups, function(idx) {
-      length(unique(stats::na.omit(A_numeric[idx]))) > 1L
-    }, logical(1))]
+  if (n_subjects && treatment_conversion$ok) {
+    has_zero <- tabulate(group[which(A_numeric == 0L)], nbins = n_subjects) > 0L
+    has_one <- tabulate(group[which(A_numeric == 1L)], nbins = n_subjects) > 0L
+    treatment_changes <- group_names[has_zero & has_one]
   }
   diagnostics$treatment_changes <- treatment_changes
   add_check(
@@ -454,12 +504,10 @@
   )
 
   impossible_survival <- character()
-  if (length(id_groups) && survival_conversion$ok && time_conversion$ok) {
-    impossible_survival <- names(id_groups)[vapply(id_groups, function(idx) {
-      ord <- idx[order(numeric_time[idx], na.last = TRUE)]
-      s <- stats::na.omit(S_numeric[ord])
-      length(s) > 1L && any(diff(s) > 0)
-    }, logical(1))]
+  if (n_subjects && survival_conversion$ok && time_conversion$ok) {
+    impossible_survival <- group_names[.pd_survival_increases(
+      group, numeric_time, S_numeric, n_subjects
+    )]
   }
   diagnostics$impossible_survival_transitions <- impossible_survival
   add_check(
@@ -634,7 +682,7 @@
     standardize_can_fix = covariate_missing_total > 0L
   )
 
-  ordering_complete <- which(!is.na(data[[id_col]]) & !is.na(numeric_time))
+  ordering_complete <- complete_rows
   expected_order <- ordering_complete[
     order(data[[id_col]][ordering_complete],
           numeric_time[ordering_complete])
@@ -645,9 +693,7 @@
   } else {
     numeric()
   }
-  observed_window <- observed_times[
-    observed_times >= baseline_time & observed_times <= cutoff_time
-  ]
+  observed_window <- observed_in_window
   add_check(
     "time_coding_and_order",
     time_conversion$ok && ordered_correctly &&
@@ -842,7 +888,9 @@
     .pd_stop("The data must contain baseline and cutoff observations after time conversion.")
   }
   id_key <- .pd_key(data[[id_col]])
-  id_groups <- split(seq_len(nrow(data)), id_key)
+  id_factor <- factor(id_key)
+  group_names <- levels(id_factor)
+  group <- as.integer(id_factor)
   mark_subjects <- function(subjects, reason) {
     if (!length(subjects)) return(invisible(NULL))
     drop_reasons <<- rbind(
@@ -853,15 +901,36 @@
     invisible(NULL)
   }
 
-  incomplete <- names(id_groups)[vapply(id_groups, function(idx) {
-    !all(required_times %in% data[[time_col]][idx])
-  }, logical(1))]
-  missing_model_data <- names(id_groups)[vapply(id_groups, function(idx) {
-    anyNA(data[[A_col]][idx]) || anyNA(data[[S_col]][idx]) ||
-      any(data[[S_col]][idx] == 1 & is.na(data[[Y_col]][idx])) ||
-      (length(covariates) &&
-         any(!stats::complete.cases(data[idx, covariates, drop = FALSE])))
-  }, logical(1))]
+  # The initial check rejects duplicates before any rows are filtered. Filtering
+  # cannot introduce a duplicate, so counting rows now counts distinct visits.
+  visits <- .pd_panel_visits(group, data[[time_col]], required_times,
+                            length(group_names), unique_pairs = TRUE)
+  incomplete <- group_names[!visits$complete]
+  plain_covariates <- vapply(data[covariates], function(x) {
+    typeof(x) %in% c("logical", "integer", "double", "character") &&
+      is.null(attributes(x))
+  }, logical(1))
+  if (all(plain_covariates)) {
+    missing_rows <- is.na(data[[A_col]]) | is.na(data[[S_col]]) |
+      (data[[S_col]] == 1 & is.na(data[[Y_col]]))
+    if (length(covariates)) {
+      missing_rows <- missing_rows |
+        !stats::complete.cases(data[, covariates, drop = FALSE])
+    }
+    missing_model_data <- group_names[
+      tabulate(group[which(missing_rows)], nbins = length(group_names)) > 0L
+    ]
+  } else {
+    # Preserve subsetting methods and short-circuit error behavior for classed,
+    # matrix, and list covariates rather than broadening accepted inputs.
+    id_groups <- split(seq_len(nrow(data)), id_key)
+    missing_model_data <- names(id_groups)[vapply(id_groups, function(idx) {
+      anyNA(data[[A_col]][idx]) || anyNA(data[[S_col]][idx]) ||
+        any(data[[S_col]][idx] == 1 & is.na(data[[Y_col]][idx])) ||
+        (length(covariates) &&
+           any(!stats::complete.cases(data[idx, covariates, drop = FALSE])))
+    }, logical(1))]
+  }
   mark_subjects(incomplete, "missing_analysis_visit")
   mark_subjects(missing_model_data, "missing_required_analysis_value")
   subjects_to_drop <- unique(c(incomplete, missing_model_data))
@@ -1000,7 +1069,7 @@
   x
 }
 
-#' @noRd
+#' @rdname pd_methods
 #' @export
 print.pd_data_check <- function(x, ...) {
   cat("PDRobust data validation\n")

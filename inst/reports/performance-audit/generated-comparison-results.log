@@ -1,0 +1,6 @@
+PASS generated outcome 1 K 1 N 1000 ordered/shuffled and RNG
+PASS generated outcome 1 K 3 N 10000 ordered/shuffled and RNG
+PASS generated outcome 1 K 6 N 1000 ordered/shuffled and RNG
+PASS generated outcome 2 K 1 N 1000 ordered/shuffled and RNG
+PASS generated outcome 2 K 3 N 10000 ordered/shuffled and RNG
+PASS generated outcome 2 K 6 N 1000 ordered/shuffled and RNG

@@ -1,14 +1,22 @@
+<div id="main" class="col-md-9" role="main">
+
 # Define the PDRobust data mapping
+
+<div class="ref-description section level2">
 
 Creates the single source of truth for structural columns, baseline and
 cutoff times, prediction-model covariates, effect modifiers, and outcome
 type. `target_time` is deliberately not stored in the mapping; it is an
-argument of
-[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-only. All ten arguments are required; no structural role or analysis
-setting is inferred or defaulted.
+argument of `HTESepT()` only. All ten arguments are required; no
+structural role or analysis setting is inferred or defaulted.
+
+</div>
+
+<div class="section level2">
 
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 Mapping(
@@ -25,55 +33,75 @@ Mapping(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- id:
+-   id:
 
-  Character scalar naming the subject ID column.
+    Character scalar naming the subject ID column.
 
-- time:
+-   time:
 
-  Character scalar naming the analysis time column.
+    Character scalar naming the analysis time column.
 
-- treatment:
+-   treatment:
 
-  Character scalar naming the treatment column.
+    Character scalar naming the treatment column. For causal estimation,
+    code the survival-favorable arm as `1` and the other arm as `0`; see
+    [PDRobust-package](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md)
+    for the convention and assumptions. Mapping does not infer which arm
+    is survival-favorable.
 
-- survival:
+-   survival:
 
-  Character scalar naming the survival/intermediate status column.
+    Character scalar naming the survival/intermediate status column.
 
-- outcome:
+-   outcome:
 
-  Character scalar naming the outcome column.
+    Character scalar naming the outcome column.
 
-- baseline_time:
+-   baseline\_time:
 
-  One finite numeric baseline time in the raw time scale.
+    One finite numeric baseline time in the raw time scale.
 
-- cutoff_time:
+-   cutoff\_time:
 
-  One finite numeric cutoff time in the raw time scale.
+    One finite numeric cutoff time in the raw time scale.
 
-- covariates:
+-   covariates:
 
-  Character vector naming every non-structural variable used in any
-  prediction-model formula.
+    Character vector naming every non-structural variable used in any
+    prediction-model formula.
 
-- interest_vars:
+-   interest\_vars:
 
-  Character vector naming effect modifiers or profiling variables. Every
-  entry must also occur in `covariates`.
+    Character vector naming effect modifiers or profiling variables.
+    Every entry must also occur in `covariates`.
 
-- y_type:
+-   y\_type:
 
-  Outcome type code: `"C"` for continuous or `"B"` for binary.
+    Outcome type code: `"C"` for continuous or `"B"` for binary.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 A `pd_mapping` object.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 map <- Mapping(
@@ -98,3 +126,9 @@ map
 #>   Interest variables: X1, X2
 #>   Outcome type: C (continuous)
 ```
+
+</div>
+
+</div>
+
+</div>

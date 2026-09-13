@@ -29,7 +29,10 @@ HTESepT(
 \item{target_time}{Non-empty numeric vector of observed standardized times.
 Baseline is allowed.}
 
-\item{B}{Number of successful subject-level bootstrap replications.}
+\item{B}{Number of successful subject-level bootstrap replications. Use
+\code{0} for point estimates only. Set a random seed before the call for
+reproducible resampling. Small values used in demonstrations are not
+sufficient for substantive interval estimation.}
 
 \item{conf_level}{Confidence level for Wald intervals based on bootstrap SDs.}
 
@@ -71,6 +74,30 @@ consolidated at the analysis boundary. Model-level details remain available
 in \code{model_diagnostics}; bootstrap warnings and their counts are stored in
 \code{bootstrap_info}.
 }
+\section{Numerical safeguards}{
+
+Propensity scores are clipped to \verb{[0.01, 0.99]}, and their product with
+treatment-1 survival probabilities is clipped to \verb{[0.005, 0.995]} in
+the estimating equation. These fixed limits stabilize denominators but
+change the equation when active; they do not establish adequate overlap
+or the causal assumptions. Inspect the model diagnostics and assess
+sensitivity to sparse risk sets. Returned summaries are rounded only after
+inference; full-precision bootstrap coefficients are in \code{boot_mat}.
+}
+
+\section{Treatment coding}{
+
+The implemented estimator uses treatment \code{1} as the survival-favorable arm:
+potential survival satisfies \eqn{S^1 \ge S^0} at cutoff. Its always-survivor
+principal score is therefore the survival probability under treatment \code{0}.
+This convention is retained from version 0.3.7. The main estimator in the
+reference below uses the opposite arm labels. To analyze data coded in that
+convention, recode the raw treatment as \code{1 - A} before mapping and
+standardizing. To report the original contrast, negate the package estimate
+and transform an interval \verb{[lower, upper]} to \verb{[-upper, -lower]}.
+\code{Mapping()} does not infer or reverse treatment coding.
+}
+
 \examples{
 \donttest{
 data("BiSample", package = "PDRobust")
@@ -91,4 +118,7 @@ fit <- HTESepT(
 )
 fit$summary
 }
+}
+\seealso{
+\link{PDRobust-package}, \link{pd_methods}
 }

@@ -14,6 +14,11 @@
 #' Binary HTE coefficients use the same bounded-link estimating equation as
 #' `HTESepT()`.
 #'
+#' This analysis measures sensitivity to the specified random outcome-noise
+#' perturbation. It does not identify the direction or magnitude of arbitrary
+#' model misspecification or test the causal identifying assumptions. Set an
+#' R random seed before calling `SA()` to reproduce its perturbations.
+#'
 #' All three prediction models are refitted internally; no fitted model is
 #' cached or reused across calls. Within one scenario, a model fitted to the
 #' same rows and formula is reused only to obtain the two counterfactual
@@ -37,6 +42,7 @@
 #'   interest_vars = c("X1", "X2"), y_type = "B"
 #' )
 #' pd_dat <- DataStandard(BiSample, map)
+#' set.seed(20260912)
 #' result <- SA(
 #'   pd_dat,
 #'   A ~ X1 + X2 + X4,

@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
   fig.height = 4.5,
   out.width = "90%",
   fig.align = "center",
-  # fig.path = "man/figures/functions-",
   warning = FALSE,
   message = FALSE
 )
@@ -25,7 +24,7 @@ knitr::opts_chunk$set(
 
 # PDRobust
 
-This is a replicating process for script.
+This vignette demonstrates validation, prediction, diagnostics, and treatment effect estimation using the bundled data.
 
 ``` text
 data("BiSample") -> Mapping() -> DataCheck() -> DataStandard() -> prediction / diagnostic / analysis functions
@@ -72,7 +71,7 @@ check$manual_resolution_required
 check$can_standardize
 ```
 
-Detailed check report and diagnostics can be retained by using `check$diagnostics` and `check$check`, respectively.
+The itemized report is in `check$checks`; supporting details are in `check$diagnostics`.
 
 ```{r}
 
@@ -162,7 +161,7 @@ ps <- PSPred(
 head(ps)
 ```
 
-```{r ps_dgn}
+```{r ps_dgn, fig.alt = "Absolute standardized mean differences before and after propensity-score weighting."}
 ps_diagnostic <- PSDiag(data = pd_data,
                         ps_fo = ps_fo)
 
@@ -184,7 +183,7 @@ p0 <- PrinPred(
 head(p0)
 ```
 
-```{r pps_dgn}
+```{r pps_dgn, fig.alt = "Standardized principal-score balance statistics for the selected covariates."}
 principal_diagnostic <- PrinSDiag(
   data = pd_data, 
   ps_fo = ps_fo, 
@@ -208,7 +207,7 @@ mu1 <- OutPred(
 head(mu1)
 ```
 
-```{r sa}
+```{r sa, fig.alt = "Estimated effect-modification coefficients over time at different outcome-noise variance ratios."}
 set.seed(12345)
 sensitivity <- SA(
   data  = pd_data,
@@ -231,12 +230,12 @@ principal_profile <- QR(
 )
 
 print(principal_profile)
-principal_profile$plot
+principal_profile$data
 ```
 
 ### Treatment-group odds ratios
 
-```{r or_ci}
+```{r or_ci, fig.alt = "Cutoff survival odds ratios and confidence intervals within treatment group zero."}
 or_control <- ORCI(
   data = pd_data,
   fomula = S ~ X1 + X3 + X4,
@@ -250,7 +249,9 @@ or_control$plot
 
 ## 5.2 Heterogeneous treatment effect
 
-```{r htesept}
+The five bootstrap replications below are only for a fast demonstration. Substantive standard errors and confidence intervals require more replications and an assessment of their stability. Use `B = 0` for point estimates alone.
+
+```{r htesept, fig.alt = "Time-specific treatment-effect model coefficients and demonstration bootstrap confidence intervals."}
 set.seed(12345)
 separate_hte <- HTESepT(
   data = pd_data,
@@ -272,7 +273,7 @@ separate_hte$forest_plot
 head(separate_hte$boot_mat)
 ```
 
-```{r hteallt}
+```{r hteallt, fig.alt = "Pooled treatment-effect model point estimates; bootstrap intervals are not calculated in this example."}
 pooled_hte <- HTEAllT(
   data = pd_data,
   ps_fo = ps_fo,

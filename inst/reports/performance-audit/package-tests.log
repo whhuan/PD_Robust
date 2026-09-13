@@ -1,0 +1,75 @@
+bootstrap-progress-callback: .....................
+cran-rjournal-contracts: ...............................
+custom-mapping: ..........
+data-contracts-035: ......................................................
+data-scalability: ................
+data-validation-expanded: ...........
+data-workflow: .......................
+diagnostics: ....................
+edge-cases: .........
+errors-validation: ..................
+example-data: ....................................
+hte-bootstrap: ................................
+input-invariance: ...
+interface: ...............................
+model-preflight-035: ..............................
+plot-colors: ......
+predictions: ...............................................
+restored-algorithms: ..................
+return-objects: ...................Exposure-model balance diagnostics
+ covariate adjustment   smd
+        X1     Before 0.748
+        X2     Before 0.079
+        X4     Before 0.089
+        X1      After 0.020
+        X2      After 0.008
+        X4      After 0.052
+.Principal-score diagnostics
+ covariate statistic
+        X1     0.055
+        X2     0.552
+        X4    -0.533
+.Principal-stratum weighted means
+    X1     X2 
+-0.176  0.136 
+
+Weighted quantiles (NA for binary variables)
+$X1
+  q0.5 
+-0.145 
+
+$X2
+ q0.5 
+0.195 
+
+.Odds ratios and confidence intervals
+ covname estcoef lowerbd upperbd
+      X1    0.75   0.510   1.103
+      X2    1.21   0.861   1.700
+.Sensitivity analysis
+ ratiovec time Intercept    X1     X2
+        0    0     0.267 0.071  0.040
+        0    1     0.301 0.096 -0.210
+        0    2     0.542 0.082 -0.029
+  Scenarios: 1 
+.Time-varying heterogeneous treatment effects
+ time covariate estimate SD LowerBound UpperBound
+    1 Intercept    0.301 NA         NA         NA
+    1        X1    0.096 NA         NA         NA
+    1        X2   -0.210 NA         NA         NA
+Bootstrap: 0 / 0 successful; 0 attempts
+.Pooled heterogeneous treatment effects
+        term estimate SD LowerBound UpperBound
+   Intercept    0.249 NA         NA         NA
+          X1    0.083 NA         NA         NA
+          X2   -0.066 NA         NA         NA
+ Time Effect    0.121 NA         NA         NA
+Bootstrap: 0 / 0 successful; 0 attempts
+.
+return-rounding-037: ...................................................
+row-order-alignment: .....
+time-scope: ............
+warning-policy-037: .........................
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+TOTAL 535 passed; 0 failed; 0 errors; 0 warnings; 0 skipped

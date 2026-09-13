@@ -5,8 +5,8 @@
 \alias{ImperfectConSample}
 \title{Imperfect Continuous Longitudinal Example Data}
 \format{
-A data frame in long format with one row per subject and visit,
-containing the following variables:
+A data frame with 599 rows and 11 variables in long format,
+with one row per recorded subject and visit:
 \describe{
 \item{\code{patient_id}}{Noncanonical character subject identifier.}
 \item{\code{visit_month}}{Character-encoded visit time in months.}
@@ -25,7 +25,7 @@ ImperfectConSample
 }
 \description{
 A deliberately imperfect continuous-outcome longitudinal data set derived
-from the analysis-ready \code{ConSample} data. The data mimic common issues
+from a simulated continuous-outcome panel. The data mimic common issues
 encountered in raw clinical data exports while remaining recoverable using
 \code{\link{DataCheck}} and \code{\link{DataStandard}} with
 \code{drop = TRUE}.

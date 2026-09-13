@@ -4,7 +4,9 @@
 #' group at the mapped cutoff time.
 #'
 #' @param data A standardized `pd_data` object.
-#' @param fomula Logistic-regression formula.
+#' @param fomula Logistic-regression formula with the mapped survival column
+#'   as its response. The spelling `fomula` is retained for compatibility;
+#'   use this spelling when supplying the argument by name.
 #' @param a Required cutoff treatment group, exactly `0` or `1`.
 #' @param conf_level Confidence level.
 #' @return An `odds_ratios` object containing three-decimal odds-ratio

@@ -1,6 +1,6 @@
 Package: PDRobust
-Title: Robust Longitudinal Treatment Effect Estimation Under Truncation by Death
-Version: 0.3.7.2
+Title: Robust Longitudinal Effects Under Truncation by Death
+Version: 0.3.8
 Authors@R: c(
     person(
         given = "Huan",
@@ -16,16 +16,14 @@ Authors@R: c(
   )
 Description: Implements principal-stratification methods for estimating
     time-specific and pooled heterogeneous treatment effects in longitudinal
-    studies where outcomes may be truncated by death. An explicit mapping is
-    the sole source of truth for structural columns, baseline and cutoff times,
-    prediction-model covariates, effect modifiers, and continuous or binary
-    outcome type. The propensity-score, principal-score, and outcome-prediction
-    functions refit and predict independently on every call and do not create
-    shared fitted-model state. Time-specific estimation accepts an explicit set
-    of target times, while pooled estimation always uses every observed time
-    from baseline through cutoff. The package also provides subject-level
-    bootstrap inference, balance diagnostics, principal-stratum summaries,
-    treatment-group-specific odds-ratio estimation, and sensitivity analysis.
+    studies where outcomes may be truncated by death. Supports continuous and
+    binary outcomes, explicit data validation and standardization, and
+    covariate-dependent treatment effects. Fits propensity-score,
+    principal-score, and outcome models and provides subject-level bootstrap
+    inference, covariate-balance diagnostics, principal-stratum summaries,
+    treatment-group-specific survival odds ratios, and outcome-noise
+    sensitivity analysis. Methodological background is provided by
+    Zhang et al. (2026) <doi:10.48550/arXiv.2608.06654>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

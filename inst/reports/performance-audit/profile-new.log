@@ -1,0 +1,12 @@
+ version     n  rows     fun replicate elapsed input_MiB  output_MiB
+     new 10000 30000 Mapping         1       0  2.979195 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               37.5                0.1
+ version     n  rows       fun replicate elapsed input_MiB output_MiB
+     new 10000 30000 DataCheck         1   0.236  2.979195 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               91.9               53.1
+ version     n  rows          fun replicate elapsed input_MiB output_MiB
+     new 10000 30000 DataStandard         1   0.557  2.979195   3.682587
+ heap_highwater_MiB heap_increment_MiB
+              102.7               63.7

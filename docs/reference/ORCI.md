@@ -1,38 +1,66 @@
+<div id="main" class="col-md-9" role="main">
+
 # Estimate treatment-group-specific survival odds ratios at cutoff
+
+<div class="ref-description section level2">
 
 Fits the supplied logistic model among subjects in the selected
 treatment group at the mapped cutoff time.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 ORCI(data, fomula, a, conf_level = 0.95)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- data:
+-   data:
 
-  A standardized `pd_data` object.
+    A standardized `pd_data` object.
 
-- fomula:
+-   fomula:
 
-  Logistic-regression formula.
+    Logistic-regression formula with the mapped survival column as its
+    response. The spelling `fomula` is retained for compatibility; use
+    this spelling when supplying the argument by name.
 
-- a:
+-   a:
 
-  Required cutoff treatment group, exactly `0` or `1`.
+    Required cutoff treatment group, exactly `0` or `1`.
 
-- conf_level:
+-   conf\_level:
 
-  Confidence level.
+    Confidence level.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 An `odds_ratios` object containing three-decimal odds-ratio summaries, a
 full-precision fitted model, model diagnostics, and a plot.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -50,8 +78,14 @@ result <- ORCI(
 )
 result$forestplotdat
 #>    covname estcoef lowerbd upperbd
-#> X1      X1   1.784   0.739   4.306
-#> X2      X2   1.307   0.609   2.806
-#> X4      X4   1.506   0.359   6.319
+#> X1      X1   1.788   1.021   3.132
+#> X2      X2   1.834   0.988   3.404
+#> X4      X4   2.028   0.677   6.076
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

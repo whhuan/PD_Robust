@@ -1,8 +1,8 @@
-citHeader("To cite PDRobust in publications use:")
+citHeader("To cite PDRobust and its methodological background use:")
 
 bibentry(
   bibtype = "Manual",
-  title = "PDRobust: Robust Longitudinal Treatment Effect Estimation Under Truncation by Death",
+  title = paste("PDRobust:", meta$Title),
   author = c(
     person("Huan", "Wang"),
     person("Yilin", "Zhang")
@@ -10,4 +10,23 @@ bibentry(
   year = "2026",
   note = paste("R package version", meta$Version),
   url = "https://github.com/whhuan/PD_Robust"
+)
+
+bibentry(
+  bibtype = "Misc",
+  title = paste(
+    "A Novel Tool for Evaluating Effect Modification in Older Adults",
+    "with ADRD Using Medicare Claims"
+  ),
+  author = c(
+    person("Yilin", "Zhang"),
+    person("Michelle", "Shardell"),
+    person("Jason", "Falvey"),
+    person("Rozalina", "McCoy"),
+    person("Elizabeth", "Stuart"),
+    person("Chixiang", "Chen")
+  ),
+  year = "2026",
+  note = "arXiv preprint arXiv:2608.06654",
+  doi = "10.48550/arXiv.2608.06654"
 )

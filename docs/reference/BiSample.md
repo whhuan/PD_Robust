@@ -1,59 +1,112 @@
+<div id="main" class="col-md-9" role="main">
+
 # Binary longitudinal example data
 
+<div class="ref-description section level2">
+
 Simulated long-format data for illustrating binary-outcome analyses.
+Potential survival is generated with \\(S^1 \\ge S^0\\), matching the
+package's treatment-1 survival-favorable convention. The simulation
+variables are not observed counterfactual information available in a
+real study.
+
+</div>
+
+<div class="section level2">
 
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 BiSample
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Format
 
-A simulated long-format data frame and the following variables:
+A simulated long-format data frame with 1,200 rows (400 subjects at
+three visits) and 16 variables:
 
-- id:
+-   id:
 
-  Subject identifier.
+    Subject identifier.
 
-- time:
+-   time:
 
-  Analysis time.
+    Analysis time.
 
-- X1, X2, X3:
+-   Pi:
 
-  Continuous baseline covariates.
+    Simulated probability of treatment 1 conditional on baseline
+    covariates, stored to three decimal places.
 
-- X4, X5, X6:
+-   S1, S0:
 
-  Binary baseline covariates.
+    Simulated potential survival indicators under treatment 1 and 0,
+    respectively; 1 denotes alive and 0 denotes dead.
 
-- A:
+-   Y1, Y0:
 
-  Binary treatment indicator.
+    Simulated binary potential outcomes under treatment 1 and 0,
+    respectively. These simulation variables are retained for
+    illustration; package analyses use the observed outcome `Y`.
 
-- S:
+-   X1, X2, X3:
 
-  Binary survival or intermediate-status indicator.
+    Continuous baseline covariates.
 
-- Y:
+-   X4, X5, X6:
 
-  Binary outcome, structurally missing after death.
+    Binary baseline covariates.
+
+-   A:
+
+    Binary treatment indicator.
+
+-   S:
+
+    Binary survival or intermediate-status indicator.
+
+-   Y:
+
+    Binary outcome, structurally missing after death.
+
+</div>
+
+<div class="section level2">
 
 ## Source
 
 Simulated for package examples.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 data("BiSample", package = "PDRobust")
 head(BiSample)
-#>   id time S A Y     X1     X2     X3 X4 X5 X6
-#> 1  1    0 1 1 0  1.521  0.261  0.649  0  1  0
-#> 2  1    1 1 1 0  1.521  0.261  0.649  0  1  0
-#> 3  1    2 1 1 1  1.521  0.261  0.649  0  1  0
-#> 4  2    0 1 1 0 -0.395 -1.241 -0.115  0  1  0
-#> 5  2    1 1 1 0 -0.395 -1.241 -0.115  0  1  0
-#> 6  2    2 1 1 0 -0.395 -1.241 -0.115  0  1  0
+#>   id time    Pi S1 S0 S A Y1 Y0 Y    X1     X2     X3 X4 X5 X6
+#> 1  1    0 0.987  1  1 1 1  0  1 0 1.479 -0.168  0.873  0  1  1
+#> 2  1    1 0.987  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 3  1    2 0.987  1  1 1 1  0  0 0 1.479 -0.168  0.873  0  1  1
+#> 4  2    0 0.777  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 5  2    1 0.777  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
+#> 6  2    2 0.777  1  1 1 1  0  0 0 0.267  0.350 -1.438  1  1  1
 ```
+
+</div>
+
+</div>
+
+</div>

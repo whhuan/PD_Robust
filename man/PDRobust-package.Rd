@@ -19,6 +19,49 @@ models are neither returned nor cached. \code{HTESepT()} alone accepts
 \code{target_time}, whereas \code{HTEAllT()} always analyzes every observed time from
 baseline through cutoff. No hidden global or session cache is created.
 }
+\section{Treatment coding}{
+
+The implemented estimator uses treatment \code{1} as the survival-favorable arm:
+potential survival satisfies \eqn{S^1 \ge S^0} at cutoff. Its always-survivor
+principal score is therefore the survival probability under treatment \code{0}.
+This convention is retained from version 0.3.7. The main estimator in the
+reference below uses the opposite arm labels. To analyze data coded in that
+convention, recode the raw treatment as \code{1 - A} before mapping and
+standardizing. To report the original contrast, negate the package estimate
+and transform an interval \verb{[lower, upper]} to \verb{[-upper, -lower]}.
+\code{Mapping()} does not infer or reverse treatment coding.
+}
+
+\section{Interpretation and assumptions}{
+
+The target population comprises subjects who would survive through the
+selected cutoff under either treatment. The effect model describes outcome
+differences at earlier analysis times within that fixed population.
+Continuous-outcome models use a linear effect function. Binary-outcome
+models use \code{2 * plogis(eta) - 1}, where \code{eta} is the linear predictor;
+coefficients are on that link scale, not the odds-ratio scale.
+
+Causal interpretation requires consistency, no interference, adequate
+treatment and survival overlap, exposure ignorability conditional on the
+measured covariates, the stated survival monotonicity, and principal
+ignorability. Data validation and covariate balance do not establish these
+assumptions. Triple robustness concerns correct specification of at least
+two of the three nuisance-model components under the method's assumptions
+and regularity conditions; it is not an unconditional finite-sample
+guarantee. Fixed probability clipping can alter the estimating equations.
+
+\code{SA()} implements random outcome-noise perturbation. It does not implement
+the reference's principal-ignorability sensitivity parameter. See the
+\code{method-and-coding} vignette for the coding conversion and implementation
+limits.
+}
+
+\references{
+Zhang, Y., Shardell, M., Falvey, J., McCoy, R., Stuart, E., and Chen, C.
+(2026). A Novel Tool for Evaluating Effect Modification in Older Adults
+with ADRD Using Medicare Claims. arXiv:2608.06654.
+\doi{10.48550/arXiv.2608.06654}.
+}
 \seealso{
 Useful links:
 \itemize{

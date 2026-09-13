@@ -22,7 +22,10 @@
 #' @param out_fo Outcome-model formula.
 #' @param target_time Non-empty numeric vector of observed standardized times.
 #'   Baseline is allowed.
-#' @param B Number of successful subject-level bootstrap replications.
+#' @param B Number of successful subject-level bootstrap replications. Use
+#'   `0` for point estimates only. Set a random seed before the call for
+#'   reproducible resampling. Small values used in demonstrations are not
+#'   sufficient for substantive interval estimation.
 #' @param conf_level Confidence level for Wald intervals based on bootstrap SDs.
 #' @param max_attempts Maximum bootstrap attempts. `NULL` uses `10 * B`.
 #' @param verbose Emit bootstrap progress messages.
@@ -40,6 +43,16 @@
 #'   failures, warning counts, and model diagnostics. Numeric estimates and
 #'   interval summaries are rounded to three decimals only after inference;
 #'   `boot_mat` retains full precision.
+#' @section Numerical safeguards:
+#' Propensity scores are clipped to `[0.01, 0.99]`, and their product with
+#' treatment-1 survival probabilities is clipped to `[0.005, 0.995]` in
+#' the estimating equation. These fixed limits stabilize denominators but
+#' change the equation when active; they do not establish adequate overlap
+#' or the causal assumptions. Inspect the model diagnostics and assess
+#' sensitivity to sparse risk sets. Returned summaries are rounded only after
+#' inference; full-precision bootstrap coefficients are in `boot_mat`.
+#' @inheritSection PDRobust-package Treatment coding
+#' @seealso [PDRobust-package], [pd_methods]
 #' @examples
 #' \donttest{
 #' data("BiSample", package = "PDRobust")

@@ -1,0 +1,144 @@
+ version    n rows     fun replicate elapsed input_MiB  output_MiB
+     old 1000 3000 Mapping         1   0.042 0.3012772 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               51.6                 17
+ version    n rows     fun replicate elapsed input_MiB  output_MiB
+     old 1000 3000 Mapping         2       0 0.3012772 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               35.5                  0
+ version    n rows     fun replicate elapsed input_MiB  output_MiB
+     old 1000 3000 Mapping         3       0 0.3012772 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               35.5                  0
+ version    n rows       fun replicate elapsed input_MiB output_MiB
+     old 1000 3000 DataCheck         1    0.17 0.3012772 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               70.6               35.1
+ version    n rows       fun replicate elapsed input_MiB output_MiB
+     old 1000 3000 DataCheck         2   0.522 0.3012772 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               69.9               34.1
+ version    n rows       fun replicate elapsed input_MiB output_MiB
+     old 1000 3000 DataCheck         3   0.119 0.3012772 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               69.9               33.8
+ version    n rows          fun replicate elapsed input_MiB output_MiB
+     old 1000 3000 DataStandard         1   0.362 0.3012772  0.4210205
+ heap_highwater_MiB heap_increment_MiB
+               72.9               36.8
+ version    n rows          fun replicate elapsed input_MiB output_MiB
+     old 1000 3000 DataStandard         2   0.963 0.3012772  0.4210205
+ heap_highwater_MiB heap_increment_MiB
+               71.3               35.1
+ version    n rows          fun replicate elapsed input_MiB output_MiB
+     old 1000 3000 DataStandard         3    0.37 0.3012772  0.4210205
+ heap_highwater_MiB heap_increment_MiB
+                 73               36.7
+ version    n rows     fun replicate elapsed input_MiB  output_MiB
+     old 3000 9000 Mapping         1       0 0.8963699 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               37.4                0.1
+ version    n rows     fun replicate elapsed input_MiB  output_MiB
+     old 3000 9000 Mapping         2       0 0.8963699 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+                 37                0.1
+ version    n rows     fun replicate elapsed input_MiB  output_MiB
+     old 3000 9000 Mapping         3       0 0.8963699 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+                 37                0.1
+ version    n rows       fun replicate elapsed input_MiB output_MiB
+     old 3000 9000 DataCheck         1   0.382 0.8963699 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               76.6               39.7
+ version    n rows       fun replicate elapsed input_MiB output_MiB
+     old 3000 9000 DataCheck         2   0.368 0.8963699 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               76.6               39.7
+ version    n rows       fun replicate elapsed input_MiB output_MiB
+     old 3000 9000 DataCheck         3   0.375 0.8963699 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               76.6               39.7
+ version    n rows          fun replicate elapsed input_MiB output_MiB
+     old 3000 9000 DataStandard         1   1.141 0.8963699   1.145813
+ heap_highwater_MiB heap_increment_MiB
+               83.3               46.4
+ version    n rows          fun replicate elapsed input_MiB output_MiB
+     old 3000 9000 DataStandard         2    1.11 0.8963699   1.145813
+ heap_highwater_MiB heap_increment_MiB
+               83.3               46.4
+ version    n rows          fun replicate elapsed input_MiB output_MiB
+     old 3000 9000 DataStandard         3   1.118 0.8963699   1.145813
+ heap_highwater_MiB heap_increment_MiB
+               83.3               46.4
+ version     n  rows     fun replicate elapsed input_MiB  output_MiB
+     old 10000 30000 Mapping         1   0.001  2.979195 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               39.5                  0
+ version     n  rows     fun replicate elapsed input_MiB  output_MiB
+     old 10000 30000 Mapping         2       0  2.979195 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               39.1                0.1
+ version     n  rows     fun replicate elapsed input_MiB  output_MiB
+     old 10000 30000 Mapping         3       0  2.979195 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               39.1                0.1
+ version     n  rows       fun replicate elapsed input_MiB output_MiB
+     old 10000 30000 DataCheck         1   1.935  2.979195 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               96.5               57.5
+ version     n  rows       fun replicate elapsed input_MiB output_MiB
+     old 10000 30000 DataCheck         2   2.051  2.979195 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               96.6               57.5
+ version     n  rows       fun replicate elapsed input_MiB output_MiB
+     old 10000 30000 DataCheck         3   1.954  2.979195 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+               96.5               57.4
+ version     n  rows          fun replicate elapsed input_MiB output_MiB
+     old 10000 30000 DataStandard         1   5.199  2.979195   3.682587
+ heap_highwater_MiB heap_increment_MiB
+              116.4               77.3
+ version     n  rows          fun replicate elapsed input_MiB output_MiB
+     old 10000 30000 DataStandard         2   5.167  2.979195   3.682587
+ heap_highwater_MiB heap_increment_MiB
+              116.4               77.3
+ version     n  rows          fun replicate elapsed input_MiB output_MiB
+     old 10000 30000 DataStandard         3   5.223  2.979195   3.682587
+ heap_highwater_MiB heap_increment_MiB
+              116.3               77.2
+ version     n  rows     fun replicate elapsed input_MiB  output_MiB
+     old 30000 90000 Mapping         1       0  8.930122 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               45.1                  0
+ version     n  rows     fun replicate elapsed input_MiB  output_MiB
+     old 30000 90000 Mapping         2   0.001  8.930122 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               45.1                  0
+ version     n  rows     fun replicate elapsed input_MiB  output_MiB
+     old 30000 90000 Mapping         3       0  8.930122 0.002807617
+ heap_highwater_MiB heap_increment_MiB
+               45.1                  0
+ version     n  rows       fun replicate elapsed input_MiB output_MiB
+     old 30000 90000 DataCheck         1  15.304  8.930122 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+              135.2               90.1
+ version     n  rows       fun replicate elapsed input_MiB output_MiB
+     old 30000 90000 DataCheck         2  15.564  8.930122 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+              135.2               90.1
+ version     n  rows       fun replicate elapsed input_MiB output_MiB
+     old 30000 90000 DataCheck         3  15.937  8.930122 0.02184296
+ heap_highwater_MiB heap_increment_MiB
+              135.2               90.1
+ version     n  rows          fun replicate elapsed input_MiB output_MiB
+     old 30000 90000 DataStandard         1  37.047  8.930122   10.93051
+ heap_highwater_MiB heap_increment_MiB
+              135.9               90.8
+ version     n  rows          fun replicate elapsed input_MiB output_MiB
+     old 30000 90000 DataStandard         2   37.16  8.930122   10.93051
+ heap_highwater_MiB heap_increment_MiB
+              135.9               90.8
+ version     n  rows          fun replicate elapsed input_MiB output_MiB
+     old 30000 90000 DataStandard         3   36.61  8.930122   10.93051
+ heap_highwater_MiB heap_increment_MiB
+              136.6               91.5

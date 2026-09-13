@@ -22,7 +22,10 @@ Mapping(
 
 \item{time}{Character scalar naming the analysis time column.}
 
-\item{treatment}{Character scalar naming the treatment column.}
+\item{treatment}{Character scalar naming the treatment column. For causal
+estimation, code the survival-favorable arm as \code{1} and the other arm as
+\code{0}; see \link{PDRobust-package} for the convention and assumptions. Mapping
+does not infer which arm is survival-favorable.}
 
 \item{survival}{Character scalar naming the survival/intermediate status column.}
 

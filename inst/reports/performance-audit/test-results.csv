@@ -1,0 +1,112 @@
+"file","test","nb","failed","skipped","error","warning","passed"
+"test-bootstrap-progress-callback.R","HTE progress callbacks expose the documented lifecycle",12,0,FALSE,FALSE,0,12
+"test-bootstrap-progress-callback.R","progress callbacks report bootstrap attempts",5,0,FALSE,FALSE,0,5
+"test-bootstrap-progress-callback.R","invalid or failing progress callbacks are isolated",4,0,FALSE,FALSE,0,4
+"test-cran-rjournal-contracts.R","B = 0 does not consume random numbers",2,0,FALSE,FALSE,0,2
+"test-cran-rjournal-contracts.R","cluster bootstrap is reproducible under a fixed seed",2,0,FALSE,FALSE,0,2
+"test-cran-rjournal-contracts.R","bootstrap standard errors and confidence limits are numerically correct",3,0,FALSE,FALSE,0,3
+"test-cran-rjournal-contracts.R","DataCheck distinguishes structural and survivor outcome missingness",5,0,FALSE,FALSE,0,5
+"test-cran-rjournal-contracts.R","bundled data complete an end-to-end point-estimation workflow",4,0,FALSE,FALSE,0,4
+"test-cran-rjournal-contracts.R","registered plot methods return ggplot objects invisibly",15,0,FALSE,FALSE,0,15
+"test-custom-mapping.R","prediction and analysis functions honor custom structural names",10,0,FALSE,FALSE,0,10
+"test-data-contracts-035.R","simulation helper is deterministic and has no RNG side effects",4,0,FALSE,FALSE,0,4
+"test-data-contracts-035.R","simulation helper creates each documented invalid dataset",9,0,FALSE,FALSE,0,9
+"test-data-contracts-035.R","DataCheck validates its public contract without changing input",7,0,FALSE,FALSE,0,7
+"test-data-contracts-035.R","DataCheck distinguishes supported from unsupported encodings",5,0,FALSE,FALSE,0,5
+"test-data-contracts-035.R","DataCheck reports structural edge cases with stable diagnostics",8,0,FALSE,FALSE,0,8
+"test-data-contracts-035.R","DataStandard preserves inputs and attaches complete audit attributes",11,0,FALSE,FALSE,0,11
+"test-data-contracts-035.R","DataStandard is value-idempotent and validates drop",4,0,FALSE,FALSE,0,4
+"test-data-contracts-035.R","DataStandard drop is reproducible and attrition is auditable",6,0,FALSE,FALSE,0,6
+"test-data-scalability.R","grouped visit counts preserve duplicate, missing and off-grid semantics",9,0,FALSE,FALSE,0,9
+"test-data-scalability.R","survival diagnostics preserve stable tied and missing time ordering",1,0,FALSE,FALSE,0,1
+"test-data-scalability.R","attrition retains sorted reasons and encounter-ordered incomplete IDs",4,0,FALSE,FALSE,0,4
+"test-data-scalability.R","empty-string IDs keep legacy completeness diagnostics",2,0,FALSE,FALSE,0,2
+"test-data-validation-expanded.R","DataCheck reports duplicate subject-time rows",5,0,FALSE,FALSE,0,5
+"test-data-validation-expanded.R","DataStandard safely converts explicit binary encodings",4,0,FALSE,FALSE,0,4
+"test-data-validation-expanded.R","DataStandard does not modify the raw input",1,0,FALSE,FALSE,0,1
+"test-data-validation-expanded.R","strict DataCheck stops on analysis-blocking defects",1,0,FALSE,FALSE,0,1
+"test-data-workflow.R","mapping validates endpoints without storing target times",5,0,FALSE,FALSE,0,5
+"test-data-workflow.R","checking reports duplicates and preserves the complete time grid",6,0,FALSE,FALSE,0,6
+"test-data-workflow.R","standardization converts explicit binary encodings and retains visits",8,0,FALSE,FALSE,0,8
+"test-data-workflow.R","drop is explicit and produces a subject-level attrition report",4,0,FALSE,FALSE,0,4
+"test-diagnostics.R","PSDiag reproduces ordinary IPTW and SMD calculations",4,0,FALSE,FALSE,0,4
+"test-diagnostics.R","PrinSDiag uses cutoff-aligned principal probabilities",6,0,FALSE,FALSE,0,6
+"test-diagnostics.R","diagnostics reject nonnumeric model covariates",2,0,FALSE,FALSE,0,2
+"test-diagnostics.R","PSDiag always clips propensity scores to 0.01 and 0.99",4,0,FALSE,FALSE,0,4
+"test-diagnostics.R","PrinSDiag always clips propensity scores to 0.01 and 0.99",4,0,FALSE,FALSE,0,4
+"test-edge-cases.R","single-time data support prediction and pooled HTE",3,0,FALSE,FALSE,0,3
+"test-edge-cases.R","irregular raw times standardize to a complete integer grid",2,0,FALSE,FALSE,0,2
+"test-edge-cases.R","binary outcome prediction follows logistic regression",1,0,FALSE,FALSE,0,1
+"test-edge-cases.R","SA supports binary outcomes with finite zero-noise estimates",3,0,FALSE,FALSE,0,3
+"test-errors-validation.R","Mapping rejects invalid structural definitions",4,0,FALSE,FALSE,0,4
+"test-errors-validation.R","analysis functions require DataStandard output",4,0,FALSE,FALSE,0,4
+"test-errors-validation.R","public analysis arguments are validated",8,0,FALSE,FALSE,0,8
+"test-errors-validation.R","invalid formulas fail with informative errors",2,0,FALSE,FALSE,0,2
+"test-example-data.R","built-in example data follow their documented raw contracts",17,0,FALSE,FALSE,0,17
+"test-example-data.R","built-in example data enter the mapping-driven public workflow",19,0,FALSE,FALSE,0,19
+"test-hte-bootstrap.R","B = 0 returns point estimates without bootstrap rows",18,0,FALSE,FALSE,0,18
+"test-hte-bootstrap.R","bootstrap defaults and argument validation are stable",2,0,FALSE,FALSE,0,2
+"test-hte-bootstrap.R","cluster bootstrap preserves complete subject panels",3,0,FALSE,FALSE,0,3
+"test-hte-bootstrap.R","ordinary warnings do not discard an otherwise usable result",2,0,FALSE,FALSE,0,2
+"test-hte-bootstrap.R","HTESepT bootstrap succeeds on the built-in binary data",7,0,FALSE,FALSE,0,7
+"test-input-invariance.R","public functions do not mutate their inputs",2,0,FALSE,FALSE,0,2
+"test-input-invariance.R","results do not depend on prior calls with other data",1,0,FALSE,FALSE,0,1
+"test-interface.R","the public interface follows the independent-prediction design",21,0,FALSE,FALSE,0,21
+"test-interface.R","Mapping has exactly ten required arguments",4,0,FALSE,FALSE,0,4
+"test-interface.R","ORCI requires explicit a and rejects the obsolete argument",2,0,FALSE,FALSE,0,2
+"test-interface.R","mapping never stores a target-time field",2,0,FALSE,FALSE,0,2
+"test-interface.R","binary HTE public interfaces return finite mapped coefficients",2,0,FALSE,FALSE,0,2
+"test-model-preflight-035.R","prediction models reject unusable inputs and preserve their inputs",5,0,FALSE,FALSE,0,5
+"test-model-preflight-035.R","finite nuisance predictions survive low variation and aliasing",2,0,FALSE,FALSE,0,2
+"test-model-preflight-035.R","separation is a warning when logistic predictions remain finite",3,0,FALSE,FALSE,0,3
+"test-model-preflight-035.R","OutPred retains finite binary predictions with one response level",3,0,FALSE,FALSE,0,3
+"test-model-preflight-035.R","PrinPred warns but returns finite constant survival predictions",3,0,FALSE,FALSE,0,3
+"test-model-preflight-035.R","non-estimable HTE modifier systems remain errors",2,0,FALSE,FALSE,0,2
+"test-model-preflight-035.R","ORCI omits aliased coefficients when estimable effects remain",4,0,FALSE,FALSE,0,4
+"test-model-preflight-035.R","diagnostics report non-estimable balance without model-fit errors",3,0,FALSE,FALSE,0,3
+"test-model-preflight-035.R","SA is reproducible for continuous and binary outcomes",5,0,FALSE,FALSE,0,5
+"test-plot-colors.R","HTEAllT maps distinct stable colors to reported terms",3,0,FALSE,FALSE,0,3
+"test-plot-colors.R","ORCI uses the same variable colors for intervals and points",3,0,FALSE,FALSE,0,3
+"test-predictions.R","prediction functions return pure aligned pd_prediction vectors",16,0,FALSE,FALSE,0,16
+"test-predictions.R","each prediction function refits from supplied fit data",3,0,FALSE,FALSE,0,3
+"test-predictions.R","principal scores accumulate over the complete baseline-to-cutoff grid",3,0,FALSE,FALSE,0,3
+"test-predictions.R","PrinPred follows the 0.2.3 baseline inclusion rule",3,0,FALSE,FALSE,0,3
+"test-predictions.R","PrinPred uses no at-risk indicator for a single observed time",1,0,FALSE,FALSE,0,1
+"test-predictions.R","PrinPred rejects incomplete cumulative prediction grids",1,0,FALSE,FALSE,0,1
+"test-predictions.R","PSPred fits baseline only and predicts the complete pred_dat",1,0,FALSE,FALSE,0,1
+"test-predictions.R","OutPred refits and predicts after fixing treatment and survival",1,0,FALSE,FALSE,0,1
+"test-predictions.R","OutPred matches the original binary logistic prediction steps",2,0,FALSE,FALSE,0,2
+"test-predictions.R","OutPred permits aliased coefficients when predictions are finite",2,0,FALSE,FALSE,0,2
+"test-predictions.R","OutPred preserves factor model matrices and rejects unseen levels",2,0,FALSE,FALSE,0,2
+"test-predictions.R","PrinPred test panels are full rank and avoid separation warnings",12,0,FALSE,FALSE,0,12
+"test-restored-algorithms.R","the SMD helper uses the original pooled and weighted ESS denominators",2,0,FALSE,FALSE,0,2
+"test-restored-algorithms.R","QR uses cutoff weighted intercept-only quantile regression",2,0,FALSE,FALSE,0,2
+"test-restored-algorithms.R","ORCI supports either cutoff treatment group",5,0,FALSE,FALSE,0,5
+"test-restored-algorithms.R","SA uses the original all-observation variance at each time",2,0,FALSE,FALSE,0,2
+"test-restored-algorithms.R","time-specific HTE reproduces the original estimating equations",2,0,FALSE,FALSE,0,2
+"test-restored-algorithms.R","pooled HTE reproduces the original all-time equations",2,0,FALSE,FALSE,0,2
+"test-restored-algorithms.R","QR numerically matches weighted intercept-only quantile regression",1,0,FALSE,FALSE,0,1
+"test-restored-algorithms.R","zero-noise SA reproduces the original time-specific equations",2,0,FALSE,FALSE,0,2
+"test-return-objects.R","prediction functions return stable numeric prediction objects",12,0,FALSE,FALSE,0,12
+"test-return-objects.R","diagnostic and analysis objects expose documented core fields",7,0,FALSE,FALSE,0,7
+"test-return-objects.R","print methods return objects invisibly",7,0,FALSE,FALSE,0,7
+"test-return-rounding-037.R","public predictions round only the full-precision return boundary",9,0,FALSE,FALSE,0,9
+"test-return-rounding-037.R","HTE summaries round after full-precision estimation and inference",7,0,FALSE,FALSE,0,7
+"test-return-rounding-037.R","final analysis tables are rounded while internal quantities remain full",12,0,FALSE,FALSE,0,12
+"test-return-rounding-037.R","standardized identifiers, times, and flags keep their storage modes",6,0,FALSE,FALSE,0,6
+"test-return-rounding-037.R","data preparation preserves analysis-column precision",6,0,FALSE,FALSE,0,6
+"test-return-rounding-037.R","bundled generated data contain at most three decimal places",4,0,FALSE,FALSE,0,4
+"test-return-rounding-037.R","the data generator rounds only its final returned data",7,0,FALSE,FALSE,0,7
+"test-row-order-alignment.R","prediction functions preserve pred_dat row order",2,0,FALSE,FALSE,0,2
+"test-row-order-alignment.R","analysis estimates are invariant to panel row order",1,0,FALSE,FALSE,0,1
+"test-row-order-alignment.R","character subject IDs are handled without cross-subject accumulation",2,0,FALSE,FALSE,0,2
+"test-time-scope.R","target_time controls only HTESepT and may include baseline",5,0,FALSE,FALSE,0,5
+"test-time-scope.R","single-time HTEAllT omits and documents the time effect",4,0,FALSE,FALSE,0,4
+"test-time-scope.R","standardization retains all actual visits inside the mapped window",2,0,FALSE,FALSE,0,2
+"test-time-scope.R","pooled analysis rejects prepared-data subsets that omit an intermediate visit",1,0,FALSE,FALSE,0,1
+"test-warning-policy-037.R","checked logistic fits classify quasi-complete separation",4,0,FALSE,FALSE,0,4
+"test-warning-policy-037.R","nonconvergence is distinct and reported once per checked fit",5,0,FALSE,FALSE,0,5
+"test-warning-policy-037.R","analysis calls consolidate repeated nuisance-model warnings",5,0,FALSE,FALSE,0,5
+"test-warning-policy-037.R","counterfactual treatment predictions reuse one internal model fit",4,0,FALSE,FALSE,0,4
+"test-warning-policy-037.R","bootstrap model warnings are aggregated in returned diagnostics",2,0,FALSE,FALSE,0,2
+"test-warning-policy-037.R","normal analysis data do not produce model warnings",5,0,FALSE,FALSE,0,5

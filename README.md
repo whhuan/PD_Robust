@@ -1,7 +1,7 @@
 
-# PDRobust: A Novel Analytical Tool for Evaluating Longitudinal Trajectories with truncation by death.
+# PDRobust: Longitudinal treatment effects under truncation by death
 
-![](man/figures/fcfigure.png)
+![PDRobust analysis workflow](man/figures/fcfigure.png)
 
 <!-- badges: start -->
 
@@ -17,9 +17,9 @@ However, when investigating the trajectory of the Heterogeneous
 Treatment Effect (HTE) of an exposure/intervention, traditional methods
 cannot sufficiently address challenges inherent to the data, including
 
-1)  the presence of truncation by death, and
+1.  the presence of truncation by death, and
 
-2)  the characterization of the unobserved principal stratum of patients
+2.  the characterization of the unobserved principal stratum of patients
     who would survive till the specific time point regardless of the
     exposure occurrence.
 
@@ -36,6 +36,22 @@ robust estimate of the HTE with the bootstrap standard deviation, and
 the diagnosis of nuisance models. The workflow implemented in `PDRobust`
 is outlined below, followed by an illustrative example demonstrating its
 application.
+
+The methodological reference is Zhang et al. (2026), [A Novel Tool for
+Evaluating Effect Modification in Older Adults with ADRD Using Medicare
+Claims](https://doi.org/10.48550/arXiv.2608.06654). Use
+`citation("PDRobust")` for the software and paper citations.
+
+**Treatment coding matters.** This release retains the 0.3.7 convention:
+treatment `1` is the survival-favorable arm. The paper’s main estimator
+uses the opposite labels. Recode paper-coded treatment as `1 - A` before
+mapping and standardizing, then negate estimates and swap/negate
+confidence limits to report the paper’s contrast. The bundled examples
+already use the package convention. Read
+`vignette("method-and-coding", package = "PDRobust")` before adapting
+the workflow to a study. Data checks cannot verify the causal
+identifying assumptions, and `SA()` provides outcome-noise sensitivity
+rather than the paper’s principal-ignorability sensitivity analysis.
 
 ``` text
 data -> Mapping() -> DataCheck() -> DataStandard()
@@ -129,8 +145,8 @@ check$can_standardize
 `DataStandard()` returns a sorted data frame. It safely converts
 explicit binary encodings, maps subject identifiers and analysis-time to
 consecutive integers, and attaches mapping and audit attributes. The
-argument `drop` is defaulted by `False` and use `drop = TRUE` only when
-the reported subject-level exclusions are intended.
+argument `drop` defaults to `FALSE`. Use `drop = TRUE` only when the
+reported subject-level exclusions are intended.
 
 ``` r
 pd_data <- DataStandard(ImperfectConSample, mapping, drop = TRUE)
@@ -154,11 +170,11 @@ head(pd_data)
 #> 6 -0.391  0  0  0
 ```
 
-### 4. Run analysis and diagnostic functions
+### 5. Run analysis and diagnostic functions
 
-Before conducting analyses, nuisance model specification is
-required.Here,`ps_fo` denotes the propensity score model,`prin_fo`
-denotes principal score model, and `out_fo` denotes outcome model.
+Specify the nuisance models before analysis. Here, `ps_fo` denotes the
+propensity-score model, `prin_fo` the principal-score model, and
+`out_fo` the outcome model.
 
 ``` r
 ps_fo <- treatment ~ X1 + X2 + X3 + X4 + X5 + X6
@@ -166,17 +182,22 @@ prin_fo <- alive_status ~ X1 + X2 + X3 + X4 + X5 + X6
 out_fo <- clinical_outcome ~ (X1 + X2 + X3 + X4 + X5 + X6) * treatment 
 ```
 
-`HTESepT()`estimates the time-varying heterogeneous treatment effect.
-For each time point specified in `target_time`, it primarily returns the
-estimated intercept and effects asscociated with the covariates of
-interest, together wth correspinding forest plots.
+`HTESepT()` estimates time-specific heterogeneous treatment effects. For
+each time in `target_time`, it returns the intercept and coefficients of
+the mapped effect modifiers, together with a forest plot.
 
 The argument `target_time` controls only the outcome-analysis time
 points reported in the results. Setting `B > 0` enables subject-level
 bootstrap estimation of standard errors and confidence intervals. When
-`B = 0`, the function will only return the point estimates.
+`B = 0`, the function will only return the point estimates. The three
+bootstrap replications below keep this demonstration fast; they are
+insufficient for substantive standard errors or confidence intervals.
+For an analysis, increase `B` and assess the stability of the inference.
+Setting a seed makes the example reproducible with the same R and
+dependency versions.
 
 ``` r
+set.seed(20260912)
 separate_hte <- HTESepT(
   pd_data,
   ps_fo = ps_fo,
@@ -191,47 +212,53 @@ separate_hte <- HTESepT(
 ``` r
 separate_hte$summary
 #>   time covariate estimate    SD LowerBound UpperBound
-#> 1    1 Intercept    3.300 1.739     -0.107      6.708
-#> 2    1        X1    0.371 1.425     -2.421      3.163
-#> 3    1        X2   -1.274 0.420     -2.098     -0.450
-#> 4    2 Intercept    0.835 0.833     -0.797      2.467
-#> 5    2        X1   -0.094 0.466     -1.006      0.819
-#> 6    2        X2    0.106 1.130     -2.109      2.321
+#> 1    1 Intercept    3.300 1.320      0.713      5.888
+#> 2    1        X1    0.371 1.918     -3.388      4.130
+#> 3    1        X2   -1.274 2.119     -5.428      2.880
+#> 4    2 Intercept    0.835 0.745     -0.626      2.296
+#> 5    2        X1   -0.094 0.859     -1.778      1.591
+#> 6    2        X2    0.106 1.708     -3.241      3.453
 ```
 
 ``` r
 separate_hte$forest_plot
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" alt="Time-specific treatment-effect model coefficients and demonstration bootstrap confidence intervals." width="90%" style="display: block; margin: auto;" />
 
 The following table summarizes the objectives and arguments of all
 functions provided by the package.
 
-| Function and arguments | Objectives and returned results |
-|:---|:---|
-| `Mapping(id, time, treatment, survival, outcome, baseline_time, cutoff_time, covariates, interest_vars, y_type)` | Defines the structural roles of variables, analysis times, covariates, effect modifiers, and outcome type. |
-| `DataCheck(data, mapping, strict = FALSE)` | Evaluates data readiness and returns dataset-level validation flags, itemized checks, diagnostic details, and recommended handling. |
-| `DataStandard(data, mapping, drop = FALSE)` | Returns a standardized and sorted longitudinal data frame with attached mapping and audit attributes. |
-| `PSPred(ps_fo, fit_dat, pred_dat, mapping, ...)` | Returns row-aligned propensity score predictions. |
-| `PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)` | Returns row-aligned cumulative principal score predictions under treatment level `a`. |
-| `OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)` | Returns row-aligned potential-outcome predictions under treatment level `a`. |
-| `PSDiag(data, ps_fo)` | Computes standardized mean differences for covariate-balance assessment of the fitted propensity score model; Returns the numeric results and corresponding diagnostic plot. |
-| `PrinSDiag(data, ps_fo, prin_fo)` | Computes standardized test statistics for covariate-level assessment of the fitted principal score model; Returns the numeric results the corresponding diagnostic plot. |
-| `SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.10))` | Evaluates the sensitivity of the fitted outcome model to varying levels of unexplained variance or model misspecification; Returns the corresponding estimates and plots. |
-| `QR(data, prin_fo, quantile_level = 0.5)` | Returns principal-stratum profiles, including means and a user-specified quantile for selected patient characteristics, together with a plot. |
-| `ORCI(data, formula, a, conf_level = 0.95)` | Returns estimated odds ratios and confidence intervals for covariates associated with principal-stratum membership under treatment level `a`, and the corresponding plot. |
-| `HTESepT(data, ps_fo, prin_fo, out_fo, target_time, B, conf_level = 0.95, max_attempts = NULL, verbose = TRUE)` | Returns time-specific heterogeneous treatment effect estimates, bootstrap results, and forest plots for the specified analysis times. |
-| `HTEAllT(data, ps_fo, prin_fo, out_fo, B, conf_level = 0.95, max_attempts = NULL, verbose = TRUE)` | Returns pooled heterogeneous treatment effect estimates across analysis times, bootstrap results, and a forest plot. |
+| Function and arguments                                                                                           | Objectives and returned results                                                                                                                                                |
+|:-----------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Mapping(id, time, treatment, survival, outcome, baseline_time, cutoff_time, covariates, interest_vars, y_type)` | Defines the structural roles of variables, analysis times, covariates, effect modifiers, and outcome type.                                                                     |
+| `DataCheck(data, mapping, strict = FALSE)`                                                                       | Evaluates data readiness and returns dataset-level validation flags, itemized checks, diagnostic details, and recommended handling.                                            |
+| `DataStandard(data, mapping, drop = FALSE)`                                                                      | Returns a standardized and sorted longitudinal data frame with attached mapping and audit attributes.                                                                          |
+| `PSPred(ps_fo, fit_dat, pred_dat, mapping, ...)`                                                                 | Returns row-aligned propensity score predictions.                                                                                                                              |
+| `PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)`                                                          | Returns row-aligned cumulative principal score predictions under treatment level `a`.                                                                                          |
+| `OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)`                                                            | Returns row-aligned potential-outcome predictions under treatment level `a`.                                                                                                   |
+| `PSDiag(data, ps_fo)`                                                                                            | Computes standardized mean differences for covariate-balance assessment of the fitted propensity score model; Returns the numeric results and corresponding diagnostic plot.   |
+| `PrinSDiag(data, ps_fo, prin_fo)`                                                                                | Computes standardized test statistics for covariate-level assessment of the fitted principal score model; Returns the numeric results the corresponding diagnostic plot.       |
+| `SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.10))`                                                  | Perturbs outcomes with random noise and returns estimates and plots across noise levels.                                                                                       |
+| `QR(data, prin_fo, quantile_level = 0.5)`                                                                        | Returns principal-score-weighted means and quantiles of mapped effect modifiers as numeric summaries and a tidy table.                                                         |
+| `ORCI(data, fomula, a, conf_level = 0.95)`                                                                       | Returns model-based survival odds ratios at cutoff within treatment group `a`, confidence intervals, and a plot. The argument spelling `fomula` is retained for compatibility. |
+| `HTESepT(data, ps_fo, prin_fo, out_fo, target_time, B, conf_level = 0.95, max_attempts = NULL, verbose = TRUE)`  | Returns time-specific heterogeneous treatment effect estimates, bootstrap results, and forest plots for the specified analysis times.                                          |
+| `HTEAllT(data, ps_fo, prin_fo, out_fo, B, conf_level = 0.95, max_attempts = NULL, verbose = TRUE)`               | Returns pooled heterogeneous treatment effect estimates across analysis times, bootstrap results, and a forest plot.                                                           |
 
 **More tutorials available on
 [tutorials](https://whhuan.github.io/PD_Robust/).**
 
 ## Installation
 
+Install a locally downloaded source release with:
+
 ``` r
-# if (!require("devtools")) {
-#   install.packages("devtools")
-# }
-# devtools::install_github("whhuan/PD_Robust")
+install.packages("PDRobust_0.3.8.tar.gz", repos = NULL, type = "source")
+```
+
+The development version is available from GitHub:
+
+``` r
+install.packages("remotes")
+remotes::install_github("whhuan/PD_Robust")
 ```

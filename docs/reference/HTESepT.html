@@ -15,7 +15,7 @@ defined at the cutoff."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,11 +28,13 @@ defined at the cutoff."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
-    <li><a class="dropdown-item" href="../articles/getting-started.html">Getting started with PDRobust</a></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
-    <li><a class="dropdown-item" href="../articles/prediction-models.html">Independent prediction models</a></li>
-    <li><a class="dropdown-item" href="../articles/diagnostics-and-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
+    <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/hte.html">Estimate the heterogeneous treatment effect</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
+    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -70,7 +72,8 @@ defined at the cutoff.</p>
 <span>  <span class="va">B</span>,</span>
 <span>  conf_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  max_attempts <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  progress_callback <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,7 +103,10 @@ Baseline is allowed.</p></dd>
 
 
 <dt id="arg-b">B<a class="anchor" aria-label="anchor" href="#arg-b"></a></dt>
-<dd><p>Number of successful subject-level bootstrap replications.</p></dd>
+<dd><p>Number of successful subject-level bootstrap replications. Use
+<code>0</code> for point estimates only. Set a random seed before the call for
+reproducible resampling. Small values used in demonstrations are not
+sufficient for substantive interval estimation.</p></dd>
 
 
 <dt id="arg-conf-level">conf_level<a class="anchor" aria-label="anchor" href="#arg-conf-level"></a></dt>
@@ -113,6 +119,16 @@ Baseline is allowed.</p></dd>
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Emit bootstrap progress messages.</p></dd>
+
+
+<dt id="arg-progress-callback">progress_callback<a class="anchor" aria-label="anchor" href="#arg-progress-callback"></a></dt>
+<dd><p>Optional function called with one named progress
+list before model fitting, after the point estimate, after every bootstrap
+attempt, and when bootstrap processing completes. The list contains
+<code>stage</code>, <code>successful</code>, <code>requested</code>, <code>attempts</code>, <code>max_attempts</code>,
+<code>failed_attempts</code>, <code>complete</code>, <code>elapsed_seconds</code>, and <code>updated_at</code>.
+Callback errors warn once and disable further updates without changing the
+analysis.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -134,6 +150,36 @@ the two counterfactual treatment predictions.</p>
 consolidated at the analysis boundary. Model-level details remain available
 in <code>model_diagnostics</code>; bootstrap warnings and their counts are stored in
 <code>bootstrap_info</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="numerical-safeguards">Numerical safeguards<a class="anchor" aria-label="anchor" href="#numerical-safeguards"></a></h2>
+
+
+<p>Propensity scores are clipped to <code>[0.01, 0.99]</code>, and their product with
+treatment-1 survival probabilities is clipped to <code>[0.005, 0.995]</code> in
+the estimating equation. These fixed limits stabilize denominators but
+change the equation when active; they do not establish adequate overlap
+or the causal assumptions. Inspect the model diagnostics and assess
+sensitivity to sparse risk sets. Returned summaries are rounded only after
+inference; full-precision bootstrap coefficients are in <code>boot_mat</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="treatment-coding">Treatment coding<a class="anchor" aria-label="anchor" href="#treatment-coding"></a></h2>
+
+
+<p>The implemented estimator uses treatment <code>1</code> as the survival-favorable arm:
+potential survival satisfies \(S^1 \ge S^0\) at cutoff. Its always-survivor
+principal score is therefore the survival probability under treatment <code>0</code>.
+This convention is retained from version 0.3.7. The main estimator in the
+reference below uses the opposite arm labels. To analyze data coded in that
+convention, recode the raw treatment as <code>1 - A</code> before mapping and
+standardizing. To report the original contrast, negate the package estimate
+and transform an interval <code>[lower, upper]</code> to <code>[-upper, -lower]</code>.
+<code><a href="Mapping.html">Mapping()</a></code> does not infer or reverse treatment coding.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><a href="PDRobust-package.html">PDRobust-package</a>, <a href="pd_methods.html">pd_methods</a></p></div>
     </div>
 
     <div class="section level2">
@@ -157,12 +203,12 @@ in <code>model_diagnostics</code>; bootstrap warnings and their counts are store
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span><span class="op">$</span><span class="va">summary</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   time covariate estimate SD LowerBound UpperBound</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0 Intercept    0.225 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0        X1   -0.041 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0        X2   -0.070 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 Intercept    0.044 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2        X1   -0.019 NA         NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2        X2   -0.175 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0 Intercept    0.066 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0        X1    0.035 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0        X2    0.053 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 Intercept   -0.028 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2        X1    0.516 NA         NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2        X2   -0.036 NA         NA         NA</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

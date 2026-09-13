@@ -1,0 +1,23 @@
+memory profiling: line profiling: sample.interval=10000
+:421438:714131:29551312:0:"gc" "system.time" 
+:421438:714131:29551312:0:"gc" "system.time" 
+#File 1: R/data_validation.R
+#File 2: R/DataStandard.R
+:425554:833211:30054920:482:"c" "structure" "as.data.frame.vector" "as.data.frame.character" "as.data.frame" "data.frame" 1#158 "add_check" 1#205 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:442769:989099:31653832:971:"paste" 1#318 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:447551:1120637:32089064:247:"order" "factor" 1#348 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:459054:1618326:33590984:1319:"%in%" "deparse" "mode" "%in%" "deparse" "paste" "deparse1" "force" "as.data.frame.logical" "as.data.frame" "data.frame" 1#158 "add_check" 1#562 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:480127:1901933:36299256:2281:"unique.default" "unique" "factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:481444:2061422:36456168:53:"factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:482299:2195758:36585136:51:"factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:483225:2430359:36848280:130:"is.na" "na.omit.default" "stats::na.omit" 1#92 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#818 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:493198:2839295:38608976:1335:"unique.default" "unique" 1#862 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:494265:3242466:38843784:183:"order" "factor" 1#891 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:501246:3648623:39836328:880:"is.na" 1#229 "which" 1#229 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:509462:3804511:40917632:958:"duplicated.default" "duplicated" 1#323 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:512770:4072436:41389096:397:"structure" "as.data.frame.logical" "as.data.frame" "data.frame" 1#158 "add_check" 1#382 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:532235:4492668:43882608:2241:"is.na" 1#654 "which" 1#654 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:541965:4746519:45300976:1211:"factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:542287:4876791:45400040:50:"factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:542874:5077957:45579688:92:"unique.default" "unique" "factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 
+:543666:5293613:45794616:100:"factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" 1#995 ".pd_standardize_data_impl" 2#31 "env$DataStandard" "run" "system.time" 

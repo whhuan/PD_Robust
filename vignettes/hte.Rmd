@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
   fig.height = 4.5,
   out.width = "90%",
   fig.align = "center",
-  fig.path = "man/figures/hte-",
   warning = TRUE,
   message = TRUE
 )
@@ -75,11 +74,11 @@ subject-level bootstrap standard errors and confidence intervals.
 The argument `data` specifies the standardized dataset used for analysis. The
 arguments `ps_fo`, `prin_fo` and `out_fo` specify model formulas for propensity
 score model, principal score model and conditional outcome model, respectively.
-There models are refitted internally foe the original sample and for every
+These models are refitted internally for the original sample and for every
 bootstrap sample. The argument `target_time` specifies the time points for
-estimation, and it must be a numeric vector such as `c(1,2)`. The mapped
+estimation, and it must be a numeric vector such as `c(1, 2)`. The mapped
 baseline time and cutoff time can also be included. Although the results are
-reported only at the requested time points, the principal scores are accumalated
+reported only at the requested time points, the principal scores are accumulated
 over all times from baseline time to cutoff time points.
 
 The argument `B`, `conf_level`, `max_attempts` and `verbose` control the
@@ -98,7 +97,13 @@ to the bootstrap progress messages are displayed.
 The argument for mapping is not required because the information is carried
 inside the attributes of standardized dataset and used automatically.
 
+The five bootstrap replications below keep the example fast; they are
+insufficient for substantive standard errors or confidence intervals. Increase
+`B` and assess inference stability for an analysis. The seed fixes the random
+resampling for a given R and dependency environment.
+
 ```{r}
+set.seed(20260912)
 separate <- HTESepT(
   data = pd_data,
   ps_fo = ps_fo,
@@ -124,17 +129,21 @@ The returned object contains the following components:
 names(separate)
 ```
 
-The two primary outputs is the `summary` and `forest_plot`. The coefficients are
-the difference between , and they are the treatment effect.
+The primary outputs are `summary` and `forest_plot`. The coefficients
+parameterize the working treatment-effect model at each requested time.
 
 The intercept represents the reference component of the conditional
 treatment-effect model. The remaining coefficients describe how the treatment
 effect varies with the corresponding baseline effect modifiers.
 
-For continuous outcomes, estimates are expressed on the outcome scale. For
-binary outcomes, coefficients parameterize the bounded treatment-effect model.
+For continuous outcomes, the working effect is the intercept plus the linear
+combination of baseline effect modifiers, on the outcome scale. For binary
+outcomes, if `eta` is this linear predictor, the working risk difference is
+`2 * plogis(eta) - 1`. Binary-model coefficients are therefore on this link
+scale; they are not odds ratios or direct risk differences. The displayed
+intervals describe the coefficients.
 
-```{r}
+```{r, fig.alt = "Time-specific treatment-effect model coefficients and demonstration bootstrap confidence intervals."}
 separate$summary
 separate$forest_plot
 ```
@@ -187,7 +196,7 @@ at least two analysis times. The `Time Effect` describes the linear change in
 the conditional treatment-effect function per one-unit increase in standardized
 time.
 
-```{r}
+```{r, fig.alt = "Pooled treatment-effect model point estimates; bootstrap intervals are not calculated in this example."}
 pooled$summary
 pooled$forest_plot
 ```
@@ -196,8 +205,7 @@ Additional components include `analysis_times`, which identifies the time points
 included in the pooled analysis, and `time_effect_estimable`, which indicates
 whether the time effect could be estimated. When only one analysis time is
 available, the time-effect term is omitted, `time_effect_estimable` is `FALSE`,
-and an explanatory message is stored in `note`. Bootstrap results, convergence
-informatiox
+and an explanatory message is stored in `note`.
 
 ```{r}
 pooled$time_effect_estimable

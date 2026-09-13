@@ -1,0 +1,14 @@
+memory profiling: line profiling: sample.interval=10000
+:417624:705770:29397088:0:"gc" "system.time" 
+:417624:705770:29397088:0:"gc" "system.time" 
+:417513:705770:29381128:0:"gc" "system.time" 
+#File 1: R/data_validation.R
+#File 2: R/DataCheck.R
+:433907:980738:31217144:1453:"paste" 1#318 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
+:443695:1107776:31922296:243:"unique.default" "unique" "factor" 1#348 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
+:448772:1386572:32626048:597:"is.na" "na.omit.default" "stats::na.omit" "unique" 1#4 ".pd_display_values" 1#451 "paste" 1#451 "data.frame" 1#158 "add_check" 1#451 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
+:470374:1793363:35486528:2538:"mode" "%in%" "deparse" "paste" "deparse1" "force" "as.data.frame.logical" "as.data.frame" "data.frame" 1#158 "add_check" 1#716 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
+:476332:1937924:36151472:475:"as.integer" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
+:478190:2154106:36412320:94:"unique.default" "unique" "factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
+:478829:2293111:36529976:54:"factor" "table" "sort" 1#94 ".pd_near_zero_variation" 1#756 "FUN" "vapply" 1#755 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
+:480925:2510418:36939560:268:"deparse" "mode" "%in%" "deparse" "paste" "deparse1" "force" "as.data.frame.logical" "as.data.frame" "data.frame" 1#158 "add_check" 1#759 ".pd_check_data_impl" "inherits" 1#1053 ".pd_round_data_check" 2#30 "env$DataCheck" "run" "system.time" 
