@@ -62,3 +62,44 @@ test_that("empty-string IDs keep legacy completeness diagnostics", {
   expect_identical(check$diagnostics$incomplete_subjects, c("", ""))
   expect_identical(check$diagnostics$missing_by_time$missing_subjects, rep(0L, 3))
 })
+
+test_that("factor covariates preserve attrition and their original levels", {
+  w <- make_pd_workflow(n = 40L)
+  plain <- w$raw
+  plain$X4[plain$id == 3L] <- NA
+  classed <- plain
+  classed$X4 <- factor(classed$X4, levels = c(0, 1))
+
+  prepared_plain <- DataStandard(plain, w$mapping, drop = TRUE)
+  prepared_classed <- DataStandard(classed, w$mapping, drop = TRUE)
+  expect_identical(
+    attr(prepared_classed, "pd_standardization")$attrition,
+    attr(prepared_plain, "pd_standardization")$attrition
+  )
+  expect_identical(prepared_classed$id, prepared_plain$id)
+  expect_identical(prepared_classed$time, prepared_plain$time)
+  expect_identical(as.character(prepared_classed$X4),
+                   as.character(prepared_plain$X4))
+  expect_identical(levels(prepared_classed$X4), levels(classed$X4))
+  expect_true(attr(prepared_classed, "pd_check")$ready_for_analysis)
+})
+
+test_that("the final check prevents analysis after deletion removes one arm", {
+  w <- make_pd_workflow(n = 40L)
+  raw <- w$raw
+  raw$X1[raw$A == 1L] <- NA_real_
+  initial <- DataCheck(raw, w$mapping)
+  expect_true(initial$can_standardize)
+  expect_false(initial$ready_for_analysis)
+
+  expect_warning(
+    prepared <- DataStandard(raw, w$mapping, drop = TRUE),
+    "not ready for analysis: treatment_group_availability"
+  )
+  expect_false(attr(prepared, "pd_check")$ready_for_analysis)
+  expect_identical(unique(prepared$A), 0L)
+  expect_error(
+    HTEAllT(prepared, w$ps_fo, w$prin_fo, w$out_fo, B = 0, verbose = FALSE),
+    "not marked ready for analysis"
+  )
+})

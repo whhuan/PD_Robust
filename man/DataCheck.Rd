@@ -14,9 +14,25 @@ DataCheck(data, mapping, strict = FALSE)
 \item{strict}{Stop when any analysis-blocking check fails.}
 }
 \value{
-A \code{pd_data_check} object containing \code{ready_for_analysis},
-\code{manual_resolution_required}, row-per-check results, settings, and detailed
-diagnostics. Calculated display diagnostics are rounded to three decimals;
+A \code{pd_data_check} list with the following components:
+\describe{
+\item{valid}{\code{TRUE} when no check with severity \code{"error"} fails.
+Analysis-blocking encoding or ordering warnings can still be present.}
+\item{ready_for_analysis}{\code{TRUE} when no analysis-blocking check fails.}
+\item{manual_resolution_required}{\code{TRUE} when a failed check requires
+manual correction before standardization.}
+\item{can_standardize}{The opposite of \code{manual_resolution_required}.
+This does not guarantee that \code{DataStandard()} will succeed: deletion
+may require \code{drop = TRUE}, leave no observations, or remove a treatment
+group. Always inspect the final readiness check.}
+\item{checks}{A data frame with one row per performed check, including
+severity, blocking and repair flags, details, and recommendations.}
+\item{settings}{A list containing the validated \code{mapping}.}
+\item{diagnostics}{Detailed row indices, subject identifiers, and summary
+tables for the performed checks. Missing columns or empty input cause
+an early return with only the checks possible at that stage.}
+}
+Calculated display diagnostics are rounded to three decimals;
 counts, row indices, identifiers, and logical flags retain their types.
 }
 \description{

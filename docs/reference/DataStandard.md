@@ -49,10 +49,40 @@ DataStandard(data, mapping, drop = FALSE)
 
 ## Value
 
-A `pd_data` frame. Attributes include the standardized mapping, original
-mapping, final readiness check, time/ID audit maps, and attrition.
-Analysis columns and computational mappings retain full precision; only
-returned display diagnostics and attrition percentages are rounded.
+A data frame inheriting from `pd_data`, retaining the input column names
+and additional unmapped columns. Rows outside the mapped time window are
+removed; retained rows are sorted by recoded ID and time. Attributes
+are:
+
+-   pd\_mapping:
+
+    The mapping with standardized baseline and cutoff times; column
+    roles retain their input names.
+
+-   pd\_original\_mapping:
+
+    The mapping supplied for the raw data.
+
+-   pd\_check:
+
+    The final `pd_data_check` report, including attrition. A warning is
+    issued if the returned data are not ready for analysis, for example
+    if deletion removes one treatment group.
+
+-   pd\_standardization:
+
+    A list containing `time_map`, `id_map`, `attrition`, and
+    `initial_check`. The maps link raw values to their standardized
+    values; the initial check describes the input data.
+
+Both the initial and final validation are performed. Audit attributes
+describe this standardization call and are not recomputed when the data
+are subsequently edited or subsetted; see
+[pd\_methods](https://whhuan.github.io/PD_Robust/reference/pd_methods.md).
+The ID map has one row per retained subject, so audit storage grows with
+sample size. Analysis columns and computational mappings retain full
+precision; only returned display diagnostics and attrition percentages
+are rounded.
 
 </div>
 

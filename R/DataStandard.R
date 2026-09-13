@@ -11,8 +11,24 @@
 #'   incomplete baseline-to-cutoff visits or required analysis values. Attrition is
 #'   reported explicitly. If `FALSE`, such problems stop standardization.
 #'
-#' @return A `pd_data` frame. Attributes include the standardized mapping,
-#'   original mapping, final readiness check, time/ID audit maps, and attrition.
+#' @return A data frame inheriting from `pd_data`, retaining the input column
+#'   names and additional unmapped columns. Rows outside the mapped time window
+#'   are removed; retained rows are sorted by recoded ID and time. Attributes are:
+#' \describe{
+#'   \item{pd_mapping}{The mapping with standardized baseline and cutoff times;
+#'     column roles retain their input names.}
+#'   \item{pd_original_mapping}{The mapping supplied for the raw data.}
+#'   \item{pd_check}{The final `pd_data_check` report, including attrition.
+#'     A warning is issued if the returned data are not ready for analysis,
+#'     for example if deletion removes one treatment group.}
+#'   \item{pd_standardization}{A list containing `time_map`, `id_map`,
+#'     `attrition`, and `initial_check`. The maps link raw values to their
+#'     standardized values; the initial check describes the input data.}
+#' }
+#'   Both the initial and final validation are performed. Audit attributes
+#'   describe this standardization call and are not recomputed when the data
+#'   are subsequently edited or subsetted; see [pd_methods]. The ID map has
+#'   one row per retained subject, so audit storage grows with sample size.
 #'   Analysis columns and computational mappings retain full precision; only
 #'   returned display diagnostics and attrition percentages are rounded.
 #' @examples

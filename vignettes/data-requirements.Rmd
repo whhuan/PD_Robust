@@ -42,8 +42,8 @@ data("BiSample", package = "PDRobust")
 ```
 
 Two built-in datasets are included with the package. The datasets are stored in
-the `data/` directory, and the scripts used to generate them are provided in the
-`data-raw/` directory.
+the `data/` directory. Their generation script is available in `data-raw/` in
+the source repository; development scripts are excluded from the CRAN archive.
 
 The first dataset, `BiSample`, is a standardized longitudinal dataset that
 satisfies the package’s data requirements. It contains no nonstructural missing
@@ -81,8 +81,9 @@ column names in the input dataset.
 
 The arguments `baseline_time` and `cutoff_time` define the beginning and end of
 the analysis window, respectively. Each must be specified as a single finite
-numeric value on the raw time scale, with `baseline_time < cutoff_time`. For
-example, when obeserved time points are (0, 1, ..., 4) may be set to 0 or 1,
+numeric value on the raw time scale, with `baseline_time <= cutoff_time`.
+Equal endpoints define a single-time analysis. For example, when observed
+time points are (0, 1, ..., 4), the baseline may be set to 0 or 1,
 whereas the cutoff may be set to a later time point, such as 4. For
 `ImperfectConSample`, the observed time points are (0, 6, 12); therefore, the
 analysis window is defined using `baseline_time = 0, cutoff_time = 12`.
@@ -130,9 +131,11 @@ determines whether the dataset is ready for analysis, can be standardized using
 `DataStandard()`, or requires manual resolution.
 
 Each check includes an action-oriented message. When `strict = FALSE`, which is
-the default, `DataCheck()` returns the complete validation report without
+the default, `DataCheck()` returns a validation report without
 modifying the input dataset. When `strict = TRUE`, the function raises an error
 if one or more failed checks are marked as analysis-blocking.
+Missing required columns or empty data cause an early return containing only
+the checks that can be performed at that stage.
 
 ```{r}
 check <- DataCheck(ImperfectConSample, map, strict = FALSE)
@@ -146,9 +149,9 @@ the following components:
 | Component | Description |
 |----|----|
 | `valid` | Indicates whether all checks with severity `"error"` have passed. Informational messages and warnings do not by themselves make the report invalid. |
-| `ready_for_analysis` | Indicates whether the dataset can be used directly in downstream prediction, diagnostic, and analysis functions. It is `TRUE` only when no failed check is marked as analysis-blocking. |
+| `ready_for_analysis` | `TRUE` when no failed check is marked as analysis-blocking. Raw data still need `DataStandard()` to attach the mapping and readiness metadata required by the HTE and diagnostic interfaces. |
 | `manual_resolution_required` | Indicates whether at least one failed check requires manual review or correction. Such issues are not automatically resolved by `DataStandard()`. |
-| `can_standardize` | Indicates whether `DataStandard()` may proceed. It is `TRUE` when no failed check requires manual resolution, although subject-level deletion may still require `drop = TRUE`. |
+| `can_standardize` | `TRUE` when no failed check requires manual resolution. Deletion may still require `drop = TRUE`, leave no observations, or remove a treatment group, so this flag does not guarantee success or final analysis readiness. |
 | `checks` | A data frame containing the itemized validation results, including the status, severity, diagnostic summary, analysis implications, and recommended handling for each check. |
 | `settings` | Records the settings used during validation. The current implementation stores the validated mapping object in `settings$mapping`. |
 | `diagnostics` | Contains detailed supporting information, such as affected row numbers, subject identifiers, missingness summaries, treatment-group counts, and problematic covariates. |
@@ -191,10 +194,10 @@ names(attributes(pd_data))
 | `names` | Stores the column names of the standardized data frame. |
 | `row.names` | Stores the row identifiers used by the data frame. |
 | `class` | Identifies the object classes, including its data-frame and package-specific classes. |
-| `pd_mapping` | Stores the standardized mapping used by subsequent package functions, including the standardized column roles and analysis-time specification. |
+| `pd_mapping` | Stores the mapping used by subsequent package functions. Column names retain their input names, while baseline and cutoff times refer to the standardized grid. |
 | `pd_original_mapping` | Preserves the original user-supplied mapping on the raw data scale before identifiers, time points, and encodings were standardized. |
 | `pd_check` | Stores the validation results associated with the standardized dataset, including readiness indicators, detected issues, and recommended handling. |
-| `pd_standardization` | Records the principal transformations performed during standardization, such as identifier and time mappings, encoding conversions, retained observations, and subject-level exclusions. |
+| `pd_standardization` | Contains `time_map`, `id_map`, `attrition`, and `initial_check`, recording identifier/time conversions, exclusion counts and subject-level reasons, and the input validation report. |
 
 For exmaple, the original and standardized mappings can be compared using:
 
@@ -231,8 +234,10 @@ retained assessment time.
 head(standardization$id_map)
 ```
 
-When `drop = TRUE`, exclusions are applied at the subject level rather than to
-individual records, and all exclusions are documented in the attrition report.
+Rows outside the mapped time window are always removed. With `drop = TRUE`,
+rows with missing identifiers or times can also be removed; remaining subjects
+with missing visits or required analysis values are excluded in full. The
+attrition report records the row-removal counts and subject-level exclusions.
 Outcome values that are structurally unobservable after death or other trunction
 are distinguished from ordinary missing outcomes among surviving subjects and
 are therefore handled separately during validation and standardization.
@@ -240,6 +245,21 @@ are therefore handled separately during validation and standardization.
 ```{r}
 standardization$attrition
 ```
+
+Standardization performs a second validation on the retained data. If dropping
+subjects removes a treatment group, it returns a warning and a `pd_check`
+attribute with `ready_for_analysis = FALSE`; the HTE interfaces reject that
+object. Inspect this flag before continuing:
+
+```{r}
+attr(pd_data, "pd_check")$ready_for_analysis
+```
+
+The ID audit map contains one row per retained subject, and detailed reports
+can contain row or subject indices. These attributes therefore grow with the
+data and the number of detected problems. They describe the standardization
+call; subsequent editing or subsetting does not recompute them. Revalidate
+changed data before analysis.
 
 Finally, even when a built-in dataset such as `BiSample`, or a user-supplied
 dataset, already satisfies all `PDRobust` data requirements, it should still be

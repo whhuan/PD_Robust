@@ -1,8 +1,8 @@
 ---
-title: "Details for function Datacheck"
+title: "Details for function DataCheck"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Details for function Datacheck}
+  %\VignetteIndexEntry{Details for function DataCheck}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -71,7 +71,7 @@ The component `check$checks` is a data frame with the following columns:
 | `details` | Provides a concise summary of the observed result, including relevant counts, values, rows, subjects, or time points. |
 | `recommendation` | Describes the recommended action for resolving or interpreting the result. |
 
-### ::: {.validation-check-table}
+::: {.validation-check-table}
 
 | Check | What is evaluated | Corresponding report and diagnostics |
 |----|----|----|
@@ -97,3 +97,5 @@ The component `check$checks` is a data frame with the following columns:
 | `treatment_group_availability` | Verifies that both treatment groups are represented at baseline. | Reports the number of unique baseline subjects in treatment groups `0` and `1`. Group counts are stored in `diagnostics$treatment_group_counts`. |
 | `covariate_variation` | Identifies mapped covariates that are constant or have near-zero variation. | Reports the names of problematic covariates and stores them in `diagnostics$near_zero_variation_covariates`. This is a nonblocking warning, but the covariates should be reviewed before model fitting. |
 | `retained_sample_after_optional_dropping` | Records the sample size before optional subject-level deletion during standardization. | Initially reports the number of subjects present. After `DataStandard()`, the corresponding report is updated with the original, removed, and retained subject counts and the retained percentage. |
+
+:::

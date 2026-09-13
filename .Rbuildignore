@@ -19,3 +19,5 @@
 ^inst/reports$
 ^release$
 ^vignettes/man$
+^01_reference_beta_N1M\.R$
+^tests/testthat/Rplots\.pdf$

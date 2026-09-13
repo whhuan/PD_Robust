@@ -41,7 +41,7 @@
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/hte.html">Estimate the heterogeneous treatment effect</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
-    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
+    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function DataCheck</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -83,7 +83,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/whhuan/PD_Robust" class="external-link">PDRobust</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ImperfectConSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span></code></pre></div>
-<p>Two built-in datasets are included with the package. The datasets are stored in the <code>data/</code> directory, and the scripts used to generate them are provided in the <code>data-raw/</code> directory.</p>
+<p>Two built-in datasets are included with the package. The datasets are stored in the <code>data/</code> directory. Their generation script is available in <code>data-raw/</code> in the source repository; development scripts are excluded from the CRAN archive.</p>
 <p>The first dataset, <code>BiSample</code>, is a standardized longitudinal dataset that satisfies the package’s data requirements. It contains no nonstructural missing values; outcome values are missing only when they are structurally unobservable due to any kind of truncation. Each row represents one subject at a specific time. The dataset includes a subject identifier (<code>id</code>), assessment time (<code>time</code>), survival status (<code>S</code>), treatment assignment (<code>A</code>), a binary outcome (<code>Y</code>), and six subject-level covariates (<code>X1</code>–<code>X6</code>) .</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"BiSample"</span>, package <span class="op">=</span> <span class="st">"PDRobust"</span><span class="op">)</span></span>
@@ -118,7 +118,7 @@
 </h2>
 <p><code><a href="../reference/Mapping.html">Mapping()</a></code> is the sole source of truth for structural columns, analysis window on the raw time scale, the covariated used to estimate treatment effects, the variables of interest, and the outcome type.</p>
 <p>The arguments <code>id, time, treatment, survival, outcome</code> specify the corresponding column names in the input dataset.</p>
-<p>The arguments <code>baseline_time</code> and <code>cutoff_time</code> define the beginning and end of the analysis window, respectively. Each must be specified as a single finite numeric value on the raw time scale, with <code>baseline_time &lt; cutoff_time</code>. For example, when obeserved time points are (0, 1, …, 4) may be set to 0 or 1, whereas the cutoff may be set to a later time point, such as 4. For <code>ImperfectConSample</code>, the observed time points are (0, 6, 12); therefore, the analysis window is defined using <code>baseline_time = 0, cutoff_time = 12</code>.</p>
+<p>The arguments <code>baseline_time</code> and <code>cutoff_time</code> define the beginning and end of the analysis window, respectively. Each must be specified as a single finite numeric value on the raw time scale, with <code>baseline_time &lt;= cutoff_time</code>. Equal endpoints define a single-time analysis. For example, when observed time points are (0, 1, …, 4), the baseline may be set to 0 or 1, whereas the cutoff may be set to a later time point, such as 4. For <code>ImperfectConSample</code>, the observed time points are (0, 6, 12); therefore, the analysis window is defined using <code>baseline_time = 0, cutoff_time = 12</code>.</p>
 <p>The argument <code>covariates</code> and <code>interest_vars</code> are character vectors containing the column names of the relevant covariates. Variables specified in <code>interest_vars</code> must also be included in <code>covariates</code> . The argument <code>y_type</code> specifies the outcome type. It should be set to <code>B</code> for a binary outcome and <code>C</code> for a continuous outcome.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Mapping.html">Mapping</a></span><span class="op">(</span></span>
@@ -161,7 +161,7 @@
 <h2 id="validation-without-modification">Validation without modification<a class="anchor" aria-label="anchor" href="#validation-without-modification"></a>
 </h2>
 <p><code><a href="../reference/DataCheck.html">DataCheck()</a></code> evaluates whether the input dataset satisfies the structural and analytical requirements of <code>PDRobust</code> without altering the data. It identifies potential issues, reports their severity and recommended handling, and determines whether the dataset is ready for analysis, can be standardized using <code><a href="../reference/DataStandard.html">DataStandard()</a></code>, or requires manual resolution.</p>
-<p>Each check includes an action-oriented message. When <code>strict = FALSE</code>, which is the default, <code><a href="../reference/DataCheck.html">DataCheck()</a></code> returns the complete validation report without modifying the input dataset. When <code>strict = TRUE</code>, the function raises an error if one or more failed checks are marked as analysis-blocking.</p>
+<p>Each check includes an action-oriented message. When <code>strict = FALSE</code>, which is the default, <code><a href="../reference/DataCheck.html">DataCheck()</a></code> returns a validation report without modifying the input dataset. When <code>strict = TRUE</code>, the function raises an error if one or more failed checks are marked as analysis-blocking. Missing required columns or empty data cause an early return containing only the checks that can be performed at that stage.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DataCheck.html">DataCheck</a></span><span class="op">(</span><span class="va">ImperfectConSample</span>, <span class="va">map</span>, strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
@@ -191,7 +191,8 @@
 </tr>
 <tr class="even">
 <td><code>ready_for_analysis</code></td>
-<td>Indicates whether the dataset can be used directly in downstream prediction, diagnostic, and analysis functions. It is <code>TRUE</code> only when no failed check is marked as analysis-blocking.</td>
+<td>
+<code>TRUE</code> when no failed check is marked as analysis-blocking. Raw data still need <code><a href="../reference/DataStandard.html">DataStandard()</a></code> to attach the mapping and readiness metadata required by the HTE and diagnostic interfaces.</td>
 </tr>
 <tr class="odd">
 <td><code>manual_resolution_required</code></td>
@@ -199,7 +200,8 @@
 </tr>
 <tr class="even">
 <td><code>can_standardize</code></td>
-<td>Indicates whether <code><a href="../reference/DataStandard.html">DataStandard()</a></code> may proceed. It is <code>TRUE</code> when no failed check requires manual resolution, although subject-level deletion may still require <code>drop = TRUE</code>.</td>
+<td>
+<code>TRUE</code> when no failed check requires manual resolution. Deletion may still require <code>drop = TRUE</code>, leave no observations, or remove a treatment group, so this flag does not guarantee success or final analysis readiness.</td>
 </tr>
 <tr class="odd">
 <td><code>checks</code></td>
@@ -301,7 +303,7 @@
 </tr>
 <tr class="even">
 <td align="left"><code>pd_mapping</code></td>
-<td align="left">Stores the standardized mapping used by subsequent package functions, including the standardized column roles and analysis-time specification.</td>
+<td align="left">Stores the mapping used by subsequent package functions. Column names retain their input names, while baseline and cutoff times refer to the standardized grid.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>pd_original_mapping</code></td>
@@ -313,7 +315,7 @@
 </tr>
 <tr class="odd">
 <td align="left"><code>pd_standardization</code></td>
-<td align="left">Records the principal transformations performed during standardization, such as identifier and time mappings, encoding conversions, retained observations, and subject-level exclusions.</td>
+<td align="left">Contains <code>time_map</code>, <code>id_map</code>, <code>attrition</code>, and <code>initial_check</code>, recording identifier/time conversions, exclusion counts and subject-level reasons, and the input validation report.</td>
 </tr>
 </tbody>
 </table>
@@ -366,7 +368,7 @@
 <span><span class="co">#&gt; 4 PT-0008               4</span></span>
 <span><span class="co">#&gt; 5 PT-0009               5</span></span>
 <span><span class="co">#&gt; 6 PT-0010               6</span></span></code></pre></div>
-<p>When <code>drop = TRUE</code>, exclusions are applied at the subject level rather than to individual records, and all exclusions are documented in the attrition report. Outcome values that are structurally unobservable after death or other trunction are distinguished from ordinary missing outcomes among surviving subjects and are therefore handled separately during validation and standardization.</p>
+<p>Rows outside the mapped time window are always removed. With <code>drop = TRUE</code>, rows with missing identifiers or times can also be removed; remaining subjects with missing visits or required analysis values are excluded in full. The attrition report records the row-removal counts and subject-level exclusions. Outcome values that are structurally unobservable after death or other trunction are distinguished from ordinary missing outcomes among surviving subjects and are therefore handled separately during validation and standardization.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">standardization</span><span class="op">$</span><span class="va">attrition</span></span>
 <span><span class="co">#&gt; $original_rows</span></span>
@@ -396,6 +398,11 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $retained_percent</span></span>
 <span><span class="co">#&gt; [1] 98</span></span></code></pre></div>
+<p>Standardization performs a second validation on the retained data. If dropping subjects removes a treatment group, it returns a warning and a <code>pd_check</code> attribute with <code>ready_for_analysis = FALSE</code>; the HTE interfaces reject that object. Inspect this flag before continuing:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">pd_data</span>, <span class="st">"pd_check"</span><span class="op">)</span><span class="op">$</span><span class="va">ready_for_analysis</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>The ID audit map contains one row per retained subject, and detailed reports can contain row or subject indices. These attributes therefore grow with the data and the number of detected problems. They describe the standardization call; subsequent editing or subsetting does not recompute them. Revalidate changed data before analysis.</p>
 <p>Finally, even when a built-in dataset such as <code>BiSample</code>, or a user-supplied dataset, already satisfies all <code>PDRobust</code> data requirements, it should still be processed through the package’s data-preparation workflow before analysis. This ensures that the dataset is formally validated, standardized, and supplied with the mapping and audit attributes required by downstream functions.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
