@@ -58,20 +58,20 @@ bootstrap standard deviation, and the diagnosis of nuisance models. The workflow
 implemented in `PDRobust` is outlined below, followed by an illustrative example
 demonstrating its application.
 
-The methodological reference is Zhang et al. (2026),
-[A Novel Tool for Evaluating Effect Modification in Older Adults with ADRD
-Using Medicare Claims](https://doi.org/10.48550/arXiv.2608.06654).
-Use `citation("PDRobust")` for the software and paper citations.
+The methodological reference is Zhang et al. (2026), [A Novel Tool for
+Evaluating Effect Modification in Older Adults with ADRD Using Medicare
+Claims](https://doi.org/10.48550/arXiv.2608.06654). Use `citation("PDRobust")`
+for the software and paper citations.
 
 **Treatment coding matters.** This release retains the 0.3.7 convention:
-treatment `1` is the survival-favorable arm. The paper's main estimator uses
-the opposite labels. Recode paper-coded treatment as `1 - A` before mapping
-and standardizing, then negate estimates and swap/negate confidence limits
-to report the paper's contrast. The bundled examples already use the package
-convention. Read `vignette("method-and-coding", package = "PDRobust")` before
-adapting the workflow to a study. Data checks cannot verify the causal
-identifying assumptions, and `SA()` provides outcome-noise sensitivity rather
-than the paper's principal-ignorability sensitivity analysis.
+treatment `1` is the survival-favorable arm. The paper's main estimator uses the
+opposite labels. Recode paper-coded treatment as `1 - A` before mapping and
+standardizing, then negate estimates and swap/negate confidence limits to report
+the paper's contrast. The bundled examples already use the package convention.
+Read `vignette("method-and-coding", package = "PDRobust")` before adapting the
+workflow to a study. Data checks cannot verify the causal identifying
+assumptions, and `SA()` provides outcome-noise sensitivity rather than the
+paper's principal-ignorability sensitivity analysis.
 
 ``` text
 data -> Mapping() -> DataCheck() -> DataStandard()
@@ -143,8 +143,8 @@ check$can_standardize
 `DataStandard()` returns a sorted data frame. It safely converts explicit binary
 encodings, maps subject identifiers and analysis-time to consecutive integers,
 and attaches mapping and audit attributes. The argument `drop` defaults to
-`FALSE`. Use `drop = TRUE` only when the reported subject-level exclusions
-are intended.
+`FALSE`. Use `drop = TRUE` only when the reported subject-level exclusions are
+intended.
 
 ```{r}
 pd_data <- DataStandard(ImperfectConSample, mapping, drop = TRUE)
@@ -157,8 +157,8 @@ head(pd_data)
 ### 5. Run analysis and diagnostic functions
 
 Specify the nuisance models before analysis. Here, `ps_fo` denotes the
-propensity-score model, `prin_fo` the principal-score model, and `out_fo`
-the outcome model.
+propensity-score model, `prin_fo` the principal-score model, and `out_fo` the
+outcome model.
 
 ```{r}
 ps_fo <- treatment ~ X1 + X2 + X3 + X4 + X5 + X6
@@ -226,13 +226,13 @@ provided by the package.
 
 Install a locally downloaded source release with:
 
-```r
+``` r
 install.packages("PDRobust_0.3.8.tar.gz", repos = NULL, type = "source")
 ```
 
 The development version is available from GitHub:
 
-```r
+``` r
 install.packages("remotes")
 remotes::install_github("whhuan/PD_Robust")
 ```
