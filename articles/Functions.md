@@ -43,7 +43,7 @@ mapping <- Mapping(
 )
 
 print(mapping)
-#> PDRobust data mapping
+#> PDRobust data mapping and analysis settings.
 #>   ID: id
 #>   Time: time
 #>   Treatment: A
@@ -236,7 +236,7 @@ ps_diagnostic <- PSDiag(data = pd_data,
                         ps_fo = ps_fo)
 
 print(ps_diagnostic)
-#> Exposure-model balance diagnostics
+#> Exposure-model balance diagnostics before and after weighting.
 #>  covariate adjustment   smd
 #>         X1     Before 0.679
 #>         X3     Before 0.615
@@ -248,7 +248,6 @@ print(ps_diagnostic)
 #>         X4      After 0.049
 #>         X5      After 0.153
 #>         X6      After 0.020
-ps_diagnostic$plot
 ```
 
 ![Absolute standardized mean differences before and after
@@ -278,14 +277,13 @@ principal_diagnostic <- PrinSDiag(
   prin_fo = prin_fo)
 
 print(principal_diagnostic)
-#> Principal-score diagnostics
+#> Principal-score standardized diagnostic statistics.
 #>  covariate statistic
 #>         X1    -0.575
 #>         X3    -0.511
 #>         X4    -0.374
 #>         X5     1.006
 #>         X6     0.656
-principal_diagnostic$plot
 ```
 
 ![Standardized principal-score balance statistics for the selected
@@ -318,7 +316,7 @@ sensitivity <- SA(
   ratiovec = c(0.05,0.1, 0.2)
 )
 print(sensitivity)
-#> Sensitivity analysis
+#> Outcome-noise sensitivity estimates across variance-ratio scenarios.
 #>  ratiovec time Intercept     X1     X4
 #>      0.05    0     0.107 -0.083 -0.317
 #>      0.10    0     0.046 -0.085 -0.283
@@ -330,18 +328,13 @@ print(sensitivity)
 #>      0.10    2     0.375  0.314 -0.860
 #>      0.20    2     0.084  0.070 -0.322
 #>   Scenarios: 3
-sensitivity$plot
-#> $X1
 ```
 
 ![Estimated effect-modification coefficients over time at different
-outcome-noise variance ratios.](Functions_files/figure-html/sa-1.png)
-
-    #> 
-    #> $X4
-
-![Estimated effect-modification coefficients over time at different
-outcome-noise variance ratios.](Functions_files/figure-html/sa-2.png)
+outcome-noise variance
+ratios.](Functions_files/figure-html/sa-1.png)![Estimated
+effect-modification coefficients over time at different outcome-noise
+variance ratios.](Functions_files/figure-html/sa-2.png)
 
 #### Principal-stratum profiling with `QR()`
 
@@ -354,11 +347,12 @@ principal_profile <- QR(
 )
 
 print(principal_profile)
-#> Principal-stratum weighted means
+#> Principal-stratum weighted means and quantiles.
+#> Weighted means:
 #>    X1    X4 
 #> 0.117 0.500 
 #> 
-#> Weighted quantiles (NA for binary variables)
+#> Weighted quantiles (NA for binary variables):
 #> $X1
 #>  q0.25  q0.50  q0.75 
 #> -0.517  0.130  0.728 
@@ -382,18 +376,17 @@ principal_profile$data
 
 or_control <- ORCI(
   data = pd_data,
-  fomula = S ~ X1 + X3 + X4,
+  formula = S ~ X1 + X3 + X4,
   a = 0,
   conf_level = 0.95
 )
 
-print(or_control)             
-#> Odds ratios and confidence intervals
+print(or_control)
+#> Treatment-group-specific survival odds ratios and confidence intervals.
 #>  covname estcoef lowerbd upperbd
 #>       X1   2.044   1.111   3.761
 #>       X3   0.565   0.301   1.059
 #>       X4   2.213   0.748   6.549
-or_control$plot
 ```
 
 ![Cutoff survival odds ratios and confidence intervals within treatment

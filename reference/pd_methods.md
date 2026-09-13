@@ -70,10 +70,12 @@ plot(x, ...)
 
 ## Value
 
-Print methods return `x` invisibly. Plot methods return the stored
-`ggplot` object invisibly. Subsetting returns the selected data; when
-the result is a data frame, mapping and audit attributes and the
-`pd_data` class are retained.
+Print methods display the principal numeric or tabular result and return
+`x` invisibly. If the result stores a user-facing plot, its print method
+also draws that same plot; `SA` objects draw each stored sensitivity
+plot. Plot methods return the stored `ggplot` object invisibly.
+Subsetting returns the selected data; when the result is a data frame,
+mapping and audit attributes and the `pd_data` class are retained.
 
 ## Details
 
@@ -96,7 +98,7 @@ map <- Mapping(
   interest_vars = c("X1", "X2"), y_type = "B"
 )
 print(map)
-#> PDRobust data mapping
+#> PDRobust data mapping and analysis settings.
 #>   ID: id
 #>   Time: time
 #>   Treatment: A
@@ -108,7 +110,7 @@ print(map)
 #>   Interest variables: X1, X2
 #>   Outcome type: B (binary)
 print(DataCheck(BiSample, map))
-#> PDRobust data validation
+#> PDRobust data-validation results and readiness summary.
 #>   Manual resolution required: NO 
 #>   Ready for analysis: YES 
 #>                                       check passed    severity
@@ -211,7 +213,7 @@ prepared[1:3, ]
 #> 3  1    2 0.987  1  1 1 1  0  0 0 1.479 -0.168 0.873  0  1  1
 diagnostic <- PSDiag(prepared, A ~ X1 + X2 + X4)
 print(diagnostic)
-#> Exposure-model balance diagnostics
+#> Exposure-model balance diagnostics before and after weighting.
 #>  covariate adjustment   smd
 #>         X1     Before 0.679
 #>         X2     Before 0.302
@@ -219,5 +221,6 @@ print(diagnostic)
 #>         X1      After 0.197
 #>         X2      After 0.047
 #>         X4      After 0.056
+
 p <- plot(diagnostic)
 ```

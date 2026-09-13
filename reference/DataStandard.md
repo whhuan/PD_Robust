@@ -78,7 +78,7 @@ map <- Mapping(
 )
 pd_dat <- DataStandard(BiSample, map)
 attr(pd_dat, "pd_mapping")
-#> PDRobust data mapping
+#> PDRobust data mapping and analysis settings.
 #>   ID: id
 #>   Time: time
 #>   Treatment: A

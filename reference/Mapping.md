@@ -90,7 +90,7 @@ map <- Mapping(
   y_type = "C"
 )
 map
-#> PDRobust data mapping
+#> PDRobust data mapping and analysis settings.
 #>   ID: id
 #>   Time: time
 #>   Treatment: A

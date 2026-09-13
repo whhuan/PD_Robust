@@ -147,7 +147,7 @@ establish that the propensity score model is correctly specified or
 eliminate the possibility of unmeasured confounding.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ps_diag</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Exposure-model balance diagnostics</span></span>
+<span><span class="co">#&gt; Exposure-model balance diagnostics before and after weighting.</span></span>
 <span><span class="co">#&gt;  covariate adjustment   smd</span></span>
 <span><span class="co">#&gt;         X1     Before 0.679</span></span>
 <span><span class="co">#&gt;         X3     Before 0.615</span></span>
@@ -158,8 +158,7 @@ eliminate the possibility of unmeasured confounding.</p>
 <span><span class="co">#&gt;         X3      After 0.084</span></span>
 <span><span class="co">#&gt;         X4      After 0.049</span></span>
 <span><span class="co">#&gt;         X5      After 0.153</span></span>
-<span><span class="co">#&gt;         X6      After 0.020</span></span>
-<span><span class="va">ps_diag</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<span><span class="co">#&gt;         X6      After 0.020</span></span></code></pre></div>
 <p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="Absolute standardized mean differences before and after propensity-score weighting." width="90%" style="display: block; margin: auto;"></p>
 <p>Additional components provide further information about the
 diagnostic procedure. For example, <code>ps_diag$weights</code> contains
@@ -196,14 +195,13 @@ also acceptable. Values outside that range warrant further examination
 of the principal score model and propensity score model.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">prin_diag</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Principal-score diagnostics</span></span>
+<span><span class="co">#&gt; Principal-score standardized diagnostic statistics.</span></span>
 <span><span class="co">#&gt;  covariate statistic</span></span>
 <span><span class="co">#&gt;         X1    -0.575</span></span>
 <span><span class="co">#&gt;         X3    -0.511</span></span>
 <span><span class="co">#&gt;         X4    -0.374</span></span>
 <span><span class="co">#&gt;         X5     1.006</span></span>
-<span><span class="co">#&gt;         X6     0.656</span></span>
-<span><span class="va">prin_diag</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<span><span class="co">#&gt;         X6     0.656</span></span></code></pre></div>
 <p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="Standardized principal-score balance statistics for the selected covariates." width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also provides additional diagnostic components,
 such as the cumulative principal scores under treatment levels 0 and
@@ -256,7 +254,7 @@ implement the principal-ignorability sensitivity parameter in the
 methodological paper.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sa</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Sensitivity analysis</span></span>
+<span><span class="co">#&gt; Outcome-noise sensitivity estimates across variance-ratio scenarios.</span></span>
 <span><span class="co">#&gt;  ratiovec time Intercept     X1     X5</span></span>
 <span><span class="co">#&gt;      0.00    0     0.175 -0.107 -0.392</span></span>
 <span><span class="co">#&gt;      0.05    0     0.243 -0.102 -0.464</span></span>
@@ -267,13 +265,8 @@ methodological paper.</p>
 <span><span class="co">#&gt;      0.00    2    -0.143  0.220  0.140</span></span>
 <span><span class="co">#&gt;      0.05    2    -0.127  0.184  0.203</span></span>
 <span><span class="co">#&gt;      0.10    2    -0.108  0.257  0.127</span></span>
-<span><span class="co">#&gt;   Scenarios: 3</span></span>
-<span><span class="va">sa</span><span class="op">$</span><span class="va">plot</span></span>
-<span><span class="co">#&gt; $X1</span></span></code></pre></div>
-<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"></p>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $X5</span></span></code></pre>
-<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-2.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"></p>
+<span><span class="co">#&gt;   Scenarios: 3</span></span></code></pre></div>
+<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-2.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also includes supplementary diagnostic
 information. For example, <code>variance_by_time</code> records the
 empirical outcome variance used to scale the perturbation at each
@@ -282,7 +275,7 @@ estimating-equation solution for each scenario,
 <code>model_diagnostics</code> contains model-fitting diagnostics, and
 <code>warnings</code> records consolidated warnings generated during the
 analysis.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sa</span><span class="op">$</span><span class="va">variance_by_time</span></span>
 <span><span class="co">#&gt;     0     1     2 </span></span>
 <span><span class="co">#&gt; 0.138 0.152 0.183</span></span>
@@ -304,7 +297,7 @@ for principal stratum summaries, <code>prin_fo</code> specifies the
 principal model formula, and <code>quantile_level</code> specifies one
 or more quantile levels, and defaluts to 0.5. It can also be a numeric
 vector such as <code>c(0.5, 0.95)</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">profile</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/QR.html">QR</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
@@ -319,13 +312,14 @@ For each selected variables, <code><a href="../reference/QR.html">QR()</a></code
 at the cutoff time. For non-binary variables, it additionally calculates
 the weighted quantile using an intercept-only weighted quantile
 regression model.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">profile</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Principal-stratum weighted means</span></span>
+<span><span class="co">#&gt; Principal-stratum weighted means and quantiles.</span></span>
+<span><span class="co">#&gt; Weighted means:</span></span>
 <span><span class="co">#&gt;    X1    X5 </span></span>
 <span><span class="co">#&gt; 0.117 0.574 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Weighted quantiles (NA for binary variables)</span></span>
+<span><span class="co">#&gt; Weighted quantiles (NA for binary variables):</span></span>
 <span><span class="co">#&gt; $X1</span></span>
 <span><span class="co">#&gt; q0.50 q0.95 </span></span>
 <span><span class="co">#&gt;  0.13  1.64 </span></span>
@@ -337,7 +331,7 @@ regression model.</p>
 identifies variables treated as binary, and
 <code>profile$weights</code>, which contains the full-precision
 cumulative principal-score weights used in the calculations.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">profile</span><span class="op">$</span><span class="va">weights</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.9708552 0.9793411 0.8698434 0.9534378 0.6395816 0.7645282</span></span></code></pre></div>
 </div>
@@ -350,17 +344,17 @@ function fits a logistic regression model and exponentiates the
 non-intercept coefficients to obtain odd ratios and Wald confidence
 interval.</p>
 <p>The argument <code>data</code> specifies the standardized dataset
-used for this function. The argument <code>fomula</code> specifies the
-the logistic regression model, with the mapped survival variable as the
+used for this function. The argument <code>formula</code> specifies the
+logistic regression model, with the mapped survival variable as the
 response variable on the left-hand side and covariates on the right-hand
 side. The argument <code>a</code> specifies the treatment group used for
 this analysis. The argument <code>conf_level</code> specifies confidence
 level and defaults to 0.95.</p>
 <p>The returned object contains the following components:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">or_fo</span> <span class="op">&lt;-</span> <span class="va">S</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span></span>
 <span><span class="va">or0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ORCI.html">ORCI</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">pd_data</span>, </span>
-<span>            fomula <span class="op">=</span> <span class="va">or_fo</span>, </span>
+<span>            formula <span class="op">=</span> <span class="va">or_fo</span>,</span>
 <span>            a <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>            conf_level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span></span>
@@ -384,19 +378,18 @@ confidence level, whereas an interval containing 1 indicates that the
 direction of association remains uncertain. Very wide intervals may
 indicate limited information, sparse outcome events, poor covariate
 overlap, or unstable model estimation within the selected group.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">or0</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Odds ratios and confidence intervals</span></span>
+<span><span class="co">#&gt; Treatment-group-specific survival odds ratios and confidence intervals.</span></span>
 <span><span class="co">#&gt;  covname estcoef lowerbd upperbd</span></span>
 <span><span class="co">#&gt;       X1   1.788   1.021   3.132</span></span>
 <span><span class="co">#&gt;       X2   1.834   0.988   3.404</span></span>
-<span><span class="co">#&gt;       X4   2.028   0.677   6.076</span></span>
-<span><span class="va">or0</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<span><span class="co">#&gt;       X4   2.028   0.677   6.076</span></span></code></pre></div>
 <p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="Cutoff survival odds ratios and confidence intervals within treatment group zero." width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also contains supplementary information, such as
 or0$model_diagnostics, which stores the full-precision fitted logistic
 regression model.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">or0</span><span class="op">$</span><span class="va">model_diagnostics</span></span>
 <span><span class="co">#&gt;                        label analysis   sample attempt target_time treatment</span></span>
 <span><span class="co">#&gt; 1 ORCI cutoff logistic model     ORCI original      NA          NA         0</span></span>

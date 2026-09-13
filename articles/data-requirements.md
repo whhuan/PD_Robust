@@ -128,7 +128,7 @@ class.
 ``` r
 
 print(map)
-#> PDRobust data mapping
+#> PDRobust data mapping and analysis settings.
 #>   ID: patient_id
 #>   Time: visit_month
 #>   Treatment: treatment
@@ -298,7 +298,7 @@ using:
 ``` r
 
 attr(pd_data, "pd_original_mapping")
-#> PDRobust data mapping
+#> PDRobust data mapping and analysis settings.
 #>   ID: patient_id
 #>   Time: visit_month
 #>   Treatment: treatment
@@ -310,7 +310,7 @@ attr(pd_data, "pd_original_mapping")
 #>   Interest variables: X1, X2
 #>   Outcome type: C (continuous)
 attr(pd_data, "pd_mapping")
-#> PDRobust data mapping
+#> PDRobust data mapping and analysis settings.
 #>   ID: patient_id
 #>   Time: visit_month
 #>   Treatment: treatment

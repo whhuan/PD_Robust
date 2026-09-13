@@ -121,8 +121,11 @@ additional arguments are accepted for generic compatibility but ignored.</p></dd
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Print methods return <code>x</code> invisibly. Plot methods return the stored
-<code>ggplot</code> object invisibly. Subsetting returns the selected data; when the
+    <p>Print methods display the principal numeric or tabular result and
+return <code>x</code> invisibly. If the result stores a user-facing plot, its print
+method also draws that same plot; <code>SA</code> objects draw each stored sensitivity
+plot. Plot methods return the stored <code>ggplot</code> object invisibly. Subsetting
+returns the selected data; when the
 result is a data frame, mapping and audit attributes and the <code>pd_data</code>
 class are retained.</p>
     </div>
@@ -145,7 +148,7 @@ method. Plot the returned table directly if a custom display is needed.</p>
 <span class="r-in"><span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>, y_type <span class="op">=</span> <span class="st">"B"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">map</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PDRobust data mapping</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PDRobust data mapping and analysis settings.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ID: id</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Time: time</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Treatment: A</span>
@@ -157,7 +160,7 @@ method. Plot the returned table directly if a custom display is needed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interest variables: X1, X2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Outcome type: B (binary)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="DataCheck.html">DataCheck</a></span><span class="op">(</span><span class="va">BiSample</span>, <span class="va">map</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PDRobust data validation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PDRobust data-validation results and readiness summary.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Manual resolution required: NO </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ready for analysis: YES </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                       check passed    severity</span>
@@ -260,7 +263,7 @@ method. Plot the returned table directly if a custom display is needed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  1    2 0.987  1  1 1 1  0  0 0 1.479 -0.168 0.873  0  1  1</span>
 <span class="r-in"><span><span class="va">diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="PSDiag.html">PSDiag</a></span><span class="op">(</span><span class="va">prepared</span>, <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">diagnostic</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Exposure-model balance diagnostics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Exposure-model balance diagnostics before and after weighting.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  covariate adjustment   smd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         X1     Before 0.679</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         X2     Before 0.302</span>
@@ -268,8 +271,9 @@ method. Plot the returned table directly if a custom display is needed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         X1      After 0.197</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         X2      After 0.047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         X4      After 0.056</span>
-<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">diagnostic</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="pd_methods-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">diagnostic</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="pd_methods-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

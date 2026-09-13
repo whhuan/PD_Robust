@@ -6,7 +6,7 @@ treatment group at the mapped cutoff time.
 ## Usage
 
 ``` r
-ORCI(data, fomula, a, conf_level = 0.95)
+ORCI(data, formula, a, conf_level = 0.95)
 ```
 
 ## Arguments
@@ -15,11 +15,10 @@ ORCI(data, fomula, a, conf_level = 0.95)
 
   A standardized `pd_data` object.
 
-- fomula:
+- formula:
 
   Logistic-regression formula with the mapped survival column as its
-  response. The spelling `fomula` is retained for compatibility; use
-  this spelling when supplying the argument by name.
+  response.
 
 - a:
 

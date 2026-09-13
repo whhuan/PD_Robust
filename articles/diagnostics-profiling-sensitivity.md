@@ -93,7 +93,7 @@ possibility of unmeasured confounding.
 ``` r
 
 print(ps_diag)
-#> Exposure-model balance diagnostics
+#> Exposure-model balance diagnostics before and after weighting.
 #>  covariate adjustment   smd
 #>         X1     Before 0.679
 #>         X3     Before 0.615
@@ -105,7 +105,6 @@ print(ps_diag)
 #>         X4      After 0.049
 #>         X5      After 0.153
 #>         X6      After 0.020
-ps_diag$plot
 ```
 
 ![Absolute standardized mean differences before and after
@@ -154,14 +153,13 @@ of the principal score model and propensity score model.
 ``` r
 
 print(prin_diag)
-#> Principal-score diagnostics
+#> Principal-score standardized diagnostic statistics.
 #>  covariate statistic
 #>         X1    -0.575
 #>         X3    -0.511
 #>         X4    -0.374
 #>         X5     1.006
 #>         X6     0.656
-prin_diag$plot
 ```
 
 ![Standardized principal-score balance statistics for the selected
@@ -226,7 +224,7 @@ methodological paper.
 ``` r
 
 print(sa)
-#> Sensitivity analysis
+#> Outcome-noise sensitivity estimates across variance-ratio scenarios.
 #>  ratiovec time Intercept     X1     X5
 #>      0.00    0     0.175 -0.107 -0.392
 #>      0.05    0     0.243 -0.102 -0.464
@@ -238,19 +236,13 @@ print(sa)
 #>      0.05    2    -0.127  0.184  0.203
 #>      0.10    2    -0.108  0.257  0.127
 #>   Scenarios: 3
-sa$plot
-#> $X1
 ```
 
 ![Estimated effect-modification coefficients over time at different
 outcome-noise variance
-ratios.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png)
-
-    #> 
-    #> $X5
-
-![Estimated effect-modification coefficients over time at different
-outcome-noise variance
+ratios.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png)![Estimated
+effect-modification coefficients over time at different outcome-noise
+variance
 ratios.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-2.png)
 
 The returned object also includes supplementary diagnostic information.
@@ -308,11 +300,12 @@ weighted quantile regression model.
 ``` r
 
 print(profile)
-#> Principal-stratum weighted means
+#> Principal-stratum weighted means and quantiles.
+#> Weighted means:
 #>    X1    X5 
 #> 0.117 0.574 
 #> 
-#> Weighted quantiles (NA for binary variables)
+#> Weighted quantiles (NA for binary variables):
 #> $X1
 #> q0.50 q0.95 
 #>  0.13  1.64 
@@ -342,7 +335,7 @@ regression model and exponentiates the non-intercept coefficients to
 obtain odd ratios and Wald confidence interval.
 
 The argument `data` specifies the standardized dataset used for this
-function. The argument `fomula` specifies the the logistic regression
+function. The argument `formula` specifies the logistic regression
 model, with the mapped survival variable as the response variable on the
 left-hand side and covariates on the right-hand side. The argument `a`
 specifies the treatment group used for this analysis. The argument
@@ -354,7 +347,7 @@ The returned object contains the following components:
 
 or_fo <- S ~ X1 + X2 + X4
 or0 <- ORCI(data = pd_data, 
-            fomula = or_fo, 
+            formula = or_fo,
             a = 0,
             conf_level = 0.95)
 
@@ -386,12 +379,11 @@ overlap, or unstable model estimation within the selected group.
 ``` r
 
 print(or0)
-#> Odds ratios and confidence intervals
+#> Treatment-group-specific survival odds ratios and confidence intervals.
 #>  covname estcoef lowerbd upperbd
 #>       X1   1.788   1.021   3.132
 #>       X2   1.834   0.988   3.404
 #>       X4   2.028   0.677   6.076
-or0$plot
 ```
 
 ![Cutoff survival odds ratios and confidence intervals within treatment
