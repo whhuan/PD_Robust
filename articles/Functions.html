@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -75,7 +76,8 @@
 <div class="section level2">
 <h2 id="pdrobust">PDRobust<a class="anchor" aria-label="anchor" href="#pdrobust"></a>
 </h2>
-<p>This is a replicating process for script.</p>
+<p>This vignette demonstrates validation, prediction, diagnostics, and
+treatment effect estimation using the bundled data.</p>
 <pre class="text"><code>data("BiSample") -&gt; Mapping() -&gt; DataCheck() -&gt; DataStandard() -&gt; prediction / diagnostic / analysis functions</code></pre>
 <div class="section level3">
 <h3 id="load-the-built-in-package-data">1. Load the built-in package data<a class="anchor" aria-label="anchor" href="#load-the-built-in-package-data"></a>
@@ -142,9 +144,8 @@
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="va">check</span><span class="op">$</span><span class="va">can_standardize</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>Detailed check report and diagnostics can be retained by using
-<code>check$diagnostics</code> and <code>check$check</code>,
-respectively.</p>
+<p>The itemized report is in <code>check$checks</code>; supporting
+details are in <code>check$diagnostics</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="standardize-the-panel-with-datastandard">4. Standardize the panel with <code>DataStandard()</code><a class="anchor" aria-label="anchor" href="#standardize-the-panel-with-datastandard"></a>
@@ -286,7 +287,7 @@ respectively.</p>
 <span><span class="co">#&gt;         X5      After 0.153</span></span>
 <span><span class="co">#&gt;         X6      After 0.020</span></span>
 <span><span class="va">ps_diagnostic</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="Functions_files/figure-html/ps_dgn-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/ps_dgn-1.png" class="r-plt" alt="Absolute standardized mean differences before and after propensity-score weighting." width="90%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="principal-score-model">Principal score model<a class="anchor" aria-label="anchor" href="#principal-score-model"></a>
@@ -317,7 +318,7 @@ respectively.</p>
 <span><span class="co">#&gt;         X5     1.006</span></span>
 <span><span class="co">#&gt;         X6     0.656</span></span>
 <span><span class="va">principal_diagnostic</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="Functions_files/figure-html/pps_dgn-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/pps_dgn-1.png" class="r-plt" alt="Standardized principal-score balance statistics for the selected covariates." width="90%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="outcome-model">Outcome model<a class="anchor" aria-label="anchor" href="#outcome-model"></a>
@@ -357,10 +358,10 @@ respectively.</p>
 <span><span class="co">#&gt;   Scenarios: 3</span></span>
 <span><span class="va">sensitivity</span><span class="op">$</span><span class="va">plot</span></span>
 <span><span class="co">#&gt; $X1</span></span></code></pre></div>
-<p><img src="Functions_files/figure-html/sa-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/sa-1.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $X4</span></span></code></pre>
-<p><img src="Functions_files/figure-html/sa-2.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/sa-2.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="principal-stratum-profiling-with-qr">Principal-stratum profiling with <code>QR()</code><a class="anchor" aria-label="anchor" href="#principal-stratum-profiling-with-qr"></a>
@@ -385,8 +386,14 @@ respectively.</p>
 <span><span class="co">#&gt; $X4</span></span>
 <span><span class="co">#&gt; q0.25 q0.50 q0.75 </span></span>
 <span><span class="co">#&gt;    NA    NA    NA</span></span>
-<span><span class="va">principal_profile</span><span class="op">$</span><span class="va">plot</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<span><span class="va">principal_profile</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="co">#&gt;   covariate  mean quantile estimate binary</span></span>
+<span><span class="co">#&gt; 1        X1 0.117     0.25   -0.517  FALSE</span></span>
+<span><span class="co">#&gt; 2        X1 0.117     0.50    0.130  FALSE</span></span>
+<span><span class="co">#&gt; 3        X1 0.117     0.75    0.728  FALSE</span></span>
+<span><span class="co">#&gt; 4        X4 0.500     0.25       NA   TRUE</span></span>
+<span><span class="co">#&gt; 5        X4 0.500     0.50       NA   TRUE</span></span>
+<span><span class="co">#&gt; 6        X4 0.500     0.75       NA   TRUE</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="treatment-group-odds-ratios">Treatment-group odds ratios<a class="anchor" aria-label="anchor" href="#treatment-group-odds-ratios"></a>
@@ -406,12 +413,16 @@ respectively.</p>
 <span><span class="co">#&gt;       X3   0.565   0.301   1.059</span></span>
 <span><span class="co">#&gt;       X4   2.213   0.748   6.549</span></span>
 <span><span class="va">or_control</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="Functions_files/figure-html/or_ci-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/or_ci-1.png" class="r-plt" alt="Cutoff survival odds ratios and confidence intervals within treatment group zero." width="90%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="heterogeneous-treatment-effect">5.2 Heterogeneous treatment effect<a class="anchor" aria-label="anchor" href="#heterogeneous-treatment-effect"></a>
 </h3>
+<p>The five bootstrap replications below are only for a fast
+demonstration. Substantive standard errors and confidence intervals
+require more replications and an assessment of their stability. Use
+<code>B = 0</code> for point estimates alone.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
 <span><span class="va">separate_hte</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HTESepT.html">HTESepT</a></span><span class="op">(</span></span>
@@ -435,7 +446,7 @@ respectively.</p>
 <span><span class="co">#&gt; 5    2        X1    0.166 0.193     -0.213      0.546</span></span>
 <span><span class="co">#&gt; 6    2        X4   -0.506 0.556     -1.596      0.584</span></span>
 <span><span class="va">separate_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
-<p><img src="Functions_files/figure-html/htesept-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/htesept-1.png" class="r-plt" alt="Time-specific treatment-effect model coefficients and demonstration bootstrap confidence intervals." width="90%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">separate_hte</span><span class="op">$</span><span class="va">boot_mat</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       1_Intercept        1_X1      1_X4 2_Intercept        2_X1        2_X4</span></span>
@@ -460,7 +471,7 @@ respectively.</p>
 <span><span class="co">#&gt; 3          X4   -0.153 NA         NA         NA</span></span>
 <span><span class="co">#&gt; 4 Time Effect    0.004 NA         NA         NA</span></span>
 <span><span class="va">pooled_hte</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
-<p><img src="Functions_files/figure-html/hteallt-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="Functions_files/figure-html/hteallt-1.png" class="r-plt" alt="Pooled treatment-effect model point estimates; bootstrap intervals are not calculated in this example." width="90%" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

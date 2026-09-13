@@ -9,7 +9,7 @@ group at the mapped cutoff time."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@ group at the mapped cutoff time."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -65,7 +66,9 @@ group at the mapped cutoff time.</p>
 
 
 <dt id="arg-fomula">fomula<a class="anchor" aria-label="anchor" href="#arg-fomula"></a></dt>
-<dd><p>Logistic-regression formula.</p></dd>
+<dd><p>Logistic-regression formula with the mapped survival column
+as its response. The spelling <code>fomula</code> is retained for compatibility;
+use this spelling when supplying the argument by name.</p></dd>
 
 
 <dt id="arg-a">a<a class="anchor" aria-label="anchor" href="#arg-a"></a></dt>

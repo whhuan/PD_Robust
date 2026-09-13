@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -159,7 +160,7 @@ eliminate the possibility of unmeasured confounding.</p>
 <span><span class="co">#&gt;         X5      After 0.153</span></span>
 <span><span class="co">#&gt;         X6      After 0.020</span></span>
 <span><span class="va">ps_diag</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="reference/figures/diag-unnamed-chunk-6-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="Absolute standardized mean differences before and after propensity-score weighting." width="90%" style="display: block; margin: auto;"></p>
 <p>Additional components provide further information about the
 diagnostic procedure. For example, <code>ps_diag$weights</code> contains
 the calculated inverse probability weights, and
@@ -203,7 +204,7 @@ of the principal score model and propensity score model.</p>
 <span><span class="co">#&gt;         X5     1.006</span></span>
 <span><span class="co">#&gt;         X6     0.656</span></span>
 <span><span class="va">prin_diag</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="reference/figures/diag-unnamed-chunk-9-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="Standardized principal-score balance statistics for the selected covariates." width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also provides additional diagnostic components,
 such as the cumulative principal scores under treatment levels 0 and
 1.</p>
@@ -249,6 +250,10 @@ curves for the covariates of interest.</p>
 <p>Greater similarity in the magnitude and direction of estimated
 coeffcients across increasing noise levels indicates greater robustness
 of estimated heterogeneous treatment effects.</p>
+<p>This comparison concerns the specified random outcome-noise
+perturbations. It does not test the causal identifying assumptions or
+implement the principal-ignorability sensitivity parameter in the
+methodological paper.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sa</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sensitivity analysis</span></span>
@@ -265,10 +270,10 @@ of estimated heterogeneous treatment effects.</p>
 <span><span class="co">#&gt;   Scenarios: 3</span></span>
 <span><span class="va">sa</span><span class="op">$</span><span class="va">plot</span></span>
 <span><span class="co">#&gt; $X1</span></span></code></pre></div>
-<p><img src="reference/figures/diag-unnamed-chunk-12-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $X5</span></span></code></pre>
-<p><img src="reference/figures/diag-unnamed-chunk-12-2.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-2.png" class="r-plt" alt="Estimated effect-modification coefficients over time at different outcome-noise variance ratios." width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also includes supplementary diagnostic
 information. For example, <code>variance_by_time</code> records the
 empirical outcome variance used to scale the perturbation at each
@@ -387,7 +392,7 @@ overlap, or unstable model estimation within the selected group.</p>
 <span><span class="co">#&gt;       X2   1.834   0.988   3.404</span></span>
 <span><span class="co">#&gt;       X4   2.028   0.677   6.076</span></span>
 <span><span class="va">or0</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="reference/figures/diag-unnamed-chunk-18-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="Cutoff survival odds ratios and confidence intervals within treatment group zero." width="90%" style="display: block; margin: auto;"></p>
 <p>The returned object also contains supplementary information, such as
 or0$model_diagnostics, which stores the full-precision fitted logistic
 regression model.</p>

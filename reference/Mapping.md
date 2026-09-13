@@ -37,7 +37,11 @@ Mapping(
 
 - treatment:
 
-  Character scalar naming the treatment column.
+  Character scalar naming the treatment column. For causal estimation,
+  code the survival-favorable arm as `1` and the other arm as `0`; see
+  [PDRobust-package](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md)
+  for the convention and assumptions. Mapping does not infer which arm
+  is survival-favorable.
 
 - survival:
 

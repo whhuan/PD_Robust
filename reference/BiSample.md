@@ -1,6 +1,10 @@
 # Binary longitudinal example data
 
 Simulated long-format data for illustrating binary-outcome analyses.
+Potential survival is generated with \\S^1 \ge S^0\\, matching the
+package's treatment-1 survival-favorable convention. The simulation
+variables are not observed counterfactual information available in a
+real study.
 
 ## Usage
 
@@ -10,7 +14,8 @@ BiSample
 
 ## Format
 
-A simulated long-format data frame and the following variables:
+A simulated long-format data frame with 1,200 rows (400 subjects at
+three visits) and 16 variables:
 
 - id:
 
@@ -19,6 +24,22 @@ A simulated long-format data frame and the following variables:
 - time:
 
   Analysis time.
+
+- Pi:
+
+  Simulated probability of treatment 1 conditional on baseline
+  covariates, stored to three decimal places.
+
+- S1, S0:
+
+  Simulated potential survival indicators under treatment 1 and 0,
+  respectively; 1 denotes alive and 0 denotes dead.
+
+- Y1, Y0:
+
+  Simulated binary potential outcomes under treatment 1 and 0,
+  respectively. These simulation variables are retained for
+  illustration; package analyses use the observed outcome `Y`.
 
 - X1, X2, X3:
 

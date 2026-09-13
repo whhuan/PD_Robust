@@ -1,0 +1,130 @@
+# Treatment coding and interpretation
+
+## Choose treatment coding before analysis
+
+PDRobust retains the treatment convention used in version 0.3.7.
+Treatment `1` must represent the survival-favorable arm: the causal
+survival-monotonicity assumption is $`S^1(t_*) \ge S^0(t_*)`$, where
+$`t_*`$ is the selected cutoff. The always-survivor population comprises
+subjects who would survive to that cutoff under either treatment. The
+implementation uses the survival probability under arm `0` as its
+principal score.
+
+This is a scientific assumption about potential survival for each
+subject. Higher observed survival in one group does not establish it.
+[`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
+names columns and
+[`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
+validates the observed panel; neither infers the appropriate treatment
+direction or verifies causal identification.
+
+The main estimator in [Zhang et
+al. (2026)](https://doi.org/10.48550/arXiv.2608.06654) uses the opposite
+treatment labels. To adapt data coded according to that convention,
+reverse the binary treatment in the raw data before calling
+[`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md),
+[`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md),
+and
+[`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
+Apply the recoding consistently to the treatment used by every model. Do
+not simply relabel a fitted object’s output.
+
+``` r
+
+paper_treatment <- c(0L, 1L, 1L, 0L)
+package_treatment <- 1L - paper_treatment
+data.frame(paper_treatment, package_treatment)
+#>   paper_treatment package_treatment
+#> 1               0                 1
+#> 2               1                 0
+#> 3               1                 0
+#> 4               0                 1
+```
+
+For character or factor treatment columns, first explicitly identify the
+two levels and their intended numeric codes. The built-in datasets
+already follow the package convention and should not be reversed for
+their example analyses.
+
+## Report the intended effect direction
+
+The package estimates arm `1` minus arm `0`. Reversing input treatment
+labels therefore reverses the contrast relative to the original labels.
+Negate an effect estimate and map an interval `[lower, upper]` to
+`[-upper, -lower]`; its standard error is unchanged. For example, using
+illustrative numbers:
+
+``` r
+
+package_result <- data.frame(estimate = 2, lower = 1, upper = 3, SD = 0.5)
+original_contrast <- data.frame(
+  estimate = -package_result$estimate,
+  lower = -package_result$upper,
+  upper = -package_result$lower,
+  SD = package_result$SD
+)
+original_contrast
+#>   estimate lower upper  SD
+#> 1       -2    -3    -1 0.5
+```
+
+For
+[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
+the estimate column is `summary$estimate` and the interval columns are
+`summary$LowerBound` and `summary$UpperBound`;
+[`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md)
+uses the same column names. The sign transformation applies to
+effect-model coefficients and their intervals. It does not instruct
+users to negate survival odds ratios returned by
+[`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md).
+
+## Interpret the working effect model
+
+For a continuous outcome, the working treatment effect is the intercept
+plus the linear combination of the mapped baseline effect modifiers. For
+a binary outcome, that linear predictor `eta` is transformed by
+`2 * plogis(eta) - 1` to obtain the working risk difference. Binary
+coefficients are consequently not direct risk differences or log odds
+ratios. The link is odd about zero, so reversing all coefficients
+reverses the modeled effect.
+
+[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
+fits separate coefficients for the requested standardized times.
+[`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md)
+uses every observed time from baseline through cutoff and includes a
+linear time term when multiple times are present.
+[`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
+maps raw visits to consecutive integers. A pooled time coefficient is
+therefore per standardized visit, not automatically per month or year;
+irregular raw visit spacing is not retained as a continuous time
+covariate by that coefficient.
+
+The target principal stratum remains defined at the cutoff, including
+when reporting effects at earlier times. Observed survivors are not
+individually identified as always-survivors by this analysis.
+
+## Assumptions, numerical safeguards, and scope
+
+Consult the package overview and the methodological reference for causal
+assumptions. The fitted models do not resolve unmeasured confounding,
+interference, violations of survival monotonicity, or violations of
+principal ignorability. Covariate balance and successful optimization
+are diagnostic evidence, not proof of those assumptions.
+
+The implementation clips propensity scores to `[0.01, 0.99]` and the
+product of propensity and treatment-1 survival probability to
+`[0.005, 0.995]` in the HTE equations. Clipping changes the equation
+when active. The coding conversion explains the contrast but is not a
+guarantee of exact numerical reproduction of the paper’s unmodified
+formulas. The package fits parametric nuisance models internally; it
+does not expose arbitrary machine-learning or cross-fitting interfaces.
+
+[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) adds random
+outcome noise. It does not implement the paper’s principal-ignorability
+sensitivity ratio. Label this output as outcome-noise sensitivity, and
+set a seed for reproducibility. The small bootstrap counts in example
+vignettes demonstrate the interface; increase them and assess inference
+stability before using confidence intervals substantively.
+
+Use `citation("PDRobust")` to obtain the software and methodological
+references.

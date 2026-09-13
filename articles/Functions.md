@@ -2,7 +2,8 @@
 
 ## PDRobust
 
-This is a replicating process for script.
+This vignette demonstrates validation, prediction, diagnostics, and
+treatment effect estimation using the bundled data.
 
 ``` text
 data("BiSample") -> Mapping() -> DataCheck() -> DataStandard() -> prediction / diagnostic / analysis functions
@@ -79,8 +80,8 @@ check$can_standardize
 #> [1] TRUE
 ```
 
-Detailed check report and diagnostics can be retained by using
-`check$diagnostics` and `check$check`, respectively.
+The itemized report is in `check$checks`; supporting details are in
+`check$diagnostics`.
 
 ### 4. Standardize the panel with `DataStandard()`
 
@@ -250,7 +251,8 @@ print(ps_diagnostic)
 ps_diagnostic$plot
 ```
 
-![](Functions_files/figure-html/ps_dgn-1.png)
+![Absolute standardized mean differences before and after
+propensity-score weighting.](Functions_files/figure-html/ps_dgn-1.png)
 
 #### Principal score model
 
@@ -286,7 +288,8 @@ print(principal_diagnostic)
 principal_diagnostic$plot
 ```
 
-![](Functions_files/figure-html/pps_dgn-1.png)
+![Standardized principal-score balance statistics for the selected
+covariates.](Functions_files/figure-html/pps_dgn-1.png)
 
 #### Outcome model
 
@@ -331,12 +334,14 @@ sensitivity$plot
 #> $X1
 ```
 
-![](Functions_files/figure-html/sa-1.png)
+![Estimated effect-modification coefficients over time at different
+outcome-noise variance ratios.](Functions_files/figure-html/sa-1.png)
 
     #> 
     #> $X4
 
-![](Functions_files/figure-html/sa-2.png)
+![Estimated effect-modification coefficients over time at different
+outcome-noise variance ratios.](Functions_files/figure-html/sa-2.png)
 
 #### Principal-stratum profiling with `QR()`
 
@@ -361,8 +366,14 @@ print(principal_profile)
 #> $X4
 #> q0.25 q0.50 q0.75 
 #>    NA    NA    NA
-principal_profile$plot
-#> NULL
+principal_profile$data
+#>   covariate  mean quantile estimate binary
+#> 1        X1 0.117     0.25   -0.517  FALSE
+#> 2        X1 0.117     0.50    0.130  FALSE
+#> 3        X1 0.117     0.75    0.728  FALSE
+#> 4        X4 0.500     0.25       NA   TRUE
+#> 5        X4 0.500     0.50       NA   TRUE
+#> 6        X4 0.500     0.75       NA   TRUE
 ```
 
 #### Treatment-group odds ratios
@@ -385,9 +396,15 @@ print(or_control)
 or_control$plot
 ```
 
-![](Functions_files/figure-html/or_ci-1.png)
+![Cutoff survival odds ratios and confidence intervals within treatment
+group zero.](Functions_files/figure-html/or_ci-1.png)
 
 ### 5.2 Heterogeneous treatment effect
+
+The five bootstrap replications below are only for a fast demonstration.
+Substantive standard errors and confidence intervals require more
+replications and an assessment of their stability. Use `B = 0` for point
+estimates alone.
 
 ``` r
 
@@ -415,7 +432,9 @@ separate_hte$summary
 separate_hte$forest_plot
 ```
 
-![](Functions_files/figure-html/htesept-1.png)
+![Time-specific treatment-effect model coefficients and demonstration
+bootstrap confidence
+intervals.](Functions_files/figure-html/htesept-1.png)
 
 ``` r
 
@@ -447,4 +466,6 @@ pooled_hte$summary
 pooled_hte$forest_plot
 ```
 
-![](Functions_files/figure-html/hteallt-1.png)
+![Pooled treatment-effect model point estimates; bootstrap intervals are
+not calculated in this
+example.](Functions_files/figure-html/hteallt-1.png)

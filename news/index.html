@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -43,6 +44,19 @@
       <small>Source: <a href="https://github.com/whhuan/PD_Robust/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.8" id="pdrobust-038">PDRobust 0.3.8<a class="anchor" aria-label="anchor" href="#pdrobust-038"></a></h2>
+<div class="section level3">
+<h3 id="cran-release-preparation-0-3-8">CRAN release preparation<a class="anchor" aria-label="anchor" href="#cran-release-preparation-0-3-8"></a></h3>
+<ul><li>Retained the 0.3.7 treatment-1 survival-favorable estimator and documented how to convert treatment coding and effect contrasts relative to Zhang et al. (2026). Added the methodological citation and an implementation guide. Outcome-noise sensitivity is explicitly distinguished from the paper’s principal-ignorability sensitivity procedure.</li>
+<li>Corrected the documented <code><a href="../reference/ORCI.html">ORCI()</a></code> argument spelling and QR return values without changing function signatures or numerical estimators.</li>
+<li>Documented all bundled data columns and the existing print, plot, and subsetting methods.</li>
+<li>Added reproducible seeds and explained demonstration-only bootstrap counts in the README and workflow vignettes; clarified the binary effect link and the interpretation of outcome-noise sensitivity analysis.</li>
+<li>Declared the utility namespace import used for global-variable registration and excluded development reports, release artifacts, and the top-level sensitivity image from source builds.</li>
+<li>Shortened the package title and made the software citation follow the package metadata.</li>
+<li>Corrected vignette figure paths for the documentation website and supplied descriptive alternative text for workflow figures.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.7.2" id="pdrobust-0372">PDRobust 0.3.7.2<a class="anchor" aria-label="anchor" href="#pdrobust-0372"></a></h2>
 <div class="section level3">

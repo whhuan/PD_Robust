@@ -49,7 +49,10 @@ HTESepT(
 
 - B:
 
-  Number of successful subject-level bootstrap replications.
+  Number of successful subject-level bootstrap replications. Use `0` for
+  point estimates only. Set a random seed before the call for
+  reproducible resampling. Small values used in demonstrations are not
+  sufficient for substantive interval estimation.
 
 - conf_level:
 
@@ -93,6 +96,36 @@ Repeated finite-prediction separation or convergence messages are
 consolidated at the analysis boundary. Model-level details remain
 available in `model_diagnostics`; bootstrap warnings and their counts
 are stored in `bootstrap_info`.
+
+## Numerical safeguards
+
+Propensity scores are clipped to `[0.01, 0.99]`, and their product with
+treatment-1 survival probabilities is clipped to `[0.005, 0.995]` in the
+estimating equation. These fixed limits stabilize denominators but
+change the equation when active; they do not establish adequate overlap
+or the causal assumptions. Inspect the model diagnostics and assess
+sensitivity to sparse risk sets. Returned summaries are rounded only
+after inference; full-precision bootstrap coefficients are in
+`boot_mat`.
+
+## Treatment coding
+
+The implemented estimator uses treatment `1` as the survival-favorable
+arm: potential survival satisfies \\S^1 \ge S^0\\ at cutoff. Its
+always-survivor principal score is therefore the survival probability
+under treatment `0`. This convention is retained from version 0.3.7. The
+main estimator in the reference below uses the opposite arm labels. To
+analyze data coded in that convention, recode the raw treatment as
+`1 - A` before mapping and standardizing. To report the original
+contrast, negate the package estimate and transform an interval
+`[lower, upper]` to `[-upper, -lower]`.
+[`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
+does not infer or reverse treatment coding.
+
+## See also
+
+[PDRobust-package](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md),
+[pd_methods](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
 
 ## Examples
 

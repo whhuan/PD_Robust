@@ -1,7 +1,7 @@
 # Imperfect Continuous Longitudinal Example Data
 
 A deliberately imperfect continuous-outcome longitudinal data set
-derived from the analysis-ready `ConSample` data. The data mimic common
+derived from a simulated continuous-outcome panel. The data mimic common
 issues encountered in raw clinical data exports while remaining
 recoverable using
 [`DataCheck`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
@@ -17,8 +17,8 @@ ImperfectConSample
 
 ## Format
 
-A data frame in long format with one row per subject and visit,
-containing the following variables:
+A data frame with 599 rows and 11 variables in long format, with one row
+per recorded subject and visit:
 
 - `patient_id`:
 

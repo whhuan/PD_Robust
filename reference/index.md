@@ -5,6 +5,22 @@
 - [`PDRobust`](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md)
   [`PDRobust-package`](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md)
   : PDRobust: Principal-stratification treatment-effect estimation
+- [`print(`*`<pd_mapping>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<pd_data_check>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`` `[`( ``*`<pd_data>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<pd_hte_timevarying>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<pd_hte_pooled>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<PSDiag>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<PrinSDiag>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<odds_ratios>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<QR>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`print(`*`<SA>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`plot(`*`<pd_hte_timevarying>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`plot(`*`<pd_hte_pooled>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`plot(`*`<PSDiag>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`plot(`*`<PrinSDiag>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  [`plot(`*`<odds_ratios>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
+  : Display and subset PDRobust objects
 
 ## Mapping and prepared data
 

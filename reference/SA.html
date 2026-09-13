@@ -13,7 +13,7 @@ Both cutoff treatment groups enter the estimating equations."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@ Both cutoff treatment groups enter the estimating equations."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -101,6 +102,10 @@ is fitted to the original 0/1 outcomes. This keeps the outcome model
 binomial rather than fitting a logistic model to invalid pseudo-responses.
 Binary HTE coefficients use the same bounded-link estimating equation as
 <code><a href="HTESepT.html">HTESepT()</a></code>.</p>
+<p>This analysis measures sensitivity to the specified random outcome-noise
+perturbation. It does not identify the direction or magnitude of arbitrary
+model misspecification or test the causal identifying assumptions. Set an
+R random seed before calling <code>SA()</code> to reproduce its perturbations.</p>
 <p>All three prediction models are refitted internally; no fitted model is
 cached or reused across calls. Within one scenario, a model fitted to the
 same rows and formula is reused only to obtain the two counterfactual
@@ -119,6 +124,7 @@ treatment predictions.</p>
 <span class="r-in"><span>  interest_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1"</span>, <span class="st">"X2"</span><span class="op">)</span>, y_type <span class="op">=</span> <span class="st">"B"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pd_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="DataStandard.html">DataStandard</a></span><span class="op">(</span><span class="va">BiSample</span>, <span class="va">map</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">20260912</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">SA</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">pd_dat</span>,</span></span>
 <span class="r-in"><span>  <span class="va">A</span> <span class="op">~</span> <span class="va">X1</span> <span class="op">+</span> <span class="va">X2</span> <span class="op">+</span> <span class="va">X4</span>,</span></span>

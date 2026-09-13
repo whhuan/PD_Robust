@@ -7,8 +7,9 @@ articles:
   diagnostics-profiling-sensitivity: diagnostics-profiling-sensitivity.html
   Functions: Functions.html
   hte: hte.html
+  method-and-coding: method-and-coding.html
   prediction-models: prediction-models.html
-last_built: 2026-09-10T17:40Z
+last_built: 2026-09-13T00:13Z
 urls:
   reference: https://whhuan.github.io/PD_Robust/reference
   article: https://whhuan.github.io/PD_Robust/articles

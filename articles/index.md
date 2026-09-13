@@ -2,6 +2,8 @@
 
 ### Workflows
 
+- [Treatment coding and
+  interpretation](https://whhuan.github.io/PD_Robust/articles/method-and-coding.md):
 - [Data requirements and
   standardization](https://whhuan.github.io/PD_Robust/articles/data-requirements.md):
 - [Prediction

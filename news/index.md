@@ -1,5 +1,33 @@
 # Changelog
 
+## PDRobust 0.3.8
+
+### CRAN release preparation
+
+- Retained the 0.3.7 treatment-1 survival-favorable estimator and
+  documented how to convert treatment coding and effect contrasts
+  relative to Zhang et al. (2026). Added the methodological citation and
+  an implementation guide. Outcome-noise sensitivity is explicitly
+  distinguished from the paper’s principal-ignorability sensitivity
+  procedure.
+- Corrected the documented
+  [`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md)
+  argument spelling and QR return values without changing function
+  signatures or numerical estimators.
+- Documented all bundled data columns and the existing print, plot, and
+  subsetting methods.
+- Added reproducible seeds and explained demonstration-only bootstrap
+  counts in the README and workflow vignettes; clarified the binary
+  effect link and the interpretation of outcome-noise sensitivity
+  analysis.
+- Declared the utility namespace import used for global-variable
+  registration and excluded development reports, release artifacts, and
+  the top-level sensitivity image from source builds.
+- Shortened the package title and made the software citation follow the
+  package metadata.
+- Corrected vignette figure paths for the documentation website and
+  supplied descriptive alternative text for workflow figures.
+
 ## PDRobust 0.3.7.2
 
 ### Live bootstrap progress

@@ -17,7 +17,7 @@ reused only to obtain the two counterfactual treatment predictions."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@ reused only to obtain the two counterfactual treatment predictions."></head><bod
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -99,7 +100,10 @@ reused only to obtain the two counterfactual treatment predictions.</p>
 
 
 <dt id="arg-b">B<a class="anchor" aria-label="anchor" href="#arg-b"></a></dt>
-<dd><p>Number of successful subject-level bootstrap replications.</p></dd>
+<dd><p>Number of successful subject-level bootstrap replications. Use
+<code>0</code> for point estimates only. Set a random seed before the call for
+reproducible resampling. Small values used in demonstrations are not
+sufficient for substantive interval estimation.</p></dd>
 
 
 <dt id="arg-conf-level">conf_level<a class="anchor" aria-label="anchor" href="#arg-conf-level"></a></dt>
@@ -142,6 +146,36 @@ in <code>model_diagnostics</code>; bootstrap warnings and their counts are store
 <code>bootstrap_info</code>.</p>
 <p>If the prepared data contain only one analysis time, the estimator omits the
 time-effect term and records that the time effect is not estimable.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="numerical-safeguards">Numerical safeguards<a class="anchor" aria-label="anchor" href="#numerical-safeguards"></a></h2>
+
+
+<p>Propensity scores are clipped to <code>[0.01, 0.99]</code>, and their product with
+treatment-1 survival probabilities is clipped to <code>[0.005, 0.995]</code> in
+the estimating equation. These fixed limits stabilize denominators but
+change the equation when active; they do not establish adequate overlap
+or the causal assumptions. Inspect the model diagnostics and assess
+sensitivity to sparse risk sets. Returned summaries are rounded only after
+inference; full-precision bootstrap coefficients are in <code>boot_mat</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="treatment-coding">Treatment coding<a class="anchor" aria-label="anchor" href="#treatment-coding"></a></h2>
+
+
+<p>The implemented estimator uses treatment <code>1</code> as the survival-favorable arm:
+potential survival satisfies \(S^1 \ge S^0\) at cutoff. Its always-survivor
+principal score is therefore the survival probability under treatment <code>0</code>.
+This convention is retained from version 0.3.7. The main estimator in the
+reference below uses the opposite arm labels. To analyze data coded in that
+convention, recode the raw treatment as <code>1 - A</code> before mapping and
+standardizing. To report the original contrast, negate the package estimate
+and transform an interval <code>[lower, upper]</code> to <code>[-upper, -lower]</code>.
+<code><a href="Mapping.html">Mapping()</a></code> does not infer or reverse treatment coding.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><a href="PDRobust-package.html">PDRobust-package</a>, <a href="pd_methods.html">pd_methods</a></p></div>
     </div>
 
     <div class="section level2">

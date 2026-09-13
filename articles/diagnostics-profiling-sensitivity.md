@@ -108,7 +108,9 @@ print(ps_diag)
 ps_diag$plot
 ```
 
-![](reference/figures/diag-unnamed-chunk-6-1.png)
+![Absolute standardized mean differences before and after
+propensity-score
+weighting.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-6-1.png)
 
 Additional components provide further information about the diagnostic
 procedure. For example, `ps_diag$weights` contains the calculated
@@ -162,7 +164,8 @@ print(prin_diag)
 prin_diag$plot
 ```
 
-![](reference/figures/diag-unnamed-chunk-9-1.png)
+![Standardized principal-score balance statistics for the selected
+covariates.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-9-1.png)
 
 The returned object also provides additional diagnostic components, such
 as the cumulative principal scores under treatment levels 0 and 1.
@@ -215,6 +218,11 @@ Greater similarity in the magnitude and direction of estimated
 coeffcients across increasing noise levels indicates greater robustness
 of estimated heterogeneous treatment effects.
 
+This comparison concerns the specified random outcome-noise
+perturbations. It does not test the causal identifying assumptions or
+implement the principal-ignorability sensitivity parameter in the
+methodological paper.
+
 ``` r
 
 print(sa)
@@ -234,12 +242,16 @@ sa$plot
 #> $X1
 ```
 
-![](reference/figures/diag-unnamed-chunk-12-1.png)
+![Estimated effect-modification coefficients over time at different
+outcome-noise variance
+ratios.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-1.png)
 
     #> 
     #> $X5
 
-![](reference/figures/diag-unnamed-chunk-12-2.png)
+![Estimated effect-modification coefficients over time at different
+outcome-noise variance
+ratios.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-12-2.png)
 
 The returned object also includes supplementary diagnostic information.
 For example, `variance_by_time` records the empirical outcome variance
@@ -382,7 +394,9 @@ print(or0)
 or0$plot
 ```
 
-![](reference/figures/diag-unnamed-chunk-18-1.png)
+![Cutoff survival odds ratios and confidence intervals within treatment
+group
+zero.](diagnostics-profiling-sensitivity_files/figure-html/unnamed-chunk-18-1.png)
 
 The returned object also contains supplementary information, such as
 or0\$model_diagnostics, which stores the full-precision fitted logistic

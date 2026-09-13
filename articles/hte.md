@@ -64,12 +64,12 @@ intervals.
 The argument `data` specifies the standardized dataset used for
 analysis. The arguments `ps_fo`, `prin_fo` and `out_fo` specify model
 formulas for propensity score model, principal score model and
-conditional outcome model, respectively. There models are refitted
-internally foe the original sample and for every bootstrap sample. The
+conditional outcome model, respectively. These models are refitted
+internally for the original sample and for every bootstrap sample. The
 argument `target_time` specifies the time points for estimation, and it
-must be a numeric vector such as `c(1,2)`. The mapped baseline time and
+must be a numeric vector such as `c(1, 2)`. The mapped baseline time and
 cutoff time can also be included. Although the results are reported only
-at the requested time points, the principal scores are accumalated over
+at the requested time points, the principal scores are accumulated over
 all times from baseline time to cutoff time points.
 
 The argument `B`, `conf_level`, `max_attempts` and `verbose` control the
@@ -90,8 +90,14 @@ The argument for mapping is not required because the information is
 carried inside the attributes of standardized dataset and used
 automatically.
 
+The five bootstrap replications below keep the example fast; they are
+insufficient for substantive standard errors or confidence intervals.
+Increase `B` and assess inference stability for an analysis. The seed
+fixes the random resampling for a given R and dependency environment.
+
 ``` r
 
+set.seed(20260912)
 separate <- HTESepT(
   data = pd_data,
   ps_fo = ps_fo,
@@ -131,33 +137,37 @@ names(separate)
 #> [10] "formulas"          "settings"          "call"
 ```
 
-The two primary outputs is the `summary` and `forest_plot`. The
-coefficients are the difference between , and they are the treatment
-effect.
+The primary outputs are `summary` and `forest_plot`. The coefficients
+parameterize the working treatment-effect model at each requested time.
 
 The intercept represents the reference component of the conditional
 treatment-effect model. The remaining coefficients describe how the
 treatment effect varies with the corresponding baseline effect
 modifiers.
 
-For continuous outcomes, estimates are expressed on the outcome scale.
-For binary outcomes, coefficients parameterize the bounded
-treatment-effect model.
+For continuous outcomes, the working effect is the intercept plus the
+linear combination of baseline effect modifiers, on the outcome scale.
+For binary outcomes, if `eta` is this linear predictor, the working risk
+difference is `2 * plogis(eta) - 1`. Binary-model coefficients are
+therefore on this link scale; they are not odds ratios or direct risk
+differences. The displayed intervals describe the coefficients.
 
 ``` r
 
 separate$summary
 #>   time covariate estimate    SD LowerBound UpperBound
-#> 1    1 Intercept   -0.063 0.243     -0.540      0.414
-#> 2    1        X1   -0.029 0.307     -0.632      0.573
-#> 3    1        X5    0.422 0.310     -0.185      1.029
-#> 4    2 Intercept   -0.143 0.139     -0.416      0.130
-#> 5    2        X1    0.220 0.138     -0.051      0.490
-#> 6    2        X5    0.140 0.304     -0.457      0.737
+#> 1    1 Intercept   -0.063 0.226     -0.507      0.381
+#> 2    1        X1   -0.029 0.263     -0.544      0.485
+#> 3    1        X5    0.422 0.240     -0.048      0.892
+#> 4    2 Intercept   -0.143 0.198     -0.532      0.246
+#> 5    2        X1    0.220 0.130     -0.035      0.475
+#> 6    2        X5    0.140 0.245     -0.340      0.619
 separate$forest_plot
 ```
 
-![](reference/figures/hte-unnamed-chunk-7-1.png)
+![Time-specific treatment-effect model coefficients and demonstration
+bootstrap confidence
+intervals.](hte_files/figure-html/unnamed-chunk-7-1.png)
 
 Supplementary components include `bootstrap_info`, which summarizes the
 requested and successful replications, total attempts, completion
@@ -193,8 +203,8 @@ separate$bootstrap_info
 #> 
 #> $warnings
 #>   attempt
-#> 1       1
-#> 2       3
+#> 1       4
+#> 2       5
 #>                                                                                                                                                                                                              message
 #> 1 Model fitting warning for `PrinPred principal-score model`: the logistic model shows complete or quasi-complete separation; finite predictions are retained, but coefficient-based interpretation may be unstable.
 #> 2   Model fitting warning for `OutPred binary-outcome model`: the logistic model shows complete or quasi-complete separation; finite predictions are retained, but coefficient-based interpretation may be unstable.
@@ -209,11 +219,11 @@ separate$bootstrap_info
 #> 
 #> $model_diagnostics
 #>                            label analysis    sample attempt target_time
-#> 1 PrinPred principal-score model  HTESepT bootstrap       1          NA
-#> 2   OutPred binary-outcome model  HTESepT bootstrap       3           1
+#> 1 PrinPred principal-score model  HTESepT bootstrap       4          NA
+#> 2   OutPred binary-outcome model  HTESepT bootstrap       5           2
 #>   treatment n_rows n_subjects response_0 response_1
-#> 1        NA    764        400         80        684
-#> 2        NA    308        308        255         53
+#> 1        NA    760        400         78        682
+#> 2        NA    318        318        257         61
 #>                            formula            predictors rank_deficient
 #> 1 S ~ (X1 + X3 + X4 + X5 + X6) * A X1, X3, X4, X5, X6, A          FALSE
 #> 2 Y ~ (X1 + X3 + X4 + X5 + X6) * A X1, X3, X4, X5, X6, A          FALSE
@@ -232,12 +242,12 @@ information about the estimating-equation solver.
 ``` r
 
 separate$boot_mat
-#>       1_Intercept        1_X1       1_X5 2_Intercept       2_X1          2_X5
-#> boot1  0.04752656  0.14111157  0.3188447 -0.27680561 0.38270823  0.6711214477
-#> boot2 -0.12524912  0.41113763  0.4276300 -0.14611863 0.35010730  0.6686695025
-#> boot3 -0.10090218  0.13996879  0.5597928 -0.20163628 0.08685723 -0.0009547269
-#> boot4 -0.29344022 -0.09360945  0.5732619  0.02759604 0.24350946  0.3618159481
-#> boot5  0.35428784 -0.40974570 -0.1821982 -0.33380232 0.43483964  0.7110207860
+#>       1_Intercept         1_X1        1_X5 2_Intercept       2_X1       2_X5
+#> boot1   0.1567987  0.121058047  0.19431062  0.05143305 0.12187217 0.05820841
+#> boot2  -0.2470239 -0.445520343  0.14153621 -0.33671863 0.36189852 0.23990224
+#> boot3  -0.2326582  0.001439229  0.58616298 -0.14610565 0.32257627 0.48988039
+#> boot4  -0.2284245  0.058987185  0.37522160 -0.13808658 0.09031616 0.34890133
+#> boot5   0.1961882  0.243226534 -0.04438299 -0.46293908 0.10809375 0.70238323
 ```
 
 ## Pooled heterogeneous treatment effects
@@ -291,14 +301,16 @@ pooled$summary
 pooled$forest_plot
 ```
 
-![](reference/figures/hte-unnamed-chunk-11-1.png)
+![Pooled treatment-effect model point estimates; bootstrap intervals are
+not calculated in this
+example.](hte_files/figure-html/unnamed-chunk-11-1.png)
 
 Additional components include `analysis_times`, which identifies the
 time points included in the pooled analysis, and
 `time_effect_estimable`, which indicates whether the time effect could
 be estimated. When only one analysis time is available, the time-effect
 term is omitted, `time_effect_estimable` is `FALSE`, and an explanatory
-message is stored in `note`. Bootstrap results, convergence informatiox
+message is stored in `note`.
 
 ``` r
 

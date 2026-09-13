@@ -15,7 +15,7 @@ of downstream data-layout information."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ of downstream data-layout information."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -68,6 +69,51 @@ every call. They return pure numeric vectors of class <code>pd_prediction</code>
 models are neither returned nor cached. <code><a href="HTESepT.html">HTESepT()</a></code> alone accepts
 <code>target_time</code>, whereas <code><a href="HTEAllT.html">HTEAllT()</a></code> always analyzes every observed time from
 baseline through cutoff. No hidden global or session cache is created.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="treatment-coding">Treatment coding<a class="anchor" aria-label="anchor" href="#treatment-coding"></a></h2>
+
+
+<p>The implemented estimator uses treatment <code>1</code> as the survival-favorable arm:
+potential survival satisfies \(S^1 \ge S^0\) at cutoff. Its always-survivor
+principal score is therefore the survival probability under treatment <code>0</code>.
+This convention is retained from version 0.3.7. The main estimator in the
+reference below uses the opposite arm labels. To analyze data coded in that
+convention, recode the raw treatment as <code>1 - A</code> before mapping and
+standardizing. To report the original contrast, negate the package estimate
+and transform an interval <code>[lower, upper]</code> to <code>[-upper, -lower]</code>.
+<code><a href="Mapping.html">Mapping()</a></code> does not infer or reverse treatment coding.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="interpretation-and-assumptions">Interpretation and assumptions<a class="anchor" aria-label="anchor" href="#interpretation-and-assumptions"></a></h2>
+
+
+<p>The target population comprises subjects who would survive through the
+selected cutoff under either treatment. The effect model describes outcome
+differences at earlier analysis times within that fixed population.
+Continuous-outcome models use a linear effect function. Binary-outcome
+models use <code>2 * plogis(eta) - 1</code>, where <code>eta</code> is the linear predictor;
+coefficients are on that link scale, not the odds-ratio scale.</p>
+<p>Causal interpretation requires consistency, no interference, adequate
+treatment and survival overlap, exposure ignorability conditional on the
+measured covariates, the stated survival monotonicity, and principal
+ignorability. Data validation and covariate balance do not establish these
+assumptions. Triple robustness concerns correct specification of at least
+two of the three nuisance-model components under the method's assumptions
+and regularity conditions; it is not an unconditional finite-sample
+guarantee. Fixed probability clipping can alter the estimating equations.</p>
+<p><code><a href="SA.html">SA()</a></code> implements random outcome-noise perturbation. It does not implement
+the reference's principal-ignorability sensitivity parameter. See the
+<code>method-and-coding</code> vignette for the coding conversion and implementation
+limits.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Zhang, Y., Shardell, M., Falvey, J., McCoy, R., Stuart, E., and Chen, C.
+(2026). A Novel Tool for Evaluating Effect Modification in Older Adults
+with ADRD Using Medicare Claims. arXiv:2608.06654.
+<a href="https://doi.org/10.48550/arXiv.2608.06654" class="external-link">doi:10.48550/arXiv.2608.06654</a>
+.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">PDRobust</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/method-and-coding.html">Treatment coding and interpretation</a></li>
     <li><a class="dropdown-item" href="../articles/data-requirements.html">Data requirements and standardization</a></li>
     <li><a class="dropdown-item" href="../articles/prediction-models.html">Prediction models</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
@@ -123,13 +124,13 @@ errors and confidence intervals.</p>
 used for analysis. The arguments <code>ps_fo</code>,
 <code>prin_fo</code> and <code>out_fo</code> specify model formulas for
 propensity score model, principal score model and conditional outcome
-model, respectively. There models are refitted internally foe the
+model, respectively. These models are refitted internally for the
 original sample and for every bootstrap sample. The argument
 <code>target_time</code> specifies the time points for estimation, and
-it must be a numeric vector such as <code>c(1,2)</code>. The mapped
+it must be a numeric vector such as <code>c(1, 2)</code>. The mapped
 baseline time and cutoff time can also be included. Although the results
 are reported only at the requested time points, the principal scores are
-accumalated over all times from baseline time to cutoff time points.</p>
+accumulated over all times from baseline time to cutoff time points.</p>
 <p>The argument <code>B</code>, <code>conf_level</code>,
 <code>max_attempts</code> and <code>verbose</code> control the bootstrap
 process. B specifies the number of successful subject-level bootstrap
@@ -148,8 +149,14 @@ to the bootstrap progress messages are displayed.</p>
 <p>The argument for mapping is not required because the information is
 carried inside the attributes of standardized dataset and used
 automatically.</p>
+<p>The five bootstrap replications below keep the example fast; they are
+insufficient for substantive standard errors or confidence intervals.
+Increase <code>B</code> and assess inference stability for an analysis.
+The seed fixes the random resampling for a given R and dependency
+environment.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">separate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HTESepT.html">HTESepT</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">20260912</span><span class="op">)</span></span>
+<span><span class="va">separate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HTESepT.html">HTESepT</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">pd_data</span>,</span>
 <span>  ps_fo <span class="op">=</span> <span class="va">ps_fo</span>,</span>
 <span>  prin_fo <span class="op">=</span> <span class="va">prin_fo</span>,</span>
@@ -181,27 +188,31 @@ successful replications relative to the requested value of
 <span><span class="co">#&gt;  [4] "boot_mat"          "convergence"       "model_diagnostics"</span></span>
 <span><span class="co">#&gt;  [7] "warnings"          "mapping"           "target_time"      </span></span>
 <span><span class="co">#&gt; [10] "formulas"          "settings"          "call"</span></span></code></pre></div>
-<p>The two primary outputs is the <code>summary</code> and
-<code>forest_plot</code>. The coefficients are the difference between ,
-and they are the treatment effect.</p>
+<p>The primary outputs are <code>summary</code> and
+<code>forest_plot</code>. The coefficients parameterize the working
+treatment-effect model at each requested time.</p>
 <p>The intercept represents the reference component of the conditional
 treatment-effect model. The remaining coefficients describe how the
 treatment effect varies with the corresponding baseline effect
 modifiers.</p>
-<p>For continuous outcomes, estimates are expressed on the outcome
-scale. For binary outcomes, coefficients parameterize the bounded
-treatment-effect model.</p>
+<p>For continuous outcomes, the working effect is the intercept plus the
+linear combination of baseline effect modifiers, on the outcome scale.
+For binary outcomes, if <code>eta</code> is this linear predictor, the
+working risk difference is <code>2 * plogis(eta) - 1</code>.
+Binary-model coefficients are therefore on this link scale; they are not
+odds ratios or direct risk differences. The displayed intervals describe
+the coefficients.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">separate</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt;   time covariate estimate    SD LowerBound UpperBound</span></span>
-<span><span class="co">#&gt; 1    1 Intercept   -0.063 0.243     -0.540      0.414</span></span>
-<span><span class="co">#&gt; 2    1        X1   -0.029 0.307     -0.632      0.573</span></span>
-<span><span class="co">#&gt; 3    1        X5    0.422 0.310     -0.185      1.029</span></span>
-<span><span class="co">#&gt; 4    2 Intercept   -0.143 0.139     -0.416      0.130</span></span>
-<span><span class="co">#&gt; 5    2        X1    0.220 0.138     -0.051      0.490</span></span>
-<span><span class="co">#&gt; 6    2        X5    0.140 0.304     -0.457      0.737</span></span>
+<span><span class="co">#&gt; 1    1 Intercept   -0.063 0.226     -0.507      0.381</span></span>
+<span><span class="co">#&gt; 2    1        X1   -0.029 0.263     -0.544      0.485</span></span>
+<span><span class="co">#&gt; 3    1        X5    0.422 0.240     -0.048      0.892</span></span>
+<span><span class="co">#&gt; 4    2 Intercept   -0.143 0.198     -0.532      0.246</span></span>
+<span><span class="co">#&gt; 5    2        X1    0.220 0.130     -0.035      0.475</span></span>
+<span><span class="co">#&gt; 6    2        X5    0.140 0.245     -0.340      0.619</span></span>
 <span><span class="va">separate</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
-<p><img src="reference/figures/hte-unnamed-chunk-7-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="hte_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="Time-specific treatment-effect model coefficients and demonstration bootstrap confidence intervals." width="90%" style="display: block; margin: auto;"></p>
 <p>Supplementary components include <code>bootstrap_info</code>, which
 summarizes the requested and successful replications, total attempts,
 completion status, and failures.</p>
@@ -234,8 +245,8 @@ completion status, and failures.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $warnings</span></span>
 <span><span class="co">#&gt;   attempt</span></span>
-<span><span class="co">#&gt; 1       1</span></span>
-<span><span class="co">#&gt; 2       3</span></span>
+<span><span class="co">#&gt; 1       4</span></span>
+<span><span class="co">#&gt; 2       5</span></span>
 <span><span class="co">#&gt;                                                                                                                                                                                                              message</span></span>
 <span><span class="co">#&gt; 1 Model fitting warning for `PrinPred principal-score model`: the logistic model shows complete or quasi-complete separation; finite predictions are retained, but coefficient-based interpretation may be unstable.</span></span>
 <span><span class="co">#&gt; 2   Model fitting warning for `OutPred binary-outcome model`: the logistic model shows complete or quasi-complete separation; finite predictions are retained, but coefficient-based interpretation may be unstable.</span></span>
@@ -250,11 +261,11 @@ completion status, and failures.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $model_diagnostics</span></span>
 <span><span class="co">#&gt;                            label analysis    sample attempt target_time</span></span>
-<span><span class="co">#&gt; 1 PrinPred principal-score model  HTESepT bootstrap       1          NA</span></span>
-<span><span class="co">#&gt; 2   OutPred binary-outcome model  HTESepT bootstrap       3           1</span></span>
+<span><span class="co">#&gt; 1 PrinPred principal-score model  HTESepT bootstrap       4          NA</span></span>
+<span><span class="co">#&gt; 2   OutPred binary-outcome model  HTESepT bootstrap       5           2</span></span>
 <span><span class="co">#&gt;   treatment n_rows n_subjects response_0 response_1</span></span>
-<span><span class="co">#&gt; 1        NA    764        400         80        684</span></span>
-<span><span class="co">#&gt; 2        NA    308        308        255         53</span></span>
+<span><span class="co">#&gt; 1        NA    760        400         78        682</span></span>
+<span><span class="co">#&gt; 2        NA    318        318        257         61</span></span>
 <span><span class="co">#&gt;                            formula            predictors rank_deficient</span></span>
 <span><span class="co">#&gt; 1 S ~ (X1 + X3 + X4 + X5 + X6) * A X1, X3, X4, X5, X6, A          FALSE</span></span>
 <span><span class="co">#&gt; 2 Y ~ (X1 + X3 + X4 + X5 + X6) * A X1, X3, X4, X5, X6, A          FALSE</span></span>
@@ -269,12 +280,12 @@ each successful bootstrap replication; and <code>convergence</code>,
 which provides information about the estimating-equation solver.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">separate</span><span class="op">$</span><span class="va">boot_mat</span></span>
-<span><span class="co">#&gt;       1_Intercept        1_X1       1_X5 2_Intercept       2_X1          2_X5</span></span>
-<span><span class="co">#&gt; boot1  0.04752656  0.14111157  0.3188447 -0.27680561 0.38270823  0.6711214477</span></span>
-<span><span class="co">#&gt; boot2 -0.12524912  0.41113763  0.4276300 -0.14611863 0.35010730  0.6686695025</span></span>
-<span><span class="co">#&gt; boot3 -0.10090218  0.13996879  0.5597928 -0.20163628 0.08685723 -0.0009547269</span></span>
-<span><span class="co">#&gt; boot4 -0.29344022 -0.09360945  0.5732619  0.02759604 0.24350946  0.3618159481</span></span>
-<span><span class="co">#&gt; boot5  0.35428784 -0.40974570 -0.1821982 -0.33380232 0.43483964  0.7110207860</span></span></code></pre></div>
+<span><span class="co">#&gt;       1_Intercept         1_X1        1_X5 2_Intercept       2_X1       2_X5</span></span>
+<span><span class="co">#&gt; boot1   0.1567987  0.121058047  0.19431062  0.05143305 0.12187217 0.05820841</span></span>
+<span><span class="co">#&gt; boot2  -0.2470239 -0.445520343  0.14153621 -0.33671863 0.36189852 0.23990224</span></span>
+<span><span class="co">#&gt; boot3  -0.2326582  0.001439229  0.58616298 -0.14610565 0.32257627 0.48988039</span></span>
+<span><span class="co">#&gt; boot4  -0.2284245  0.058987185  0.37522160 -0.13808658 0.09031616 0.34890133</span></span>
+<span><span class="co">#&gt; boot5   0.1961882  0.243226534 -0.04438299 -0.46293908 0.10809375 0.70238323</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="pooled-heterogeneous-treatment-effects">Pooled heterogeneous treatment effects<a class="anchor" aria-label="anchor" href="#pooled-heterogeneous-treatment-effects"></a>
@@ -320,14 +331,14 @@ per one-unit increase in standardized time.</p>
 <span><span class="co">#&gt; 3          X5    0.075 NA         NA         NA</span></span>
 <span><span class="co">#&gt; 4 Time Effect    0.004 NA         NA         NA</span></span>
 <span><span class="va">pooled</span><span class="op">$</span><span class="va">forest_plot</span></span></code></pre></div>
-<p><img src="reference/figures/hte-unnamed-chunk-11-1.png" class="r-plt" alt="" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="hte_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="Pooled treatment-effect model point estimates; bootstrap intervals are not calculated in this example." width="90%" style="display: block; margin: auto;"></p>
 <p>Additional components include <code>analysis_times</code>, which
 identifies the time points included in the pooled analysis, and
 <code>time_effect_estimable</code>, which indicates whether the time
 effect could be estimated. When only one analysis time is available, the
 time-effect term is omitted, <code>time_effect_estimable</code> is
 <code>FALSE</code>, and an explanatory message is stored in
-<code>note</code>. Bootstrap results, convergence informatiox</p>
+<code>note</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pooled</span><span class="op">$</span><span class="va">time_effect_estimable</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
