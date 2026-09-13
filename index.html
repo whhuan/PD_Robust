@@ -63,9 +63,9 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="pdrobust-longitudinal-treatment-effects-under-truncation-by-death">PDRobust: Longitudinal treatment effects under truncation by death<a class="anchor" aria-label="anchor" href="#pdrobust-longitudinal-treatment-effects-under-truncation-by-death"></a>
 </h1></div>
-<figure><img src="reference/figures/fcfigure.png" alt="PDRobust analysis workflow"><figcaption aria-hidden="true">
-PDRobust analysis workflow
-</figcaption></figure><!-- badges: start -->
+<p><img src="reference/figures/fcfigure.png"></p>
+<!-- badges: start -->
+
 <!-- badges: end -->
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
@@ -80,10 +80,9 @@ PDRobust analysis workflow
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><strong>PDRobust</strong> is a novel analytical tool that incorporates multiple statistical techniques, including propensity score weighting, principal score weighting, conditional outcome mean fitting, and projection methods. It provides a thorough set of analyses, including the triply robust estimate of the HTE with the bootstrap standard deviation, and the diagnosis of nuisance models. The workflow implemented in <code>PDRobust</code> is outlined below, followed by an illustrative example demonstrating its application.</p>
-<p>The methodological reference is Zhang et al. (2026), <a href="https://doi.org/10.48550/arXiv.2608.06654" class="external-link">A Novel Tool for Evaluating Effect Modification in Older Adults with ADRD Using Medicare Claims</a>. Use <code>citation("PDRobust")</code> for the software and paper citations.</p>
-<p><strong>Treatment coding matters.</strong> This release retains the 0.3.7 convention: treatment <code>1</code> is the survival-favorable arm. The paper’s main estimator uses the opposite labels. Recode paper-coded treatment as <code>1 - A</code> before mapping and standardizing, then negate estimates and swap/negate confidence limits to report the paper’s contrast. The bundled examples already use the package convention. Read <code><a href="articles/method-and-coding.html">vignette("method-and-coding", package = "PDRobust")</a></code> before adapting the workflow to a study. Data checks cannot verify the causal identifying assumptions, and <code><a href="reference/SA.html">SA()</a></code> provides outcome-noise sensitivity rather than the paper’s principal-ignorability sensitivity analysis.</p>
-<pre class="text"><code>data -&gt; Mapping() -&gt; DataCheck() -&gt; DataStandard()
+<p><strong>PDRobust</strong> is a novel analytical tool that incorporates multiple statistical techniques, including propensity score weighting, principal score weighting, conditional outcome mean fitting, and projection methods. It provides a thorough set of analyses, including the triply robust estimate of the HTE with the bootstrap standard deviation, and the diagnosis of nuisance models.</p>
+<p>The workflow implemented in <code>PDRobust</code> is outlined below, followed by an illustrative example demonstrating its application.</p>
+<pre class="text"><code>data -&gt; Mapping() -&gt; DataCheck()(optional) -&gt; DataStandard()
      -&gt; prediction / diagnostic / analysis functions</code></pre>
 <div class="section level3">
 <h3 id="id_1-load-the-built-in-package-data">1. Load the built-in package data<a class="anchor" aria-label="anchor" href="#id_1-load-the-built-in-package-data"></a>
@@ -253,7 +252,7 @@ PDRobust analysis workflow
 </tr>
 <tr>
 <td align="left"><code>SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.10))</code></td>
-<td align="left">Perturbs outcomes with random noise and returns estimates and plots across noise levels.</td>
+<td align="left">Conducts sensiticity analysis by perturbing outcomes with random noise and returns estimates and plots across noise levels.</td>
 </tr>
 <tr>
 <td align="left"><code>QR(data, prin_fo, quantile_level = 0.5)</code></td>
@@ -273,19 +272,33 @@ PDRobust analysis workflow
 </tr>
 </tbody>
 </table>
-<p><strong>More tutorials available on <a href="https://whhuan.github.io/PD_Robust/">tutorials</a>.</strong></p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="tutorials">Tutorials<a class="anchor" aria-label="anchor" href="#tutorials"></a>
+</h2>
+<p><strong>More tutorials available on <a href="https://whhuan.github.io/PD_Robust/">tutorials</a>.</strong></p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Install a locally downloaded source release with:</p>
+<p>Users can install package from CRAN or GitHub:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"PDRobust_0.3.8.tar.gz"</span>, repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></span></code></pre></div>
-<p>The development version is available from GitHub:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Install from CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"PDRobust"</span><span class="op">)</span></span>
+<span><span class="co"># Load the package</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/whhuan/PD_Robust" class="external-link">PDRobust</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The development version is available from GitHub:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"whhuan/PD_Robust"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="methodological-reference">Methodological Reference<a class="anchor" aria-label="anchor" href="#methodological-reference"></a>
+</h2>
+<p>The methodological reference is Zhang et al. (2026), <a href="https://doi.org/10.48550/arXiv.2608.06654" class="external-link">A Novel Tool for Evaluating Effect Modification in Older Adults with ADRD Using Medicare Claims</a>.</p>
+<p><strong>Treatment coding matters.</strong> Treatment(A) <code>1</code> is the survival-favorable arm for PDRobust but the paper’s main estimator uses the opposite labels. The bundled examples already use the package convention. Recode paper-coded treatment as <code>1 - A</code> before mapping and standardizing, then negate estimates and swap/negate confidence limits to report the paper’s contrast.</p>
+<p>Read <code><a href="articles/method-and-coding.html">vignette("method-and-coding", package = "PDRobust")</a></code> before adapting the workflow to a study. Data checks cannot verify the causal identifying assumptions, and <code><a href="reference/SA.html">SA()</a></code> provides outcome-noise sensitivity rather than the paper’s principal-ignorability sensitivity analysis.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

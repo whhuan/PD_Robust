@@ -1,8 +1,6 @@
 # PDRobust: Longitudinal treatment effects under truncation by death
 
-![PDRobust analysis workflow](reference/figures/fcfigure.png)
-
-PDRobust analysis workflow
+![](reference/figures/fcfigure.png)
 
 ## Background
 
@@ -28,30 +26,13 @@ statistical techniques, including propensity score weighting, principal
 score weighting, conditional outcome mean fitting, and projection
 methods. It provides a thorough set of analyses, including the triply
 robust estimate of the HTE with the bootstrap standard deviation, and
-the diagnosis of nuisance models. The workflow implemented in `PDRobust`
-is outlined below, followed by an illustrative example demonstrating its
-application.
+the diagnosis of nuisance models.
 
-The methodological reference is Zhang et al. (2026), [A Novel Tool for
-Evaluating Effect Modification in Older Adults with ADRD Using Medicare
-Claims](https://doi.org/10.48550/arXiv.2608.06654). Use
-`citation("PDRobust")` for the software and paper citations.
-
-**Treatment coding matters.** This release retains the 0.3.7 convention:
-treatment `1` is the survival-favorable arm. The paper’s main estimator
-uses the opposite labels. Recode paper-coded treatment as `1 - A` before
-mapping and standardizing, then negate estimates and swap/negate
-confidence limits to report the paper’s contrast. The bundled examples
-already use the package convention. Read
-[`vignette("method-and-coding", package = "PDRobust")`](https://whhuan.github.io/PD_Robust/articles/method-and-coding.md)
-before adapting the workflow to a study. Data checks cannot verify the
-causal identifying assumptions, and
-[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) provides
-outcome-noise sensitivity rather than the paper’s principal-ignorability
-sensitivity analysis.
+The workflow implemented in `PDRobust` is outlined below, followed by an
+illustrative example demonstrating its application.
 
 ``` text
-data -> Mapping() -> DataCheck() -> DataStandard()
+data -> Mapping() -> DataCheck()(optional) -> DataStandard()
      -> prediction / diagnostic / analysis functions
 ```
 
@@ -255,28 +236,50 @@ functions provided by the package.
 | `OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)` | Returns row-aligned potential-outcome predictions under treatment level `a`. |
 | `PSDiag(data, ps_fo)` | Computes standardized mean differences for covariate-balance assessment of the fitted propensity score model; Returns the numeric results and corresponding diagnostic plot. |
 | `PrinSDiag(data, ps_fo, prin_fo)` | Computes standardized test statistics for covariate-level assessment of the fitted principal score model; Returns the numeric results the corresponding diagnostic plot. |
-| `SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.10))` | Perturbs outcomes with random noise and returns estimates and plots across noise levels. |
+| `SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.10))` | Conducts sensiticity analysis by perturbing outcomes with random noise and returns estimates and plots across noise levels. |
 | `QR(data, prin_fo, quantile_level = 0.5)` | Returns principal-score-weighted means and quantiles of mapped effect modifiers as numeric summaries and a tidy table. |
 | `ORCI(data, formula, a, conf_level = 0.95)` | Returns model-based survival odds ratios at cutoff within treatment group `a`, confidence intervals, and a plot. |
 | `HTESepT(data, ps_fo, prin_fo, out_fo, target_time, B, conf_level = 0.95, max_attempts = NULL, verbose = TRUE)` | Returns time-specific heterogeneous treatment effect estimates, bootstrap results, and forest plots for the specified analysis times. |
 | `HTEAllT(data, ps_fo, prin_fo, out_fo, B, conf_level = 0.95, max_attempts = NULL, verbose = TRUE)` | Returns pooled heterogeneous treatment effect estimates across analysis times, bootstrap results, and a forest plot. |
+
+## Tutorials
 
 **More tutorials available on
 [tutorials](https://whhuan.github.io/PD_Robust/).**
 
 ## Installation
 
-Install a locally downloaded source release with:
+Users can install package from CRAN or GitHub:
 
 ``` r
 
-install.packages("PDRobust_0.3.8.tar.gz", repos = NULL, type = "source")
-```
+# Install from CRAN
+install.packages("PDRobust")
+# Load the package
+library(PDRobust)
 
-The development version is available from GitHub:
-
-``` r
-
+# The development version is available from GitHub:
 install.packages("remotes")
 remotes::install_github("whhuan/PD_Robust")
 ```
+
+## Methodological Reference
+
+The methodological reference is Zhang et al. (2026), [A Novel Tool for
+Evaluating Effect Modification in Older Adults with ADRD Using Medicare
+Claims](https://doi.org/10.48550/arXiv.2608.06654).
+
+**Treatment coding matters.** Treatment(A) `1` is the survival-favorable
+arm for PDRobust but the paper’s main estimator uses the opposite
+labels. The bundled examples already use the package convention. Recode
+paper-coded treatment as `1 - A` before mapping and standardizing, then
+negate estimates and swap/negate confidence limits to report the paper’s
+contrast.
+
+Read
+[`vignette("method-and-coding", package = "PDRobust")`](https://whhuan.github.io/PD_Robust/articles/method-and-coding.md)
+before adapting the workflow to a study. Data checks cannot verify the
+causal identifying assumptions, and
+[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) provides
+outcome-noise sensitivity rather than the paper’s principal-ignorability
+sensitivity analysis.
