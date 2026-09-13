@@ -30,7 +30,7 @@ attaches the standardized mapping and audit reports."></head><body>
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/hte.html">Estimate the heterogeneous treatment effect</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
-    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
+    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function DataCheck</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -80,8 +80,30 @@ reported explicitly. If <code>FALSE</code>, such problems stop standardization.<
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>pd_data</code> frame. Attributes include the standardized mapping,
-original mapping, final readiness check, time/ID audit maps, and attrition.
+    <p>A data frame inheriting from <code>pd_data</code>, retaining the input column
+names and additional unmapped columns. Rows outside the mapped time window
+are removed; retained rows are sorted by recoded ID and time. Attributes are:</p><dl><dt>pd_mapping</dt>
+<dd><p>The mapping with standardized baseline and cutoff times;
+column roles retain their input names.</p></dd>
+
+<dt>pd_original_mapping</dt>
+<dd><p>The mapping supplied for the raw data.</p></dd>
+
+<dt>pd_check</dt>
+<dd><p>The final <code>pd_data_check</code> report, including attrition.
+A warning is issued if the returned data are not ready for analysis,
+for example if deletion removes one treatment group.</p></dd>
+
+<dt>pd_standardization</dt>
+<dd><p>A list containing <code>time_map</code>, <code>id_map</code>,
+<code>attrition</code>, and <code>initial_check</code>. The maps link raw values to their
+standardized values; the initial check describes the input data.</p></dd>
+
+
+</dl><p>Both the initial and final validation are performed. Audit attributes
+describe this standardization call and are not recomputed when the data
+are subsequently edited or subsetted; see <a href="pd_methods.html">pd_methods</a>. The ID map has
+one row per retained subject, so audit storage grows with sample size.
 Analysis columns and computational mappings retain full precision; only
 returned display diagnostics and attrition percentages are rounded.</p>
     </div>

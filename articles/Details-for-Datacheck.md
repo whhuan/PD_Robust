@@ -1,4 +1,4 @@
-# Details for function Datacheck
+# Details for function DataCheck
 
 ### Columns in the itemized checks
 
@@ -14,8 +14,6 @@ The component `check$checks` is a data frame with the following columns:
 | `analysis_blocking` | Indicates whether failure of the check prevents the dataset from being considered analysis-ready. |
 | `details` | Provides a concise summary of the observed result, including relevant counts, values, rows, subjects, or time points. |
 | `recommendation` | Describes the recommended action for resolving or interpreting the result. |
-
-### :::
 
 | Check | What is evaluated | Corresponding report and diagnostics |
 |----|----|----|

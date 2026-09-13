@@ -28,11 +28,48 @@ DataCheck(data, mapping, strict = FALSE)
 
 ## Value
 
-A `pd_data_check` object containing `ready_for_analysis`,
-`manual_resolution_required`, row-per-check results, settings, and
-detailed diagnostics. Calculated display diagnostics are rounded to
-three decimals; counts, row indices, identifiers, and logical flags
-retain their types.
+A `pd_data_check` list with the following components:
+
+- valid:
+
+  `TRUE` when no check with severity `"error"` fails. Analysis-blocking
+  encoding or ordering warnings can still be present.
+
+- ready_for_analysis:
+
+  `TRUE` when no analysis-blocking check fails.
+
+- manual_resolution_required:
+
+  `TRUE` when a failed check requires manual correction before
+  standardization.
+
+- can_standardize:
+
+  The opposite of `manual_resolution_required`. This does not guarantee
+  that
+  [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
+  will succeed: deletion may require `drop = TRUE`, leave no
+  observations, or remove a treatment group. Always inspect the final
+  readiness check.
+
+- checks:
+
+  A data frame with one row per performed check, including severity,
+  blocking and repair flags, details, and recommendations.
+
+- settings:
+
+  A list containing the validated `mapping`.
+
+- diagnostics:
+
+  Detailed row indices, subject identifiers, and summary tables for the
+  performed checks. Missing columns or empty input cause an early return
+  with only the checks possible at that stage.
+
+Calculated display diagnostics are rounded to three decimals; counts,
+row indices, identifiers, and logical flags retain their types.
 
 ## Examples
 

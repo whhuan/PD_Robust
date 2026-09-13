@@ -2,6 +2,25 @@
 
 ## PDRobust 0.3.8
 
+### Data validation and standardization
+
+- Replaced repeated subject-level lookups with grouped visit counts,
+  treatment flags, and stable survival ordering. Both validation passes
+  and the existing public interfaces, data ordering, and audit
+  attributes remain.
+- Documented all
+  [`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
+  return fields and
+  [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
+  attributes, including the distinction between repairability and final
+  analysis readiness. Corrected the data-workflow vignette’s endpoint,
+  row-removal, and metadata descriptions to match the existing
+  implementation.
+- Added regression coverage for factor-covariate attrition and the final
+  readiness check when deletion removes a treatment group.
+- Excluded the large-sample development script and saved test plot from
+  source archives; these files remain in the working repository.
+
 ### CRAN release preparation
 
 - Retained the 0.3.7 treatment-1 survival-favorable estimator and

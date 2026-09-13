@@ -26,7 +26,7 @@
     <li><a class="dropdown-item" href="../articles/diagnostics-profiling-sensitivity.html">Diagnostics, profiling, and sensitivity analysis</a></li>
     <li><a class="dropdown-item" href="../articles/hte.html">Estimate the heterogeneous treatment effect</a></li>
     <li><a class="dropdown-item" href="../articles/Functions.html">Detailed Function Presentation</a></li>
-    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function Datacheck</a></li>
+    <li><a class="dropdown-item" href="../articles/Details-for-Datacheck.html">Details for function DataCheck</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -46,6 +46,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.8" id="pdrobust-038">PDRobust 0.3.8<a class="anchor" aria-label="anchor" href="#pdrobust-038"></a></h2>
+<div class="section level3">
+<h3 id="data-validation-and-standardization-0-3-8">Data validation and standardization<a class="anchor" aria-label="anchor" href="#data-validation-and-standardization-0-3-8"></a></h3>
+<ul><li>Replaced repeated subject-level lookups with grouped visit counts, treatment flags, and stable survival ordering. Both validation passes and the existing public interfaces, data ordering, and audit attributes remain.</li>
+<li>Documented all <code><a href="../reference/DataCheck.html">DataCheck()</a></code> return fields and <code><a href="../reference/DataStandard.html">DataStandard()</a></code> attributes, including the distinction between repairability and final analysis readiness. Corrected the data-workflow vignette’s endpoint, row-removal, and metadata descriptions to match the existing implementation.</li>
+<li>Added regression coverage for factor-covariate attrition and the final readiness check when deletion removes a treatment group.</li>
+<li>Excluded the large-sample development script and saved test plot from source archives; these files remain in the working repository.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="cran-release-preparation-0-3-8">CRAN release preparation<a class="anchor" aria-label="anchor" href="#cran-release-preparation-0-3-8"></a></h3>
 <ul><li>Retained the 0.3.7 treatment-1 survival-favorable estimator and documented how to convert treatment coding and effect contrasts relative to Zhang et al. (2026). Added the methodological citation and an implementation guide. Outcome-noise sensitivity is explicitly distinguished from the paper’s principal-ignorability sensitivity procedure.</li>
