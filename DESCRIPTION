@@ -22,8 +22,8 @@ Description: Implements principal-stratification methods for estimating
     principal-score, and outcome models and provides subject-level bootstrap
     inference, covariate-balance diagnostics, principal-stratum summaries,
     treatment-group-specific survival odds ratios, and outcome-noise
-    sensitivity analysis. Methodological background is provided by
-    Zhang et al. (2026) <doi:10.48550/arXiv.2608.06654>.
+    sensitivity analysis. Methodological background is provided in
+    <doi:10.48550/arXiv.2608.06654>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
