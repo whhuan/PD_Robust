@@ -53,19 +53,19 @@ models.
 ## Heterogeneous treatment effects
 
 - [`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-  : Estimate time-specific heterogeneous treatment effects
+  : Separate estimation of heterogeneous treatment effects by time point
 - [`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md)
-  : Estimate pooled heterogeneous treatment effects across all times
+  : Joint estimation of heterogeneous treatment effects across time
 
 ## Diagnostics and supporting analyses
 
 - [`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md) :
-  Diagnose propensity-score covariate balance
+  Evaluate how well a propensity score model performs
 - [`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
   : Diagnose principal-score balance
-- [`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) :
-  Summarize cutoff covariates in the always-survivor principal stratum
+- [`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) : Summary
+  statistics of covariates within the always-survivor principal stratum
 - [`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md) :
-  Estimate treatment-group-specific survival odds ratios at cutoff
-- [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) : Perform
-  outcome-noise sensitivity analysis
+  Estimate covariate associations with survival at cutoff
+- [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) :
+  Sensitivity analysis of outcome mean model misspecification

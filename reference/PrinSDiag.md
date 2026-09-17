@@ -20,11 +20,11 @@ PrinSDiag(data, ps_fo, prin_fo)
 
 - ps_fo:
 
-  Propensity-score formula; its numeric covariates are diagnosed.
+  propensity score model formula
 
 - prin_fo:
 
-  Principal-score formula.
+  principal score model formula
 
 ## Value
 

@@ -14,7 +14,7 @@ PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)
 
 - prin_fo:
 
-  Principal-score formula.
+  principal score model formula
 
 - fit_dat:
 

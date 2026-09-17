@@ -14,7 +14,7 @@ PSPred(ps_fo, fit_dat, pred_dat, mapping, ...)
 
 - ps_fo:
 
-  Propensity-score formula.
+  propensity score model formula
 
 - fit_dat:
 

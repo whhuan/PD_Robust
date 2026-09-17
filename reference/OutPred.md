@@ -15,7 +15,7 @@ OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)
 
 - out_fo:
 
-  Outcome-model formula.
+  outcome mean model formula
 
 - fit_dat:
 

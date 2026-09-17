@@ -2,7 +2,6 @@
 
 ## Choose treatment coding before analysis
 
-PDRobust retains the treatment convention used in version 0.3.7.
 Treatment `1` must represent the survival-favorable arm: the causal
 survival-monotonicity assumption is $`S^1(t_*) \ge S^0(t_*)`$, where
 $`t_*`$ is the selected cutoff. The always-survivor population comprises
@@ -18,8 +17,8 @@ names columns and
 validates the observed panel; neither infers the appropriate treatment
 direction or verifies causal identification.
 
-The main estimator in [Zhang et
-al. (2026)](https://doi.org/10.48550/arXiv.2608.06654) uses the opposite
+The main estimator in [Zhang et al.
+(2026)](https://doi.org/10.48550/arXiv.2608.06654) uses the opposite
 treatment labels. To adapt data coded according to that convention,
 reverse the binary treatment in the raw data before calling
 [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md),

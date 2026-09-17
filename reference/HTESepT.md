@@ -1,10 +1,7 @@
-# Estimate time-specific heterogeneous treatment effects
+# Separate estimation of heterogeneous treatment effects by time point
 
-`target_time` is defined only for `HTESepT()`. It may include the mapped
-baseline and controls only the outcome-analysis times reported by this
-function. Principal scores are nevertheless accumulated over every
-actual observed time from baseline through cutoff because the principal
-stratum is defined at the cutoff.
+Performs separate analyses of heterogeneous treatment effects at each
+selected time point.
 
 ## Usage
 
@@ -32,27 +29,24 @@ HTESepT(
 
 - ps_fo:
 
-  Propensity-score formula.
+  propensity score model formula
 
 - prin_fo:
 
-  Principal-score formula.
+  principal score model formula
 
 - out_fo:
 
-  Outcome-model formula.
+  outcome mean model formula
 
 - target_time:
 
-  Non-empty numeric vector of observed standardized times. Baseline is
-  allowed.
+  A non-empty numeric vector containing timepoints of interest in
+  standardized form. Baseline is allowed.
 
 - B:
 
-  Number of successful subject-level bootstrap replications. Use `0` for
-  point estimates only. Set a random seed before the call for
-  reproducible resampling. Small values used in demonstrations are not
-  sufficient for substantive interval estimation.
+  Number of bootstrap replications. Use `0` for point estimates only.
 
 - conf_level:
 
@@ -60,7 +54,12 @@ HTESepT(
 
 - max_attempts:
 
-  Maximum bootstrap attempts. `NULL` uses `10 * B`.
+  The maximum number of resampling attempts allowed to obtain `B`
+  successful bootstrap replications. Defaults to `10B`. Resampling stops
+  once `B` successful replications are obtained or when the maximum
+  number of attempts is reached, whichever occurs first. Thus, fewer
+  than `B` successful replications may be returned if the maximum number
+  of attempts is reached.
 
 - verbose:
 
@@ -87,15 +86,11 @@ interval summaries are rounded to three decimals only after inference;
 
 ## Details
 
-The propensity, principal-score, and outcome models are refitted
-internally for the point estimate and for every bootstrap sample. Within
-one analysis sample, a model fitted to the same rows and formula is
-reused only to obtain the two counterfactual treatment predictions.
-
-Repeated finite-prediction separation or convergence messages are
-consolidated at the analysis boundary. Model-level details remain
-available in `model_diagnostics`; bootstrap warnings and their counts
-are stored in `bootstrap_info`.
+`HTESepT()` uses the supplied arguments to construct pseudo-data based
+on the propensity score model, principal score model, and outcome mean
+model. It then estimates heterogeneous treatment effects separately at
+each selected time point and provides bootstrap-based confidence
+intervals.
 
 ## Numerical safeguards
 

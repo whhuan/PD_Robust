@@ -1,9 +1,8 @@
-# Summarize cutoff covariates in the always-survivor principal stratum
+# Summary statistics of covariates within the always-survivor principal stratum
 
-Restores the original weighted intercept-only quantile-regression
-algorithm. For each nonbinary mapped interest variable,
-`quantreg::rq(variable ~ 1, weights = K_p0, tau = quantile_level)` is
-fitted on cutoff rows.
+Estimates the user-specified quantile for continuous covariates and the
+mean of covariates for subjects within the always-survivor principal
+stratum.
 
 ## Usage
 
@@ -19,7 +18,7 @@ QR(data, prin_fo, quantile_level = 0.5)
 
 - prin_fo:
 
-  Principal-score formula.
+  principal score model formula
 
 - quantile_level:
 
@@ -29,6 +28,16 @@ QR(data, prin_fo, quantile_level = 0.5)
 
 A `QR` object containing three-decimal weighted means and quantiles;
 principal-score weights retain full precision.
+
+## Details
+
+`QR()` estimates cumulative principal scores under treatment level `0`
+and uses their cutoff values as weights for the mapped numeric interest
+variables. It reports weighted means for all such variables and
+estimates the requested quantiles for variables with more than two
+observed values using weighted intercept-only quantile regression.
+Variables with no more than two observed values are treated as binary
+and receive a weighted mean but no quantile estimate.
 
 ## Examples
 

@@ -76,9 +76,8 @@
 <div class="section level2">
 <h2 id="choose-treatment-coding-before-analysis">Choose treatment coding before analysis<a class="anchor" aria-label="anchor" href="#choose-treatment-coding-before-analysis"></a>
 </h2>
-<p>PDRobust retains the treatment convention used in version 0.3.7.
-Treatment <code>1</code> must represent the survival-favorable arm: the
-causal survival-monotonicity assumption is
+<p>Treatment <code>1</code> must represent the survival-favorable arm:
+the causal survival-monotonicity assumption is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>S</mi><mn>1</mn></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>t</mi><mo>*</mo></msub><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><msup><mi>S</mi><mn>0</mn></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>t</mi><mo>*</mo></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S^1(t_*) \ge S^0(t_*)</annotation></semantics></math>,
 where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mo>*</mo></msub><annotation encoding="application/x-tex">t_*</annotation></semantics></math>
@@ -91,7 +90,7 @@ subject. Higher observed survival in one group does not establish it.
 <code><a href="../reference/Mapping.html">Mapping()</a></code> names columns and <code><a href="../reference/DataCheck.html">DataCheck()</a></code>
 validates the observed panel; neither infers the appropriate treatment
 direction or verifies causal identification.</p>
-<p>The main estimator in <a href="https://doi.org/10.48550/arXiv.2608.06654" class="external-link">Zhang et al. (2026)</a>
+<p>The main estimator in <a href="https://doi.org/10.48550/arXiv.2608.06654" class="external-link">Zhang et al. (2026)</a>
 uses the opposite treatment labels. To adapt data coded according to
 that convention, reverse the binary treatment in the raw data before
 calling <code><a href="../reference/Mapping.html">Mapping()</a></code>, <code><a href="../reference/DataCheck.html">DataCheck()</a></code>, and

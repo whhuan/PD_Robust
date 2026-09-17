@@ -1,9 +1,7 @@
-# Diagnose propensity-score covariate balance
+# Evaluate how well a propensity score model performs
 
-Fits the propensity-score model internally on baseline observations,
-clips every estimated propensity score to `[0.01, 0.99]`, creates
-ordinary inverse-probability-of-treatment weights, and evaluates balance
-using the original pooled and weighted-ESS SMD denominators.
+Calculates the standardized mean difference (SMD) for each covariate
+before and after propensity score weighting.
 
 ## Usage
 
@@ -19,12 +17,21 @@ PSDiag(data, ps_fo)
 
 - ps_fo:
 
-  Propensity-score formula.
+  propensity score model formula
 
 ## Value
 
 A `PSDiag` object containing three-decimal SMD summaries and a plot;
 propensity scores and weights retain full precision.
+
+## Details
+
+`PSDiag()` fits the propensity score model using baseline observations,
+constrains the estimated propensity scores to `[0.01, 0.99]`, and
+constructs ordinary inverse-probability-of-treatment weights. Comparing
+each covariate's SMD before and after weighting assesses covariate
+balance and indicates how well the fitted propensity score model
+balances the treatment groups.
 
 ## Examples
 
