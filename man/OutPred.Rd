@@ -7,7 +7,7 @@
 OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)
 }
 \arguments{
-\item{out_fo}{Outcome-model formula.}
+\item{out_fo}{outcome mean model formula}
 
 \item{fit_dat}{Data used to fit the outcome model.}
 

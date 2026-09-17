@@ -178,8 +178,8 @@ Greater similarity in the magnitude and direction of estimated coeffcients
 across increasing noise levels indicates greater robustness of estimated
 heterogeneous treatment effects.
 
-This comparison concerns the specified random outcome-noise perturbations.
-It does not test the causal identifying assumptions or implement the
+This comparison concerns the specified random outcome-noise perturbations. It
+does not test the causal identifying assumptions or implement the
 principal-ignorability sensitivity parameter in the methodological paper.
 
 ```{r, fig.alt = "Estimated effect-modification coefficients over time at different outcome-noise variance ratios."}
@@ -247,11 +247,11 @@ model and exponentiates the non-intercept coefficients to obtain odd ratios and
 Wald confidence interval.
 
 The argument `data` specifies the standardized dataset used for this function.
-The argument `formula` specifies the logistic regression model, with the
-mapped survival variable as the response variable on the left-hand side and
-covariates on the right-hand side. The argument `a` specifies the treatment
-group used for this analysis. The argument `conf_level` specifies confidence
-level and defaults to 0.95.
+The argument `formula` specifies the logistic regression model, with the mapped
+survival variable as the response variable on the left-hand side and covariates
+on the right-hand side. The argument `a` specifies the treatment group used for
+this analysis. The argument `conf_level` specifies confidence level and defaults
+to 0.95.
 
 The returned object contains the following components:
 

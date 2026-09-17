@@ -7,7 +7,7 @@
 PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)
 }
 \arguments{
-\item{prin_fo}{Principal-score formula.}
+\item{prin_fo}{principal score model formula}
 
 \item{fit_dat}{Data used to fit the model.}
 

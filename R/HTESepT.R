@@ -1,33 +1,27 @@
-#' Estimate time-specific heterogeneous treatment effects
+#' Separate estimation of heterogeneous treatment effects by time point
 #'
-#' `target_time` is defined only for `HTESepT()`. It may include the mapped
-#' baseline and controls only the outcome-analysis times reported by this
-#' function. Principal scores are nevertheless accumulated over every actual
-#' observed time from baseline through cutoff because the principal stratum is
-#' defined at the cutoff.
+#' Performs separate analyses of heterogeneous treatment effects at each
+#' selected time point.
 #'
-#' The propensity, principal-score, and outcome models are refitted internally
-#' for the point estimate and for every bootstrap sample. Within one analysis
-#' sample, a model fitted to the same rows and formula is reused only to obtain
-#' the two counterfactual treatment predictions.
-#'
-#' Repeated finite-prediction separation or convergence messages are
-#' consolidated at the analysis boundary. Model-level details remain available
-#' in `model_diagnostics`; bootstrap warnings and their counts are stored in
-#' `bootstrap_info`.
+#' `HTESepT()` uses the supplied arguments to construct pseudo-data based on the
+#' propensity score model, principal score model, and outcome mean model. It
+#' then estimates heterogeneous treatment effects separately at each selected
+#' time point and provides bootstrap-based confidence intervals.
 #'
 #' @param data A standardized `pd_data` object returned by `DataStandard()`.
-#' @param ps_fo Propensity-score formula.
-#' @param prin_fo Principal-score formula.
-#' @param out_fo Outcome-model formula.
-#' @param target_time Non-empty numeric vector of observed standardized times.
-#'   Baseline is allowed.
-#' @param B Number of successful subject-level bootstrap replications. Use
-#'   `0` for point estimates only. Set a random seed before the call for
-#'   reproducible resampling. Small values used in demonstrations are not
-#'   sufficient for substantive interval estimation.
+#' @param ps_fo propensity score model formula
+#' @param prin_fo principal score model formula
+#' @param out_fo outcome mean model formula
+#' @param target_time A non-empty numeric vector containing timepoints of
+#'   interest in standardized form. Baseline is allowed.
+#' @param B Number of bootstrap replications. Use `0` for point estimates only.
 #' @param conf_level Confidence level for Wald intervals based on bootstrap SDs.
-#' @param max_attempts Maximum bootstrap attempts. `NULL` uses `10 * B`.
+#' @param max_attempts The maximum number of resampling attempts allowed to
+#'   obtain `B` successful bootstrap replications. Defaults to `10B`.
+#'   Resampling stops once `B` successful replications are obtained or when the
+#'   maximum number of attempts is reached, whichever occurs first. Thus,
+#'   fewer than `B` successful replications may be returned if the maximum
+#'   number of attempts is reached.
 #' @param verbose Emit bootstrap progress messages.
 #' @param progress_callback Optional function called with one named progress
 #'   list before model fitting, after the point estimate, after every bootstrap

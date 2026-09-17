@@ -6,8 +6,8 @@
 #' diagnostic equation is evaluated at cutoff using the original algorithm.
 #'
 #' @param data A standardized `pd_data` object.
-#' @param ps_fo Propensity-score formula; its numeric covariates are diagnosed.
-#' @param prin_fo Principal-score formula.
+#' @param ps_fo propensity score model formula
+#' @param prin_fo principal score model formula
 #' @return A `PrinSDiag` object containing three-decimal standardized
 #'   statistics and plots; nuisance probabilities retain full precision.
 #' @examples

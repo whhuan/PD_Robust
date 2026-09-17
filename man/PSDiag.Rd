@@ -2,24 +2,30 @@
 % Please edit documentation in R/PSDiag.R
 \name{PSDiag}
 \alias{PSDiag}
-\title{Diagnose propensity-score covariate balance}
+\title{Evaluate how well a propensity score model performs}
 \usage{
 PSDiag(data, ps_fo)
 }
 \arguments{
 \item{data}{A standardized \code{pd_data} object.}
 
-\item{ps_fo}{Propensity-score formula.}
+\item{ps_fo}{propensity score model formula}
 }
 \value{
 A \code{PSDiag} object containing three-decimal SMD summaries and a plot;
 propensity scores and weights retain full precision.
 }
 \description{
-Fits the propensity-score model internally on baseline observations, clips
-every estimated propensity score to \verb{[0.01, 0.99]}, creates ordinary
-inverse-probability-of-treatment weights, and evaluates balance using the
-original pooled and weighted-ESS SMD denominators.
+Calculates the standardized mean difference (SMD) for each covariate before
+and after propensity score weighting.
+}
+\details{
+\code{PSDiag()} fits the propensity score model using baseline observations,
+constrains the estimated propensity scores to \verb{[0.01, 0.99]}, and constructs
+ordinary inverse-probability-of-treatment weights. Comparing each
+covariate's SMD before and after weighting assesses covariate balance and
+indicates how well the fitted propensity score model balances the treatment
+groups.
 }
 \examples{
 \donttest{

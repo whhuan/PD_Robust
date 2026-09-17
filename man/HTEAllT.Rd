@@ -2,7 +2,7 @@
 % Please edit documentation in R/HTEAllT.R
 \name{HTEAllT}
 \alias{HTEAllT}
-\title{Estimate pooled heterogeneous treatment effects across all times}
+\title{Joint estimation of heterogeneous treatment effects across time}
 \usage{
 HTEAllT(
   data,
@@ -19,20 +19,22 @@ HTEAllT(
 \arguments{
 \item{data}{A standardized \code{pd_data} object returned by \code{DataStandard()}.}
 
-\item{ps_fo}{Propensity-score formula.}
+\item{ps_fo}{propensity score model formula}
 
-\item{prin_fo}{Principal-score formula.}
+\item{prin_fo}{principal score model formula}
 
-\item{out_fo}{Outcome-model formula.}
+\item{out_fo}{outcome mean model formula}
 
-\item{B}{Number of successful subject-level bootstrap replications. Use
-\code{0} for point estimates only. Set a random seed before the call for
-reproducible resampling. Small values used in demonstrations are not
-sufficient for substantive interval estimation.}
+\item{B}{Number of bootstrap replications. Use \code{0} for point estimates only.}
 
 \item{conf_level}{Confidence level for Wald intervals based on bootstrap SDs.}
 
-\item{max_attempts}{Maximum bootstrap attempts. \code{NULL} uses \code{10 * B}.}
+\item{max_attempts}{The maximum number of resampling attempts allowed to
+obtain \code{B} successful bootstrap replications. Defaults to \verb{10B}.
+Resampling stops once \code{B} successful replications are obtained or when the
+maximum number of attempts is reached, whichever occurs first. Thus,
+fewer than \code{B} successful replications may be returned if the maximum
+number of attempts is reached.}
 
 \item{verbose}{Emit bootstrap progress messages.}
 
@@ -54,21 +56,14 @@ summaries are rounded to three decimals only after inference; \code{boot_mat}
 retains full precision.
 }
 \description{
-\code{HTEAllT()} always uses every actual observed analysis time from the mapped
-baseline through the mapped cutoff, inclusive. It does not accept or use
-\code{target_time}. The propensity, principal-score, and outcome models are
-refitted internally for the point estimate and for every bootstrap sample.
-Within one analysis sample, a model fitted to the same rows and formula is
-reused only to obtain the two counterfactual treatment predictions.
+Performs joint longitudinal analysis of heterogeneous treatment effects
+across all time points with time included as a covariate.
 }
 \details{
-Repeated finite-prediction separation or convergence messages are
-consolidated at the analysis boundary. Model-level details remain available
-in \code{model_diagnostics}; bootstrap warnings and their counts are stored in
-\code{bootstrap_info}.
-
-If the prepared data contain only one analysis time, the estimator omits the
-time-effect term and records that the time effect is not estimable.
+\code{HTEAllT()} uses the supplied arguments to construct pseudo-data based on the
+propensity score model, principal score model, and outcome mean model. It
+then jointly estimates the heterogeneous treatment effect trajectory across
+all time points and provides bootstrap-based confidence intervals.
 }
 \section{Numerical safeguards}{
 

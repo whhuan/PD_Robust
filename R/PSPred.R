@@ -4,7 +4,7 @@
 #' `fit_dat` and predicts on every row of `pred_dat`. The model is refitted on
 #' every call; no fitted object or cache is retained.
 #'
-#' @param ps_fo Propensity-score formula.
+#' @param ps_fo propensity score model formula
 #' @param fit_dat Data used to fit the model.
 #' @param pred_dat Data on which to predict.
 #' @param mapping A `pd_mapping` object. It supplies column names and

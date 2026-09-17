@@ -2,14 +2,14 @@
 % Please edit documentation in R/QR.R
 \name{QR}
 \alias{QR}
-\title{Summarize cutoff covariates in the always-survivor principal stratum}
+\title{Summary statistics of covariates within the always-survivor principal stratum}
 \usage{
 QR(data, prin_fo, quantile_level = 0.5)
 }
 \arguments{
 \item{data}{A standardized \code{pd_data} object.}
 
-\item{prin_fo}{Principal-score formula.}
+\item{prin_fo}{principal score model formula}
 
 \item{quantile_level}{Quantile probabilities strictly between zero and one.}
 }
@@ -18,8 +18,17 @@ A \code{QR} object containing three-decimal weighted means and quantiles;
 principal-score weights retain full precision.
 }
 \description{
-Restores the original weighted intercept-only quantile-regression algorithm.
-For each nonbinary mapped interest variable, \code{quantreg::rq(variable ~ 1, weights = K_p0, tau = quantile_level)} is fitted on cutoff rows.
+Estimates the user-specified quantile for continuous covariates and the mean
+of covariates for subjects within the always-survivor principal stratum.
+}
+\details{
+\code{QR()} estimates cumulative principal scores under treatment level \code{0} and
+uses their cutoff values as weights for the mapped numeric interest
+variables. It reports weighted means for all such variables and estimates
+the requested quantiles for variables with more than two observed values
+using weighted intercept-only quantile regression. Variables with no more
+than two observed values are treated as binary and receive a weighted mean
+but no quantile estimate.
 }
 \examples{
 \donttest{

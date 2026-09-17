@@ -7,7 +7,7 @@
 PSPred(ps_fo, fit_dat, pred_dat, mapping, ...)
 }
 \arguments{
-\item{ps_fo}{Propensity-score formula.}
+\item{ps_fo}{propensity score model formula}
 
 \item{fit_dat}{Data used to fit the model.}
 

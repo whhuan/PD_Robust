@@ -10,7 +10,7 @@
 #' analysis contains only one observed time point, no at-risk indicator is
 #' constructed and all complete observations at that time are used for fitting.
 #'
-#' @param prin_fo Principal-score formula.
+#' @param prin_fo principal score model formula
 #' @param fit_dat Data used to fit the model.
 #' @param pred_dat Data on which to predict cumulative scores.
 #' @param a Treatment level for principal-score prediction, either `0` or `1`.

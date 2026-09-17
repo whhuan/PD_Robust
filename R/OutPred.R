@@ -4,7 +4,7 @@
 #' `pred_dat`. During prediction the mapped treatment column is set to `a` and
 #' the mapped survival column is set to one, exactly as in the original method.
 #'
-#' @param out_fo Outcome-model formula.
+#' @param out_fo outcome mean model formula
 #' @param fit_dat Data used to fit the outcome model.
 #' @param pred_dat Data on which to predict.
 #' @param a Treatment value, either `0` or `1`.

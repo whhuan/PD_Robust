@@ -2,7 +2,7 @@
 % Please edit documentation in R/ORCI.R
 \name{ORCI}
 \alias{ORCI}
-\title{Estimate treatment-group-specific survival odds ratios at cutoff}
+\title{Estimate covariate associations with survival at cutoff}
 \usage{
 ORCI(data, formula, a, conf_level = 0.95)
 }
@@ -21,8 +21,15 @@ An \code{odds_ratios} object containing three-decimal odds-ratio
 summaries, a full-precision fitted model, model diagnostics, and a plot.
 }
 \description{
-Fits the supplied logistic model among subjects in the selected treatment
-group at the mapped cutoff time.
+Estimates odds ratios with confidence intervals for associations between
+covariates and survival at the cutoff time within a selected treatment group.
+}
+\details{
+\code{ORCI()} fits the supplied logistic regression model to cutoff observations
+from treatment group \code{a}. It exponentiates every finite, estimable
+non-intercept coefficient and reports the corresponding Wald confidence
+interval using the confidence level specified by \code{conf_level}; it does not
+screen or retain covariates according to statistical significance.
 }
 \examples{
 \donttest{

@@ -9,9 +9,9 @@ PrinSDiag(data, ps_fo, prin_fo)
 \arguments{
 \item{data}{A standardized \code{pd_data} object.}
 
-\item{ps_fo}{Propensity-score formula; its numeric covariates are diagnosed.}
+\item{ps_fo}{propensity score model formula}
 
-\item{prin_fo}{Principal-score formula.}
+\item{prin_fo}{principal score model formula}
 }
 \value{
 A \code{PrinSDiag} object containing three-decimal standardized

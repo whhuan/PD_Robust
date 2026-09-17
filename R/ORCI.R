@@ -1,7 +1,13 @@
-#' Estimate treatment-group-specific survival odds ratios at cutoff
+#' Estimate covariate associations with survival at cutoff
 #'
-#' Fits the supplied logistic model among subjects in the selected treatment
-#' group at the mapped cutoff time.
+#' Estimates odds ratios with confidence intervals for associations between
+#' covariates and survival at the cutoff time within a selected treatment group.
+#'
+#' `ORCI()` fits the supplied logistic regression model to cutoff observations
+#' from treatment group `a`. It exponentiates every finite, estimable
+#' non-intercept coefficient and reports the corresponding Wald confidence
+#' interval using the confidence level specified by `conf_level`; it does not
+#' screen or retain covariates according to statistical significance.
 #'
 #' @param data A standardized `pd_data` object.
 #' @param formula Logistic-regression formula with the mapped survival column
