@@ -103,12 +103,11 @@ after inference; full-precision bootstrap coefficients are in
 The implemented estimator uses treatment `1` as the survival-favorable
 arm: potential survival satisfies \\S^1 \ge S^0\\ at cutoff. Its
 always-survivor principal score is therefore the survival probability
-under treatment `0`. This convention is retained from version 0.3.7. The
-main estimator in the reference below uses the opposite arm labels. To
-analyze data coded in that convention, recode the raw treatment as
-`1 - A` before mapping and standardizing. To report the original
-contrast, negate the package estimate and transform an interval
-`[lower, upper]` to `[-upper, -lower]`.
+under treatment `0`. If the survival-favorable arm is coded as `0` in
+the raw data, recode the raw treatment as `1 - A` before mapping and
+standardizing. To report the original contrast, negate the package
+estimate and transform an interval `[lower, upper]` to
+`[-upper, -lower]`.
 [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
 does not infer or reverse treatment coding.
 
