@@ -47,7 +47,7 @@
 <div id="documentation-maintenance" class="section level1">
 
 <p>Roxygen comments in <code>R/</code> are the sole source for function and package reference documentation. Edit these comments and run <code>roxygen2::roxygenise()</code> to regenerate the R package help files in <code>man/</code>. Commit the source comments and generated help files together; do not edit <code>man/</code> directly.</p>
-<p>The pkgdown GitHub Action builds the reference website from the package documentation and deploys it to GitHub Pages after a push to <code>main</code> or <code>master</code>. Files in <code>docs/</code>, including <code>docs/reference/</code>, are generated website output and must not be maintained manually. Vignette sources remain in <code>vignettes/</code>, and website configuration remains in <code>_pkgdown.yml</code>.</p>
+<p>The pkgdown GitHub Action builds the reference website from the package documentation and deploys it to GitHub Pages after a push to <code>main</code> or <code>master</code>. Files in <code>docs/</code>, including <code>docs/reference/</code>, are generated website output, ignored by Git, and must not be committed to <code>main</code> or maintained manually. The Action generates <code>docs/</code> and deploys its contents to the root of <code>gh-pages</code>, which is the GitHub Pages publishing source. Local website builds are for preview only; publish website changes through the Action. Vignette sources remain in <code>vignettes/</code>, and website configuration remains in <code>_pkgdown.yml</code>.</p>
 </div>
 
   </main></div>
