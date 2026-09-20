@@ -81,9 +81,8 @@ inference; full-precision bootstrap coefficients are in \code{boot_mat}.
 The implemented estimator uses treatment \code{1} as the survival-favorable arm:
 potential survival satisfies \eqn{S^1 \ge S^0} at cutoff. Its always-survivor
 principal score is therefore the survival probability under treatment \code{0}.
-This convention is retained from version 0.3.7. The main estimator in the
-reference below uses the opposite arm labels. To analyze data coded in that
-convention, recode the raw treatment as \code{1 - A} before mapping and
+If the survival-favorable arm is coded as \code{0} in the raw data,
+recode the raw treatment as \code{1 - A} before mapping and
 standardizing. To report the original contrast, negate the package estimate
 and transform an interval \verb{[lower, upper]} to \verb{[-upper, -lower]}.
 \code{Mapping()} does not infer or reverse treatment coding.
