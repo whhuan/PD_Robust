@@ -33,9 +33,8 @@ or executable code were changed.
 
 The `Mapping()` parameter now reads:
 
-> A single finite number giving the last time included in the analysis, in the
-> original time scale. The always-survivor principal stratum used in
-> treatment-effect analyses is defined by survival through this time.
+> The time point, on the original time scale, at which the always-survivor
+> principal stratum is defined.
 
 This wording distinguishes `cutoff_time` from `target_time`: the cutoff defines
 the survival-based target population and the end of the analysis window,

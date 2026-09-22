@@ -35,17 +35,15 @@ survival or another intermediate status.}
 \item{baseline_time}{A single finite number giving the baseline time in the
 original time scale.}
 
-\item{cutoff_time}{A single finite number giving the last time included in
-the analysis, in the original time scale. The always-survivor principal
-stratum used in treatment-effect analyses is defined by survival through
-this time.}
+\item{cutoff_time}{The time point, on the original time scale, at which the
+always-survivor principal stratum is defined.}
 
 \item{covariates}{A character vector naming all variables used as predictors
 in the propensity score, principal score, or outcome mean models.}
 
-\item{interest_vars}{A character vector naming the variables used to describe
-treatment-effect differences or principal-stratum summaries. Each variable
-must also be listed in \code{covariates}.}
+\item{interest_vars}{A character vector specifying the names of variables
+used to evaluate heterogeneous treatment effects. Each variable must also
+be included in \code{covariates}.}
 
 \item{y_type}{The outcome type: \code{"C"} for continuous or \code{"B"} for binary.}
 }
