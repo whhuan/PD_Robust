@@ -1,27 +1,23 @@
-#' Display and subset PDRobust objects
+#' Print, plot, and subset PDRobust results
 #'
-#' Print methods display mappings, validation reports, diagnostic tables,
-#' treatment-effect estimates, or sensitivity summaries. Plot methods display
-#' the stored diagnostic or treatment-effect plot without refitting a model.
+#' Provides standard ways to print analysis summaries, draw stored plots, and
+#' select rows or columns from data prepared by `DataStandard()`. Plotting a
+#' result does not refit its model.
 #'
-#' @param x An object returned by a PDRobust function, of the class indicated
-#'   by the method. Subsetting applies to a `pd_data` data frame returned by
-#'   `DataStandard()`.
+#' @param x An object returned by a PDRobust function. For `[`, this must be a
+#'   data frame returned by `DataStandard()`.
 #' @param ... For subsetting, arguments passed to the next `[` method,
 #'   including row and column indices and `drop`. For printing and plotting,
 #'   additional arguments are accepted for generic compatibility but ignored.
-#' @return Print methods display the principal numeric or tabular result and
-#'   return `x` invisibly. If the result stores a user-facing plot, its print
-#'   method also draws that same plot; `SA` objects draw each stored sensitivity
-#'   plot. Plot methods return the stored `ggplot` object invisibly. Subsetting
-#'   returns the selected data; when the
-#'   result is a data frame, mapping and audit attributes and the `pd_data`
-#'   class are retained.
-#' @details Subsetting copies metadata without recomputing validation or audit
-#'   reports. Revalidate changed data before analysis; deleting rows or columns
-#'   can invalidate the required panel structure. `QR()` supplies numeric and
-#'   tabular summaries and has a print method, but no package-specific plot
-#'   method. Plot the returned table directly if a custom display is needed.
+#' @return Print methods show the main result and invisibly return `x`. When a
+#'   result contains a plot, printing also draws it; `SA` draws all stored
+#'   sensitivity plots. Plot methods invisibly return the stored `ggplot`
+#'   object. Subsetting returns the selected data and preserves its PDRobust
+#'   mapping and preparation information when the result remains a data frame.
+#' @details Subsetting preserves the stored information but does not check the
+#'   data again. Before analyzing subsetted or edited data, validate them because
+#'   removing rows or columns can break the required longitudinal structure.
+#'   `QR()` has a print method but no package-specific plot method.
 #' @examples
 #' data("BiSample", package = "PDRobust")
 #' map <- Mapping(

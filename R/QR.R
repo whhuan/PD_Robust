@@ -3,19 +3,19 @@
 #' Estimates the user-specified quantile for continuous covariates and the mean
 #' of covariates for subjects within the always-survivor principal stratum.
 #'
-#' `QR()` estimates cumulative principal scores under treatment level `0` and
-#' uses their cutoff values as weights for the mapped numeric interest
-#' variables. It reports weighted means for all such variables and estimates
-#' the requested quantiles for variables with more than two observed values
-#' using weighted intercept-only quantile regression. Variables with no more
-#' than two observed values are treated as binary and receive a weighted mean
-#' but no quantile estimate.
+#' `QR()` uses estimated survival probabilities under treatment `0` to weight
+#' the numeric variables listed in `interest_vars`. It reports a weighted mean
+#' for every variable. For variables with more than two observed values, it also
+#' reports the requested weighted quantiles. Variables with no more than two
+#' observed values are treated as binary and receive a mean but no quantile.
 #'
-#' @param data A standardized `pd_data` object.
+#' @param data Data prepared by `DataStandard()`.
 #' @param prin_fo principal score model formula
-#' @param quantile_level Quantile probabilities strictly between zero and one.
-#' @return A `QR` object containing three-decimal weighted means and quantiles;
-#'   principal-score weights retain full precision.
+#' @param quantile_level One or more quantiles to estimate, expressed as
+#'   probabilities strictly between `0` and `1`. Defaults to the median (`0.5`).
+#' @return A `QR` object containing the weighted means, requested quantiles,
+#'   variable-type indicators, and weights. Reported means and quantiles are
+#'   rounded to three decimal places.
 #' @examples
 #' \donttest{
 #' data("BiSample", package = "PDRobust")

@@ -1,34 +1,35 @@
 
-#' Validate longitudinal principal-stratification data
+#' Check whether longitudinal data are ready for analysis
 #'
-#' Uses the column roles, baseline and cutoff endpoints, mapped covariates,
-#' effect modifiers, and outcome type stored in `mapping`. Every actual observed
-#' time within the mapped window belongs to the analysis grid. Input data are never
-#' modified.
+#' Checks the columns, values, visit structure, and analysis settings specified
+#' by `mapping`. Every observed time from baseline through the cutoff is treated
+#' as an analysis time, and the input data are left unchanged.
 #'
 #' @param data A long-format data frame.
 #' @param mapping A `pd_mapping` object returned by `Mapping()`.
-#' @param strict Stop when any analysis-blocking check fails.
+#' @param strict If `TRUE`, stop as soon as a problem that prevents analysis is
+#'   found. If `FALSE`, return a report describing all checks that can be
+#'   completed.
 #'
 #' @return A `pd_data_check` list with the following components:
 #' \describe{
-#'   \item{valid}{`TRUE` when no check with severity `"error"` fails.
-#'     Analysis-blocking encoding or ordering warnings can still be present.}
-#'   \item{ready_for_analysis}{`TRUE` when no analysis-blocking check fails.}
+#'   \item{valid}{`TRUE` when no check classified as an error fails. Some
+#'     warnings about encoding or ordering may still prevent analysis.}
+#'   \item{ready_for_analysis}{`TRUE` when the data pass every check required
+#'     for analysis.}
 #'   \item{manual_resolution_required}{`TRUE` when a failed check requires
-#'     manual correction before standardization.}
-#'   \item{can_standardize}{The opposite of `manual_resolution_required`.
-#'     This does not guarantee that `DataStandard()` will succeed: deletion
-#'     may require `drop = TRUE`, leave no observations, or remove a treatment
-#'     group. Always inspect the final readiness check.}
+#'     the user to correct the data before standardization.}
+#'   \item{can_standardize}{`TRUE` when no problem requires manual correction.
+#'     Standardization can still fail if rows must be removed but `drop = FALSE`,
+#'     or if removal leaves no observations or only one treatment group.}
 #'   \item{checks}{A data frame with one row per performed check, including
-#'     severity, blocking and repair flags, details, and recommendations.}
+#'     the result, its importance, details, and a recommended action.}
 #'   \item{settings}{A list containing the validated `mapping`.}
 #'   \item{diagnostics}{Detailed row indices, subject identifiers, and summary
 #'     tables for the performed checks. Missing columns or empty input cause
 #'     an early return with only the checks possible at that stage.}
 #' }
-#'   Calculated display diagnostics are rounded to three decimals;
+#'   Numeric summaries intended for display are rounded to three decimals;
 #'   counts, row indices, identifiers, and logical flags retain their types.
 #' @examples
 #' data("BiSample", package = "PDRobust")

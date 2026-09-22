@@ -3,39 +3,40 @@
 #' Performs joint longitudinal analysis of heterogeneous treatment effects
 #' across all time points with time included as a covariate.
 #'
-#' `HTEAllT()` uses the supplied arguments to construct pseudo-data based on the
-#' propensity score model, principal score model, and outcome mean model. It
-#' then jointly estimates the heterogeneous treatment effect trajectory across
-#' all time points and provides bootstrap-based confidence intervals.
+#' `HTEAllT()` combines predictions from the propensity score, principal score,
+#' and outcome mean models to form the data used for effect estimation. It then
+#' estimates one treatment-effect trajectory across all observed times and,
+#' when requested, uses bootstrap resampling to calculate confidence intervals.
 #'
-#' @param data A standardized `pd_data` object returned by `DataStandard()`.
+#' @param data Data prepared by `DataStandard()`.
 #' @param ps_fo propensity score model formula
 #' @param prin_fo principal score model formula
 #' @param out_fo outcome mean model formula
 #' @inheritParams HTESepT
-#' @param conf_level Confidence level for Wald intervals based on bootstrap SDs.
+#' @param conf_level The confidence level for Wald intervals calculated from
+#'   bootstrap standard errors.
 #' @param max_attempts The maximum number of resampling attempts allowed to
 #'   obtain `B` successful bootstrap replications. Defaults to `10B`.
 #'   Resampling stops once `B` successful replications are obtained or when the
 #'   maximum number of attempts is reached, whichever occurs first. Thus,
 #'   fewer than `B` successful replications may be returned if the maximum
 #'   number of attempts is reached.
-#' @param verbose Emit bootstrap progress messages.
-#' @param progress_callback Optional function called with one named progress
-#'   list before model fitting, after the point estimate, after every bootstrap
-#'   attempt, and when bootstrap processing completes. The list contains
+#' @param verbose If `TRUE`, print bootstrap progress messages.
+#' @param progress_callback An optional function for receiving bootstrap
+#'   progress updates. It is called before model fitting, after the point
+#'   estimate, after every bootstrap attempt, and when bootstrapping finishes.
+#'   Each update is a named list containing
 #'   `stage`, `successful`, `requested`, `attempts`, `max_attempts`,
 #'   `failed_attempts`, `complete`, `elapsed_seconds`, and `updated_at`.
-#'   Callback errors warn once and disable further updates without changing the
-#'   analysis.
+#'   If the callback produces an error, the function warns once and stops
+#'   sending updates; the statistical analysis continues.
 #'
-#' @return A `pd_hte_pooled` object. `analysis_times` gives the complete
-#'   baseline-to-cutoff grid, `time_effect_estimable` records whether a time
-#'   effect was included, and `bootstrap_info` records requested and successful
-#'   replicates, attempts, completion status, categorized failures, and captured
-#'   warning counts, and model diagnostics. Numeric estimates and interval
-#'   summaries are rounded to three decimals only after inference; `boot_mat`
-#'   retains full precision.
+#' @return A `pd_hte_pooled` object containing the jointly estimated trajectory,
+#'   the analysis times, confidence intervals when `B > 0`, model-checking
+#'   information, and a summary of successful and failed bootstrap attempts.
+#'   `time_effect_estimable` indicates whether the data allowed a time effect to
+#'   be included. Displayed estimates are rounded to three decimal places;
+#'   `boot_mat` stores the unrounded bootstrap coefficients.
 #' @inheritSection HTESepT Numerical safeguards
 #' @inheritSection PDRobust-package Treatment coding
 #' @seealso [PDRobust-package], [pd_methods]

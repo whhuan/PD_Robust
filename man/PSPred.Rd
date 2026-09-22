@@ -9,23 +9,25 @@ PSPred(ps_fo, fit_dat, pred_dat, mapping, ...)
 \arguments{
 \item{ps_fo}{propensity score model formula}
 
-\item{fit_dat}{Data used to fit the model.}
+\item{fit_dat}{A data frame containing the baseline observations used to fit
+the model.}
 
-\item{pred_dat}{Data on which to predict.}
+\item{pred_dat}{A data frame containing the observations for which propensity
+scores are requested.}
 
-\item{mapping}{A \code{pd_mapping} object. It supplies column names and
-\code{baseline_time} only; it never supplies data.}
+\item{mapping}{A \code{pd_mapping} object that identifies the treatment and time
+columns and the baseline time.}
 
 \item{...}{Additional arguments passed to \code{stats::glm()}.}
 }
 \value{
-A numeric vector of class \code{pd_prediction} with length
-\code{nrow(pred_dat)}, rounded to three decimal places after prediction.
+A numeric vector of propensity scores, one for each row of
+\code{pred_dat}, rounded to three decimal places.
 }
 \description{
-Fits a logistic propensity-score model on baseline observations from
-\code{fit_dat} and predicts on every row of \code{pred_dat}. The model is refitted on
-every call; no fitted object or cache is retained.
+Fits a logistic model using baseline observations from \code{fit_dat} and returns
+each row's estimated probability of receiving treatment \code{1} in \code{pred_dat}.
+The model is fitted again each time the function is called.
 }
 \examples{
 data("BiSample", package = "PDRobust")

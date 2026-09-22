@@ -2,26 +2,33 @@
 % Please edit documentation in R/PrinSDiag.R
 \name{PrinSDiag}
 \alias{PrinSDiag}
-\title{Diagnose principal-score balance}
+\title{Evaluate covariate balance for the principal score model}
 \usage{
 PrinSDiag(data, ps_fo, prin_fo)
 }
 \arguments{
-\item{data}{A standardized \code{pd_data} object.}
+\item{data}{Data prepared by \code{DataStandard()}.}
 
 \item{ps_fo}{propensity score model formula}
 
 \item{prin_fo}{principal score model formula}
 }
 \value{
-A \code{PrinSDiag} object containing three-decimal standardized
-statistics and plots; nuisance probabilities retain full precision.
+A \code{PrinSDiag} object containing the standardized balance statistics,
+estimated probabilities, and a diagnostic plot. Balance statistics are
+rounded to three decimal places.
 }
 \description{
-Refits the propensity and principal-score models internally. Estimated
-propensity scores are always clipped to \verb{[0.01, 0.99]}. Cumulative principal
-scores use all actual observed times from baseline through cutoff, and the
-diagnostic equation is evaluated at cutoff using the original algorithm.
+Calculates a standardized balance statistic for each numeric covariate at
+the cutoff time after accounting for treatment assignment and estimated
+survival. Values nearer zero indicate better balance between the weighted
+treatment groups.
+}
+\details{
+The function fits both the propensity score and principal score models. It
+uses all observed times from baseline through cutoff to estimate cumulative
+survival probabilities, limits propensity scores to \verb{[0.01, 0.99]}, and then
+calculates the balance statistics at the cutoff time.
 }
 \examples{
 \donttest{

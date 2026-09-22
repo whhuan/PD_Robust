@@ -18,7 +18,7 @@ HTESepT(
 )
 }
 \arguments{
-\item{data}{A standardized \code{pd_data} object returned by \code{DataStandard()}.}
+\item{data}{Data prepared by \code{DataStandard()}.}
 
 \item{ps_fo}{propensity score model formula}
 
@@ -31,7 +31,8 @@ interest in standardized form. Baseline is allowed.}
 
 \item{B}{Number of bootstrap replications. Use \code{0} for point estimates only.}
 
-\item{conf_level}{Confidence level for Wald intervals based on bootstrap SDs.}
+\item{conf_level}{The confidence level for Wald intervals calculated from
+bootstrap standard errors.}
 
 \item{max_attempts}{The maximum number of resampling attempts allowed to
 obtain \code{B} successful bootstrap replications. Defaults to \verb{10B}.
@@ -40,43 +41,42 @@ maximum number of attempts is reached, whichever occurs first. Thus,
 fewer than \code{B} successful replications may be returned if the maximum
 number of attempts is reached.}
 
-\item{verbose}{Emit bootstrap progress messages.}
+\item{verbose}{If \code{TRUE}, print bootstrap progress messages.}
 
-\item{progress_callback}{Optional function called with one named progress
-list before model fitting, after the point estimate, after every bootstrap
-attempt, and when bootstrap processing completes. The list contains
+\item{progress_callback}{An optional function for receiving bootstrap
+progress updates. It is called before model fitting, after the point
+estimate, after every bootstrap attempt, and when bootstrapping finishes.
+Each update is a named list containing
 \code{stage}, \code{successful}, \code{requested}, \code{attempts}, \code{max_attempts},
 \code{failed_attempts}, \code{complete}, \code{elapsed_seconds}, and \code{updated_at}.
-Callback errors warn once and disable further updates without changing the
-analysis.}
+If the callback produces an error, the function warns once and stops
+sending updates; the statistical analysis continues.}
 }
 \value{
-A \code{pd_hte_timevarying} object containing time-specific estimates,
-the explicitly requested \code{target_time}, and \code{bootstrap_info} with requested
-and successful replicates, attempts, completion status, categorized
-failures, warning counts, and model diagnostics. Numeric estimates and
-interval summaries are rounded to three decimals only after inference;
-\code{boot_mat} retains full precision.
+A \code{pd_hte_timevarying} object containing the estimate for each
+requested time, confidence intervals when \code{B > 0}, model-checking
+information, and a summary of successful and failed bootstrap attempts.
+Displayed estimates are rounded to three decimal places; \code{boot_mat} stores
+the unrounded bootstrap coefficients.
 }
 \description{
 Performs separate analyses of heterogeneous treatment effects at each
 selected time point.
 }
 \details{
-\code{HTESepT()} uses the supplied arguments to construct pseudo-data based on the
-propensity score model, principal score model, and outcome mean model. It
-then estimates heterogeneous treatment effects separately at each selected
-time point and provides bootstrap-based confidence intervals.
+\code{HTESepT()} combines predictions from the propensity score, principal score,
+and outcome mean models to form the data used for effect estimation. It fits
+a separate treatment-effect model at each selected time and, when requested,
+uses bootstrap resampling to calculate confidence intervals.
 }
 \section{Numerical safeguards}{
 
-Propensity scores are clipped to \verb{[0.01, 0.99]}, and their product with
-treatment-1 survival probabilities is clipped to \verb{[0.005, 0.995]} in
-the estimating equation. These fixed limits stabilize denominators but
-change the equation when active; they do not establish adequate overlap
-or the causal assumptions. Inspect the model diagnostics and assess
-sensitivity to sparse risk sets. Returned summaries are rounded only after
-inference; full-precision bootstrap coefficients are in \code{boot_mat}.
+Propensity scores are limited to \verb{[0.01, 0.99]}. Their product with estimated
+survival probabilities under treatment \code{1} is limited to \verb{[0.005, 0.995]}
+when effects are estimated. These limits prevent division by probabilities
+very close to zero, but they can affect the estimates and do not demonstrate
+adequate overlap or validate the causal assumptions. Review the returned
+model information, especially when few subjects remain at risk.
 }
 
 \section{Treatment coding}{

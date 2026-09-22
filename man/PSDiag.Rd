@@ -7,25 +7,25 @@
 PSDiag(data, ps_fo)
 }
 \arguments{
-\item{data}{A standardized \code{pd_data} object.}
+\item{data}{Data prepared by \code{DataStandard()}.}
 
 \item{ps_fo}{propensity score model formula}
 }
 \value{
-A \code{PSDiag} object containing three-decimal SMD summaries and a plot;
-propensity scores and weights retain full precision.
+A \code{PSDiag} object containing SMDs before and after weighting, the
+estimated propensity scores and weights, and a balance plot. SMDs are
+rounded to three decimal places.
 }
 \description{
 Calculates the standardized mean difference (SMD) for each covariate before
 and after propensity score weighting.
 }
 \details{
-\code{PSDiag()} fits the propensity score model using baseline observations,
-constrains the estimated propensity scores to \verb{[0.01, 0.99]}, and constructs
-ordinary inverse-probability-of-treatment weights. Comparing each
-covariate's SMD before and after weighting assesses covariate balance and
-indicates how well the fitted propensity score model balances the treatment
-groups.
+\code{PSDiag()} fits the propensity score model using baseline observations and
+uses inverse-probability-of-treatment weighting to make the treatment groups
+more comparable. It limits estimated probabilities to \verb{[0.01, 0.99]} to
+avoid extremely large weights. A smaller absolute SMD after weighting
+indicates better balance for that covariate.
 }
 \examples{
 \donttest{

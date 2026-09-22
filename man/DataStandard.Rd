@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataStandard.R
 \name{DataStandard}
 \alias{DataStandard}
-\title{Standardize longitudinal principal-stratification data}
+\title{Prepare longitudinal data for PDRobust analyses}
 \usage{
 DataStandard(data, mapping, drop = FALSE)
 }
@@ -11,17 +11,18 @@ DataStandard(data, mapping, drop = FALSE)
 
 \item{mapping}{A \code{pd_mapping} object returned by \code{Mapping()}.}
 
-\item{drop}{If \code{TRUE}, remove unidentifiable rows and entire subjects with
-incomplete baseline-to-cutoff visits or required analysis values. Attrition is
-reported explicitly. If \code{FALSE}, such problems stop standardization.}
+\item{drop}{If \code{TRUE}, remove rows that cannot be assigned to a subject and
+remove subjects with missing visits or required values between baseline and
+cutoff. The returned report records what was removed. If \code{FALSE}, these
+problems stop standardization.}
 }
 \value{
 A data frame inheriting from \code{pd_data}, retaining the input column
 names and additional unmapped columns. Rows outside the mapped time window
 are removed; retained rows are sorted by recoded ID and time. Attributes are:
 \describe{
-\item{pd_mapping}{The mapping with standardized baseline and cutoff times;
-column roles retain their input names.}
+\item{pd_mapping}{The mapping updated to use the standardized baseline and
+cutoff times. Column names remain unchanged.}
 \item{pd_original_mapping}{The mapping supplied for the raw data.}
 \item{pd_check}{The final \code{pd_data_check} report, including attrition.
 A warning is issued if the returned data are not ready for analysis,
@@ -30,17 +31,17 @@ for example if deletion removes one treatment group.}
 \code{attrition}, and \code{initial_check}. The maps link raw values to their
 standardized values; the initial check describes the input data.}
 }
-Both the initial and final validation are performed. Audit attributes
-describe this standardization call and are not recomputed when the data
-are subsequently edited or subsetted; see \link{pd_methods}. The ID map has
-one row per retained subject, so audit storage grows with sample size.
-Analysis columns and computational mappings retain full precision; only
-returned display diagnostics and attrition percentages are rounded.
+The function checks the data both before and after preparation. The stored
+reports describe this call and are not recalculated if the returned data
+are later edited or subsetted; see \link{pd_methods}. The ID map has one row per
+retained subject, so its size increases with the number of subjects.
+Analysis values retain full precision; only summaries shown to users and
+percentages describing removed data are rounded.
 }
 \description{
-Safely converts explicit binary encodings, maps IDs to consecutive integers,
-maps the raw analysis time grid to \verb{0, 1, ..., n}, sorts the panel, and
-attaches the standardized mapping and audit reports.
+Converts supported binary values to \code{0} and \code{1}, replaces subject IDs and
+analysis times with consecutive integers, sorts the data by subject and time,
+and stores the information needed by other PDRobust functions.
 }
 \examples{
 data("BiSample", package = "PDRobust")

@@ -9,25 +9,28 @@ OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)
 \arguments{
 \item{out_fo}{outcome mean model formula}
 
-\item{fit_dat}{Data used to fit the outcome model.}
+\item{fit_dat}{A data frame containing the observations used to fit the
+outcome mean model.}
 
-\item{pred_dat}{Data on which to predict.}
+\item{pred_dat}{A data frame containing the observations for which outcome
+predictions are requested.}
 
-\item{a}{Treatment value, either \code{0} or \code{1}.}
+\item{a}{The treatment level under which outcomes are predicted, either \code{0}
+or \code{1}.}
 
-\item{mapping}{A \code{pd_mapping} object. \code{mapping$y_type} selects linear or
-logistic regression.}
+\item{mapping}{A \code{pd_mapping} object. Its outcome type determines whether the
+function uses linear regression or logistic regression.}
 
 \item{...}{Additional arguments passed to \code{stats::lm()} or \code{stats::glm()}.}
 }
 \value{
-A numeric vector of class \code{pd_prediction} with length
-\code{nrow(pred_dat)}, rounded to three decimal places after prediction.
+A numeric vector of predicted outcome means, one for each row of
+\code{pred_dat}, rounded to three decimal places.
 }
 \description{
-Refits the outcome model on every call and predicts on all rows of
-\code{pred_dat}. During prediction the mapped treatment column is set to \code{a} and
-the mapped survival column is set to one, exactly as in the original method.
+Fits the outcome mean model and predicts each row of \code{pred_dat} under
+treatment \code{a} and survival status \code{1}. The model is fitted again each time
+the function is called.
 }
 \examples{
 data("BiSample", package = "PDRobust")

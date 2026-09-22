@@ -2,34 +2,37 @@
 % Please edit documentation in R/ORCI.R
 \name{ORCI}
 \alias{ORCI}
-\title{Estimate covariate associations with survival at cutoff}
+\title{Estimate covariate associations with survival at the cutoff time}
 \usage{
 ORCI(data, formula, a, conf_level = 0.95)
 }
 \arguments{
-\item{data}{A standardized \code{pd_data} object.}
+\item{data}{Data prepared by \code{DataStandard()}.}
 
-\item{formula}{Logistic-regression formula with the mapped survival column
-as its response.}
+\item{formula}{A logistic regression formula with the survival variable on
+the left-hand side and the covariates of interest on the right-hand side.}
 
-\item{a}{Required cutoff treatment group, exactly \code{0} or \code{1}.}
+\item{a}{The treatment group to analyze at the cutoff time, either \code{0} or
+\code{1}.}
 
-\item{conf_level}{Confidence level.}
+\item{conf_level}{The confidence level, expressed as a single number between
+\code{0} and \code{1}. Defaults to \code{0.95}.}
 }
 \value{
-An \code{odds_ratios} object containing three-decimal odds-ratio
-summaries, a full-precision fitted model, model diagnostics, and a plot.
+An \code{odds_ratios} object containing odds-ratio estimates and
+confidence intervals, the fitted model, model-checking information, and a
+forest plot. Reported estimates are rounded to three decimal places.
 }
 \description{
 Estimates odds ratios with confidence intervals for associations between
 covariates and survival at the cutoff time within a selected treatment group.
 }
 \details{
-\code{ORCI()} fits the supplied logistic regression model to cutoff observations
-from treatment group \code{a}. It exponentiates every finite, estimable
-non-intercept coefficient and reports the corresponding Wald confidence
-interval using the confidence level specified by \code{conf_level}; it does not
-screen or retain covariates according to statistical significance.
+\code{ORCI()} fits the supplied logistic regression model using observations from
+treatment group \code{a} at the cutoff time. It reports an odds ratio and Wald
+confidence interval for every non-intercept coefficient that can be
+estimated. Covariates are not selected according to statistical
+significance.
 }
 \examples{
 \donttest{

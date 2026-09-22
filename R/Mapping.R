@@ -1,29 +1,38 @@
-#' Define the PDRobust data mapping
+#' Identify variables and analysis times for PDRobust
 #'
-#' Creates the single source of truth for structural columns, baseline and
-#' cutoff times, prediction-model covariates, effect modifiers, and outcome type.
-#' `target_time` is deliberately not stored in the mapping; it is an argument
-#' of `HTESepT()` only.
-#' All ten arguments are required; no structural role or analysis setting is
-#' inferred or defaulted.
+#' Records which columns contain the subject ID, time, treatment, survival,
+#' outcome, and covariates, together with the analysis time range and outcome
+#' type. Other package functions use this information to interpret the data
+#' consistently.
 #'
-#' @param id Character scalar naming the subject ID column.
-#' @param time Character scalar naming the analysis time column.
-#' @param treatment Character scalar naming the treatment column. For causal
+#' All ten arguments are required. `target_time` is specified separately when
+#' calling `HTESepT()` because it selects time points for that analysis rather
+#' than describing the data.
+#'
+#' @param id A single character string naming the subject ID column.
+#' @param time A single character string naming the time column.
+#' @param treatment A single character string naming the treatment column. For causal
 #'   estimation, code the survival-favorable arm as `1` and the other arm as
-#'   `0`; see [PDRobust-package] for the convention and assumptions. Mapping
-#'   does not infer which arm is survival-favorable.
-#' @param survival Character scalar naming the survival/intermediate status column.
-#' @param outcome Character scalar naming the outcome column.
-#' @param baseline_time One finite numeric baseline time in the raw time scale.
-#' @param cutoff_time One finite numeric cutoff time in the raw time scale.
-#' @param covariates Character vector naming every non-structural variable used
-#'   in any prediction-model formula.
-#' @param interest_vars Character vector naming effect modifiers or profiling
-#'   variables. Every entry must also occur in `covariates`.
-#' @param y_type Outcome type code: `"C"` for continuous or `"B"` for binary.
+#'   `0`; see [PDRobust-package] for the convention and assumptions. The
+#'   function does not determine which arm is survival-favorable.
+#' @param survival A single character string naming the column that records
+#'   survival or another intermediate status.
+#' @param outcome A single character string naming the outcome column.
+#' @param baseline_time A single finite number giving the baseline time in the
+#'   original time scale.
+#' @param cutoff_time A single finite number giving the last time included in
+#'   the analysis, in the original time scale. The always-survivor principal
+#'   stratum used in treatment-effect analyses is defined by survival through
+#'   this time.
+#' @param covariates A character vector naming all variables used as predictors
+#'   in the propensity score, principal score, or outcome mean models.
+#' @param interest_vars A character vector naming the variables used to describe
+#'   treatment-effect differences or principal-stratum summaries. Each variable
+#'   must also be listed in `covariates`.
+#' @param y_type The outcome type: `"C"` for continuous or `"B"` for binary.
 #'
-#' @return A `pd_mapping` object.
+#' @return A `pd_mapping` object that can be supplied to `DataCheck()` and
+#'   `DataStandard()`.
 #' @examples
 #' map <- Mapping(
 #'   id = "id", time = "time", treatment = "A",

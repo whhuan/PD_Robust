@@ -7,28 +7,28 @@
 QR(data, prin_fo, quantile_level = 0.5)
 }
 \arguments{
-\item{data}{A standardized \code{pd_data} object.}
+\item{data}{Data prepared by \code{DataStandard()}.}
 
 \item{prin_fo}{principal score model formula}
 
-\item{quantile_level}{Quantile probabilities strictly between zero and one.}
+\item{quantile_level}{One or more quantiles to estimate, expressed as
+probabilities strictly between \code{0} and \code{1}. Defaults to the median (\code{0.5}).}
 }
 \value{
-A \code{QR} object containing three-decimal weighted means and quantiles;
-principal-score weights retain full precision.
+A \code{QR} object containing the weighted means, requested quantiles,
+variable-type indicators, and weights. Reported means and quantiles are
+rounded to three decimal places.
 }
 \description{
 Estimates the user-specified quantile for continuous covariates and the mean
 of covariates for subjects within the always-survivor principal stratum.
 }
 \details{
-\code{QR()} estimates cumulative principal scores under treatment level \code{0} and
-uses their cutoff values as weights for the mapped numeric interest
-variables. It reports weighted means for all such variables and estimates
-the requested quantiles for variables with more than two observed values
-using weighted intercept-only quantile regression. Variables with no more
-than two observed values are treated as binary and receive a weighted mean
-but no quantile estimate.
+\code{QR()} uses estimated survival probabilities under treatment \code{0} to weight
+the numeric variables listed in \code{interest_vars}. It reports a weighted mean
+for every variable. For variables with more than two observed values, it also
+reports the requested weighted quantiles. Variables with no more than two
+observed values are treated as binary and receive a mean but no quantile.
 }
 \examples{
 \donttest{

@@ -9,32 +9,34 @@ PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)
 \arguments{
 \item{prin_fo}{principal score model formula}
 
-\item{fit_dat}{Data used to fit the model.}
+\item{fit_dat}{A data frame containing the observations used to fit the model.}
 
-\item{pred_dat}{Data on which to predict cumulative scores.}
+\item{pred_dat}{A data frame containing the observations for which cumulative
+survival probabilities are requested.}
 
-\item{a}{Treatment level for principal-score prediction, either \code{0} or \code{1}.}
+\item{a}{The treatment level under which survival probabilities are
+predicted, either \code{0} or \code{1}.}
 
-\item{mapping}{A \code{pd_mapping} object.}
+\item{mapping}{A \code{pd_mapping} object that identifies the variables and
+analysis times.}
 
 \item{...}{Additional arguments passed to \code{stats::glm()}.}
 }
 \value{
-A numeric vector of class \code{pd_prediction} with length
-\code{nrow(pred_dat)}, rounded to three decimal places after cumulative
-probabilities have been calculated.
+A numeric vector of cumulative survival probabilities, one for each
+row of \code{pred_dat}, rounded to three decimal places.
 }
 \description{
-Fits the principal-score model and returns cumulative survival probabilities
-for all rows of \code{pred_dat}. All actual observed times from baseline through
-cutoff are used. The model is refitted on every call.
+Fits the principal score model and returns each row's estimated probability
+of surviving from baseline through its observed time under treatment \code{a}.
+All observed times from baseline through cutoff are used, and the model is
+fitted again each time the function is called.
 }
 \details{
-When multiple observed time points exist, baseline rows are assigned an
-at-risk indicator of zero and each post-baseline row is included only when
-the subject survived at the immediately preceding observed time. When the
-analysis contains only one observed time point, no at-risk indicator is
-constructed and all complete observations at that time are used for fitting.
+When the data contain multiple times, each post-baseline observation is used
+to model the next survival step only if the subject was alive at the previous
+observed time. If the data contain only one observed time, all complete
+observations at that time are used.
 }
 \examples{
 data("BiSample", package = "PDRobust")
