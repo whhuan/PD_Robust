@@ -42,10 +42,11 @@ the outcome mean model is fitted to the original binary outcomes, while the
 perturbed outcomes are used only during effect estimation. Binary treatment
 effects use the same bounded scale as \code{HTESepT()}.
 
-The three models are fitted again as needed for each scenario. The results
-show sensitivity to this particular form of random outcome noise; they do
-not cover every possible model error or violation of the causal assumptions.
-Set an R random seed before calling \code{SA()} to reproduce the same noise.
+The three nuisance models are fitted again as needed for each scenario. The
+results show sensitivity to this particular form of random outcome noise;
+they do not cover every possible model error or violation of the causal
+assumptions. Set an R random seed before calling \code{SA()} to reproduce the
+same noise.
 }
 \examples{
 \donttest{

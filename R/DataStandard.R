@@ -1,4 +1,3 @@
-
 #' Prepare longitudinal data for PDRobust analyses
 #'
 #' Converts supported binary values to `0` and `1`, replaces subject IDs and
