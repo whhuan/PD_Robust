@@ -23,7 +23,7 @@ HTEAllT(
 
 - data:
 
-  A standardized `pd_data` object returned by
+  Data prepared by
   [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
 
 - ps_fo:
@@ -44,7 +44,8 @@ HTEAllT(
 
 - conf_level:
 
-  Confidence level for Wald intervals based on bootstrap SDs.
+  The confidence level for Wald intervals calculated from bootstrap
+  standard errors.
 
 - max_attempts:
 
@@ -57,46 +58,44 @@ HTEAllT(
 
 - verbose:
 
-  Emit bootstrap progress messages.
+  If `TRUE`, print bootstrap progress messages.
 
 - progress_callback:
 
-  Optional function called with one named progress list before model
-  fitting, after the point estimate, after every bootstrap attempt, and
-  when bootstrap processing completes. The list contains `stage`,
-  `successful`, `requested`, `attempts`, `max_attempts`,
-  `failed_attempts`, `complete`, `elapsed_seconds`, and `updated_at`.
-  Callback errors warn once and disable further updates without changing
-  the analysis.
+  An optional function for receiving bootstrap progress updates. It is
+  called before model fitting, after the point estimate, after every
+  bootstrap attempt, and when bootstrapping finishes. Each update is a
+  named list containing `stage`, `successful`, `requested`, `attempts`,
+  `max_attempts`, `failed_attempts`, `complete`, `elapsed_seconds`, and
+  `updated_at`. If the callback produces an error, the function warns
+  once and stops sending updates; the statistical analysis continues.
 
 ## Value
 
-A `pd_hte_pooled` object. `analysis_times` gives the complete
-baseline-to-cutoff grid, `time_effect_estimable` records whether a time
-effect was included, and `bootstrap_info` records requested and
-successful replicates, attempts, completion status, categorized
-failures, and captured warning counts, and model diagnostics. Numeric
-estimates and interval summaries are rounded to three decimals only
-after inference; `boot_mat` retains full precision.
+A `pd_hte_pooled` object containing the jointly estimated trajectory,
+the analysis times, confidence intervals when `B > 0`, model-checking
+information, and a summary of successful and failed bootstrap attempts.
+`time_effect_estimable` indicates whether the data allowed a time effect
+to be included. Displayed estimates are rounded to three decimal places;
+`boot_mat` stores the unrounded bootstrap coefficients.
 
 ## Details
 
-`HTEAllT()` uses the supplied arguments to construct pseudo-data based
-on the propensity score model, principal score model, and outcome mean
-model. It then jointly estimates the heterogeneous treatment effect
-trajectory across all time points and provides bootstrap-based
-confidence intervals.
+`HTEAllT()` combines predictions from the propensity score, principal
+score, and outcome mean models to form the data used for effect
+estimation. It then estimates one treatment-effect trajectory across all
+observed times and, when requested, uses bootstrap resampling to
+calculate confidence intervals.
 
 ## Numerical safeguards
 
-Propensity scores are clipped to `[0.01, 0.99]`, and their product with
-treatment-1 survival probabilities is clipped to `[0.005, 0.995]` in the
-estimating equation. These fixed limits stabilize denominators but
-change the equation when active; they do not establish adequate overlap
-or the causal assumptions. Inspect the model diagnostics and assess
-sensitivity to sparse risk sets. Returned summaries are rounded only
-after inference; full-precision bootstrap coefficients are in
-`boot_mat`.
+Propensity scores are limited to `[0.01, 0.99]`. Their product with
+estimated survival probabilities under treatment `1` is limited to
+`[0.005, 0.995]` when effects are estimated. These limits prevent
+division by probabilities very close to zero, but they can affect the
+estimates and do not demonstrate adequate overlap or validate the causal
+assumptions. Review the returned model information, especially when few
+subjects remain at risk.
 
 ## Treatment coding
 

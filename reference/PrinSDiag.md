@@ -1,10 +1,9 @@
-# Diagnose principal-score balance
+# Evaluate covariate balance for the principal score model
 
-Refits the propensity and principal-score models internally. Estimated
-propensity scores are always clipped to `[0.01, 0.99]`. Cumulative
-principal scores use all actual observed times from baseline through
-cutoff, and the diagnostic equation is evaluated at cutoff using the
-original algorithm.
+Calculates a standardized balance statistic for each numeric covariate
+at the cutoff time after accounting for treatment assignment and
+estimated survival. Values nearer zero indicate better balance between
+the weighted treatment groups.
 
 ## Usage
 
@@ -16,7 +15,8 @@ PrinSDiag(data, ps_fo, prin_fo)
 
 - data:
 
-  A standardized `pd_data` object.
+  Data prepared by
+  [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
 
 - ps_fo:
 
@@ -28,8 +28,17 @@ PrinSDiag(data, ps_fo, prin_fo)
 
 ## Value
 
-A `PrinSDiag` object containing three-decimal standardized statistics
-and plots; nuisance probabilities retain full precision.
+A `PrinSDiag` object containing the standardized balance statistics,
+estimated probabilities, and a diagnostic plot. Balance statistics are
+rounded to three decimal places.
+
+## Details
+
+The function fits both the propensity score and principal score models.
+It uses all observed times from baseline through cutoff to estimate
+cumulative survival probabilities, limits propensity scores to
+`[0.01, 0.99]`, and then calculates the balance statistics at the cutoff
+time.
 
 ## Examples
 

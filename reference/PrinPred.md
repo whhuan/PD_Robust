@@ -1,8 +1,9 @@
 # Estimate cumulative principal scores
 
-Fits the principal-score model and returns cumulative survival
-probabilities for all rows of `pred_dat`. All actual observed times from
-baseline through cutoff are used. The model is refitted on every call.
+Fits the principal score model and returns each row's estimated
+probability of surviving from baseline through its observed time under
+treatment `a`. All observed times from baseline through cutoff are used,
+and the model is fitted again each time the function is called.
 
 ## Usage
 
@@ -18,19 +19,22 @@ PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)
 
 - fit_dat:
 
-  Data used to fit the model.
+  A data frame containing the observations used to fit the model.
 
 - pred_dat:
 
-  Data on which to predict cumulative scores.
+  A data frame containing the observations for which cumulative survival
+  probabilities are requested.
 
 - a:
 
-  Treatment level for principal-score prediction, either `0` or `1`.
+  The treatment level under which survival probabilities are predicted,
+  either `0` or `1`.
 
 - mapping:
 
-  A `pd_mapping` object.
+  A `pd_mapping` object that identifies the variables and analysis
+  times.
 
 - ...:
 
@@ -39,18 +43,15 @@ PrinPred(prin_fo, fit_dat, pred_dat, a, mapping, ...)
 
 ## Value
 
-A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`,
-rounded to three decimal places after cumulative probabilities have been
-calculated.
+A numeric vector of cumulative survival probabilities, one for each row
+of `pred_dat`, rounded to three decimal places.
 
 ## Details
 
-When multiple observed time points exist, baseline rows are assigned an
-at-risk indicator of zero and each post-baseline row is included only
-when the subject survived at the immediately preceding observed time.
-When the analysis contains only one observed time point, no at-risk
-indicator is constructed and all complete observations at that time are
-used for fitting.
+When the data contain multiple times, each post-baseline observation is
+used to model the next survival step only if the subject was alive at
+the previous observed time. If the data contain only one observed time,
+all complete observations at that time are used.
 
 ## Examples
 

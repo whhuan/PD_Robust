@@ -1,13 +1,13 @@
 # PDRobust: Principal-stratification treatment-effect estimation
 
-PDRobust provides principal-stratification methods for longitudinal
-outcomes truncated by death.
+PDRobust estimates treatment effects for longitudinal outcomes that may
+be unavailable after death. The effects apply to the always-survivor
+principal stratum: subjects who would survive through the selected
+cutoff time under either treatment.
 [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
-defines structural columns, baseline and cutoff times, prediction-model
-covariates, effect modifiers, and outcome type.
+identifies the variables and analysis times, and
 [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
-attaches the standardized mapping as the sole source of downstream
-data-layout information.
+prepares the data for the remaining functions.
 
 ## Details
 
@@ -15,14 +15,13 @@ data-layout information.
 [`PrinPred()`](https://whhuan.github.io/PD_Robust/reference/PrinPred.md),
 and
 [`OutPred()`](https://whhuan.github.io/PD_Robust/reference/OutPred.md)
-each fit and predict internally on every call. They return pure numeric
-vectors of class `pd_prediction`; fitted models are neither returned nor
-cached.
+fit their models each time they are called and return numeric
+predictions.
 [`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-alone accepts `target_time`, whereas
+estimates effects separately at user-selected times, whereas
 [`HTEAllT()`](https://whhuan.github.io/PD_Robust/reference/HTEAllT.md)
-always analyzes every observed time from baseline through cutoff. No
-hidden global or session cache is created.
+estimates a joint trajectory over every observed time from baseline
+through cutoff.
 
 ## Treatment coding
 
@@ -42,26 +41,24 @@ does not infer or reverse treatment coding.
 The target population comprises subjects who would survive through the
 selected cutoff under either treatment. The effect model describes
 outcome differences at earlier analysis times within that fixed
-population. Continuous-outcome models use a linear effect function.
-Binary-outcome models use `2 * plogis(eta) - 1`, where `eta` is the
-linear predictor; coefficients are on that link scale, not the
-odds-ratio scale.
+population. Continuous-outcome models describe effects on a linear
+scale. Binary-outcome models transform the model's linear predictor with
+`2 * plogis(eta) - 1`; their coefficients are not odds ratios.
 
 Causal interpretation requires consistency, no interference, adequate
-treatment and survival overlap, exposure ignorability conditional on the
-measured covariates, the stated survival monotonicity, and principal
-ignorability. Data validation and covariate balance do not establish
-these assumptions. Triple robustness concerns correct specification of
-at least two of the three nuisance-model components under the method's
-assumptions and regularity conditions; it is not an unconditional
-finite-sample guarantee. Fixed probability clipping can alter the
-estimating equations.
+treatment and survival overlap, treatment ignorability conditional on
+the measured covariates, the stated survival monotonicity, and principal
+ignorability. Checking the data and covariate balance cannot establish
+these assumptions. Triple robustness means that, under the method's
+assumptions and regularity conditions, at least two of the propensity
+score, principal score, and outcome mean models must be correctly
+specified. It does not guarantee unbiased results in every finite
+sample. Limiting extreme probabilities can also affect the estimates.
 
-[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) implements
-random outcome-noise perturbation. It does not implement the reference's
-principal-ignorability sensitivity parameter. See the
-`method-and-coding` vignette for the coding conversion and
-implementation limits.
+[`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) examines
+sensitivity by adding random noise to the outcome. It does not vary the
+principal-ignorability assumption. See the `method-and-coding` vignette
+for treatment coding and other implementation limits.
 
 ## References
 

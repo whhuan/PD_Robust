@@ -72,7 +72,7 @@ across all time points with time included as a covariate.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A standardized <code>pd_data</code> object returned by <code><a href="DataStandard.html">DataStandard()</a></code>.</p></dd>
+<dd><p>Data prepared by <code><a href="DataStandard.html">DataStandard()</a></code>.</p></dd>
 
 
 <dt id="arg-ps-fo">ps_fo<a class="anchor" aria-label="anchor" href="#arg-ps-fo"></a></dt>
@@ -92,7 +92,8 @@ across all time points with time included as a covariate.</p>
 
 
 <dt id="arg-conf-level">conf_level<a class="anchor" aria-label="anchor" href="#arg-conf-level"></a></dt>
-<dd><p>Confidence level for Wald intervals based on bootstrap SDs.</p></dd>
+<dd><p>The confidence level for Wald intervals calculated from
+bootstrap standard errors.</p></dd>
 
 
 <dt id="arg-max-attempts">max_attempts<a class="anchor" aria-label="anchor" href="#arg-max-attempts"></a></dt>
@@ -105,47 +106,46 @@ number of attempts is reached.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Emit bootstrap progress messages.</p></dd>
+<dd><p>If <code>TRUE</code>, print bootstrap progress messages.</p></dd>
 
 
 <dt id="arg-progress-callback">progress_callback<a class="anchor" aria-label="anchor" href="#arg-progress-callback"></a></dt>
-<dd><p>Optional function called with one named progress
-list before model fitting, after the point estimate, after every bootstrap
-attempt, and when bootstrap processing completes. The list contains
+<dd><p>An optional function for receiving bootstrap
+progress updates. It is called before model fitting, after the point
+estimate, after every bootstrap attempt, and when bootstrapping finishes.
+Each update is a named list containing
 <code>stage</code>, <code>successful</code>, <code>requested</code>, <code>attempts</code>, <code>max_attempts</code>,
 <code>failed_attempts</code>, <code>complete</code>, <code>elapsed_seconds</code>, and <code>updated_at</code>.
-Callback errors warn once and disable further updates without changing the
-analysis.</p></dd>
+If the callback produces an error, the function warns once and stops
+sending updates; the statistical analysis continues.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>pd_hte_pooled</code> object. <code>analysis_times</code> gives the complete
-baseline-to-cutoff grid, <code>time_effect_estimable</code> records whether a time
-effect was included, and <code>bootstrap_info</code> records requested and successful
-replicates, attempts, completion status, categorized failures, and captured
-warning counts, and model diagnostics. Numeric estimates and interval
-summaries are rounded to three decimals only after inference; <code>boot_mat</code>
-retains full precision.</p>
+    <p>A <code>pd_hte_pooled</code> object containing the jointly estimated trajectory,
+the analysis times, confidence intervals when <code>B &gt; 0</code>, model-checking
+information, and a summary of successful and failed bootstrap attempts.
+<code>time_effect_estimable</code> indicates whether the data allowed a time effect to
+be included. Displayed estimates are rounded to three decimal places;
+<code>boot_mat</code> stores the unrounded bootstrap coefficients.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code>HTEAllT()</code> uses the supplied arguments to construct pseudo-data based on the
-propensity score model, principal score model, and outcome mean model. It
-then jointly estimates the heterogeneous treatment effect trajectory across
-all time points and provides bootstrap-based confidence intervals.</p>
+    <p><code>HTEAllT()</code> combines predictions from the propensity score, principal score,
+and outcome mean models to form the data used for effect estimation. It then
+estimates one treatment-effect trajectory across all observed times and,
+when requested, uses bootstrap resampling to calculate confidence intervals.</p>
     </div>
     <div class="section level2">
     <h2 id="numerical-safeguards">Numerical safeguards<a class="anchor" aria-label="anchor" href="#numerical-safeguards"></a></h2>
 
 
-<p>Propensity scores are clipped to <code>[0.01, 0.99]</code>, and their product with
-treatment-1 survival probabilities is clipped to <code>[0.005, 0.995]</code> in
-the estimating equation. These fixed limits stabilize denominators but
-change the equation when active; they do not establish adequate overlap
-or the causal assumptions. Inspect the model diagnostics and assess
-sensitivity to sparse risk sets. Returned summaries are rounded only after
-inference; full-precision bootstrap coefficients are in <code>boot_mat</code>.</p>
+<p>Propensity scores are limited to <code>[0.01, 0.99]</code>. Their product with estimated
+survival probabilities under treatment <code>1</code> is limited to <code>[0.005, 0.995]</code>
+when effects are estimated. These limits prevent division by probabilities
+very close to zero, but they can affect the estimates and do not demonstrate
+adequate overlap or validate the causal assumptions. Review the returned
+model information, especially when few subjects remain at risk.</p>
     </div>
     <div class="section level2">
     <h2 id="treatment-coding">Treatment coding<a class="anchor" aria-label="anchor" href="#treatment-coding"></a></h2>

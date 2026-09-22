@@ -1,11 +1,10 @@
 # Sensitivity analysis of outcome mean model misspecification
 
-Evaluates the sensitivity of time-specific heterogeneous treatment
-effect estimates to a specified random outcome-noise perturbation
-intended to probe outcome mean model misspecification. At each observed
-analysis time, the perturbation variance is based on the ordinary
-variance of the observed outcomes, and both cutoff treatment groups
-contribute to the estimating equations.
+Examines how time-specific heterogeneous treatment effect estimates
+change when random noise is added to the outcome. The amount of noise is
+determined from the observed outcome variance at each analysis time, and
+subjects from both treatment groups at the cutoff contribute to effect
+estimation.
 
 ## Usage
 
@@ -17,7 +16,8 @@ SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.1))
 
 - data:
 
-  A standardized continuous- or binary-outcome `pd_data` object.
+  Continuous- or binary-outcome data prepared by
+  [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
 
 - ps_fo:
 
@@ -33,35 +33,35 @@ SA(data, ps_fo, prin_fo, out_fo, ratiovec = c(0, 0.05, 0.1))
 
 - ratiovec:
 
-  Finite nonnegative outcome-variance ratios.
+  One or more nonnegative numbers that set the added-noise variance as a
+  proportion of the observed outcome variance. Use `0` for a scenario
+  with no added noise.
 
 ## Value
 
-An `SA` object containing rounded tidy and wide estimates,
-full-precision estimating diagnostics, consolidated warnings, and plots.
+An `SA` object containing estimates for every analysis time and noise
+level, model-checking information, warnings, and plots. Displayed
+estimates are rounded to three decimal places.
 
 ## Details
 
-`SA()` adds mean-zero random noise to the outcome for every combination
-of observed analysis time and user-specified variance ratio. The noise
-variance equals the specified ratio multiplied by the ordinary variance
-of the observed outcomes at that time, after which the function
-estimates the time-specific heterogeneous treatment effects.
+For each observed analysis time and each value in `ratiovec`, `SA()`
+adds mean-zero random noise whose variance equals that value multiplied
+by the observed outcome variance. It then re-estimates the heterogeneous
+treatment effect for that time.
 
 For continuous outcomes, the perturbed outcomes are used both to refit
-the linear outcome mean model and in the estimating equation. For binary
-outcomes, the logistic outcome mean model is fitted to the original
-binary outcomes, while the perturbed outcomes enter the estimating
-equation; the heterogeneous treatment effect coefficients use the same
-bounded-link estimating equation as
+the outcome mean model and to estimate the treatment effect. For binary
+outcomes, the outcome mean model is fitted to the original binary
+outcomes, while the perturbed outcomes are used only during effect
+estimation. Binary treatment effects use the same bounded scale as
 [`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md).
 
-The propensity score, principal score, and outcome mean models are
-refitted internally as required by each scenario. This procedure
-evaluates sensitivity to the specified random outcome-noise
-perturbation, not to arbitrary forms of model misspecification or
-violations of the causal identifying assumptions. Setting an R random
-seed before calling `SA()` makes the perturbations reproducible.
+The three models are fitted again as needed for each scenario. The
+results show sensitivity to this particular form of random outcome
+noise; they do not cover every possible model error or violation of the
+causal assumptions. Set an R random seed before calling `SA()` to
+reproduce the same noise.
 
 ## Examples
 

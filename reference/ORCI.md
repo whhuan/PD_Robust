@@ -1,4 +1,4 @@
-# Estimate covariate associations with survival at cutoff
+# Estimate covariate associations with survival at the cutoff time
 
 Estimates odds ratios with confidence intervals for associations between
 covariates and survival at the cutoff time within a selected treatment
@@ -14,34 +14,36 @@ ORCI(data, formula, a, conf_level = 0.95)
 
 - data:
 
-  A standardized `pd_data` object.
+  Data prepared by
+  [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
 
 - formula:
 
-  Logistic-regression formula with the mapped survival column as its
-  response.
+  A logistic regression formula with the survival variable on the
+  left-hand side and the covariates of interest on the right-hand side.
 
 - a:
 
-  Required cutoff treatment group, exactly `0` or `1`.
+  The treatment group to analyze at the cutoff time, either `0` or `1`.
 
 - conf_level:
 
-  Confidence level.
+  The confidence level, expressed as a single number between `0` and
+  `1`. Defaults to `0.95`.
 
 ## Value
 
-An `odds_ratios` object containing three-decimal odds-ratio summaries, a
-full-precision fitted model, model diagnostics, and a plot.
+An `odds_ratios` object containing odds-ratio estimates and confidence
+intervals, the fitted model, model-checking information, and a forest
+plot. Reported estimates are rounded to three decimal places.
 
 ## Details
 
-`ORCI()` fits the supplied logistic regression model to cutoff
-observations from treatment group `a`. It exponentiates every finite,
-estimable non-intercept coefficient and reports the corresponding Wald
-confidence interval using the confidence level specified by
-`conf_level`; it does not screen or retain covariates according to
-statistical significance.
+`ORCI()` fits the supplied logistic regression model using observations
+from treatment group `a` at the cutoff time. It reports an odds ratio
+and Wald confidence interval for every non-intercept coefficient that
+can be estimated. Covariates are not selected according to statistical
+significance.
 
 ## Examples
 

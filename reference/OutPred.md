@@ -1,9 +1,8 @@
 # Estimate outcome predictions
 
-Refits the outcome model on every call and predicts on all rows of
-`pred_dat`. During prediction the mapped treatment column is set to `a`
-and the mapped survival column is set to one, exactly as in the original
-method.
+Fits the outcome mean model and predicts each row of `pred_dat` under
+treatment `a` and survival status `1`. The model is fitted again each
+time the function is called.
 
 ## Usage
 
@@ -19,20 +18,23 @@ OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)
 
 - fit_dat:
 
-  Data used to fit the outcome model.
+  A data frame containing the observations used to fit the outcome mean
+  model.
 
 - pred_dat:
 
-  Data on which to predict.
+  A data frame containing the observations for which outcome predictions
+  are requested.
 
 - a:
 
-  Treatment value, either `0` or `1`.
+  The treatment level under which outcomes are predicted, either `0` or
+  `1`.
 
 - mapping:
 
-  A `pd_mapping` object. `mapping$y_type` selects linear or logistic
-  regression.
+  A `pd_mapping` object. Its outcome type determines whether the
+  function uses linear regression or logistic regression.
 
 - ...:
 
@@ -42,8 +44,8 @@ OutPred(out_fo, fit_dat, pred_dat, a, mapping, ...)
 
 ## Value
 
-A numeric vector of class `pd_prediction` with length `nrow(pred_dat)`,
-rounded to three decimal places after prediction.
+A numeric vector of predicted outcome means, one for each row of
+`pred_dat`, rounded to three decimal places.
 
 ## Examples
 

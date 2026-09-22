@@ -20,7 +20,7 @@
   [`plot(`*`<PSDiag>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
   [`plot(`*`<PrinSDiag>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
   [`plot(`*`<odds_ratios>`*`)`](https://whhuan.github.io/PD_Robust/reference/pd_methods.md)
-  : Display and subset PDRobust objects
+  : Print, plot, and subset PDRobust results
 
 ## Mapping and prepared data
 
@@ -28,11 +28,11 @@ Define the data-layout contract, validate raw data, and attach the
 standardized mapping.
 
 - [`Mapping()`](https://whhuan.github.io/PD_Robust/reference/Mapping.md)
-  : Define the PDRobust data mapping
+  : Identify variables and analysis times for PDRobust
 - [`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
-  : Validate longitudinal principal-stratification data
+  : Check whether longitudinal data are ready for analysis
 - [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md)
-  : Standardize longitudinal principal-stratification data
+  : Prepare longitudinal data for PDRobust analyses
 - [`BiSample`](https://whhuan.github.io/PD_Robust/reference/BiSample.md)
   : Binary longitudinal example data
 - [`ImperfectConSample`](https://whhuan.github.io/PD_Robust/reference/ImperfectConSample.md)
@@ -62,10 +62,10 @@ models.
 - [`PSDiag()`](https://whhuan.github.io/PD_Robust/reference/PSDiag.md) :
   Evaluate how well a propensity score model performs
 - [`PrinSDiag()`](https://whhuan.github.io/PD_Robust/reference/PrinSDiag.md)
-  : Diagnose principal-score balance
+  : Evaluate covariate balance for the principal score model
 - [`QR()`](https://whhuan.github.io/PD_Robust/reference/QR.md) : Summary
   statistics of covariates within the always-survivor principal stratum
 - [`ORCI()`](https://whhuan.github.io/PD_Robust/reference/ORCI.md) :
-  Estimate covariate associations with survival at cutoff
+  Estimate covariate associations with survival at the cutoff time
 - [`SA()`](https://whhuan.github.io/PD_Robust/reference/SA.md) :
   Sensitivity analysis of outcome mean model misspecification

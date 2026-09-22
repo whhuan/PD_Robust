@@ -1,12 +1,9 @@
-# Define the PDRobust data mapping
+# Identify variables and analysis times for PDRobust
 
-Creates the single source of truth for structural columns, baseline and
-cutoff times, prediction-model covariates, effect modifiers, and outcome
-type. `target_time` is deliberately not stored in the mapping; it is an
-argument of
-[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
-only. All ten arguments are required; no structural role or analysis
-setting is inferred or defaulted.
+Records which columns contain the subject ID, time, treatment, survival,
+outcome, and covariates, together with the analysis time range and
+outcome type. Other package functions use this information to interpret
+the data consistently.
 
 ## Usage
 
@@ -29,53 +26,70 @@ Mapping(
 
 - id:
 
-  Character scalar naming the subject ID column.
+  A single character string naming the subject ID column.
 
 - time:
 
-  Character scalar naming the analysis time column.
+  A single character string naming the time column.
 
 - treatment:
 
-  Character scalar naming the treatment column. For causal estimation,
-  code the survival-favorable arm as `1` and the other arm as `0`; see
+  A single character string naming the treatment column. For causal
+  estimation, code the survival-favorable arm as `1` and the other arm
+  as `0`; see
   [PDRobust-package](https://whhuan.github.io/PD_Robust/reference/PDRobust-package.md)
-  for the convention and assumptions. Mapping does not infer which arm
-  is survival-favorable.
+  for the convention and assumptions. The function does not determine
+  which arm is survival-favorable.
 
 - survival:
 
-  Character scalar naming the survival/intermediate status column.
+  A single character string naming the column that records survival or
+  another intermediate status.
 
 - outcome:
 
-  Character scalar naming the outcome column.
+  A single character string naming the outcome column.
 
 - baseline_time:
 
-  One finite numeric baseline time in the raw time scale.
+  A single finite number giving the baseline time in the original time
+  scale.
 
 - cutoff_time:
 
-  One finite numeric cutoff time in the raw time scale.
+  A single finite number giving the last time included in the analysis,
+  in the original time scale. The always-survivor principal stratum used
+  in treatment-effect analyses is defined by survival through this time.
 
 - covariates:
 
-  Character vector naming every non-structural variable used in any
-  prediction-model formula.
+  A character vector naming all variables used as predictors in the
+  propensity score, principal score, or outcome mean models.
 
 - interest_vars:
 
-  Character vector naming effect modifiers or profiling variables. Every
-  entry must also occur in `covariates`.
+  A character vector naming the variables used to describe
+  treatment-effect differences or principal-stratum summaries. Each
+  variable must also be listed in `covariates`.
 
 - y_type:
 
-  Outcome type code: `"C"` for continuous or `"B"` for binary.
+  The outcome type: `"C"` for continuous or `"B"` for binary.
 
 ## Value
 
-A `pd_mapping` object.
+A `pd_mapping` object that can be supplied to
+[`DataCheck()`](https://whhuan.github.io/PD_Robust/reference/DataCheck.md)
+and
+[`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
+
+## Details
+
+All ten arguments are required. `target_time` is specified separately
+when calling
+[`HTESepT()`](https://whhuan.github.io/PD_Robust/reference/HTESepT.md)
+because it selects time points for that analysis rather than describing
+the data.
 
 ## Examples
 

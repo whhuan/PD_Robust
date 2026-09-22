@@ -14,7 +14,8 @@ QR(data, prin_fo, quantile_level = 0.5)
 
 - data:
 
-  A standardized `pd_data` object.
+  Data prepared by
+  [`DataStandard()`](https://whhuan.github.io/PD_Robust/reference/DataStandard.md).
 
 - prin_fo:
 
@@ -22,22 +23,23 @@ QR(data, prin_fo, quantile_level = 0.5)
 
 - quantile_level:
 
-  Quantile probabilities strictly between zero and one.
+  One or more quantiles to estimate, expressed as probabilities strictly
+  between `0` and `1`. Defaults to the median (`0.5`).
 
 ## Value
 
-A `QR` object containing three-decimal weighted means and quantiles;
-principal-score weights retain full precision.
+A `QR` object containing the weighted means, requested quantiles,
+variable-type indicators, and weights. Reported means and quantiles are
+rounded to three decimal places.
 
 ## Details
 
-`QR()` estimates cumulative principal scores under treatment level `0`
-and uses their cutoff values as weights for the mapped numeric interest
-variables. It reports weighted means for all such variables and
-estimates the requested quantiles for variables with more than two
-observed values using weighted intercept-only quantile regression.
+`QR()` uses estimated survival probabilities under treatment `0` to
+weight the numeric variables listed in `interest_vars`. It reports a
+weighted mean for every variable. For variables with more than two
+observed values, it also reports the requested weighted quantiles.
 Variables with no more than two observed values are treated as binary
-and receive a weighted mean but no quantile estimate.
+and receive a mean but no quantile.
 
 ## Examples
 

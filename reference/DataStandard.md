@@ -1,8 +1,8 @@
-# Standardize longitudinal principal-stratification data
+# Prepare longitudinal data for PDRobust analyses
 
-Safely converts explicit binary encodings, maps IDs to consecutive
-integers, maps the raw analysis time grid to `0, 1, ..., n`, sorts the
-panel, and attaches the standardized mapping and audit reports.
+Converts supported binary values to `0` and `1`, replaces subject IDs
+and analysis times with consecutive integers, sorts the data by subject
+and time, and stores the information needed by other PDRobust functions.
 
 ## Usage
 
@@ -23,10 +23,10 @@ DataStandard(data, mapping, drop = FALSE)
 
 - drop:
 
-  If `TRUE`, remove unidentifiable rows and entire subjects with
-  incomplete baseline-to-cutoff visits or required analysis values.
-  Attrition is reported explicitly. If `FALSE`, such problems stop
-  standardization.
+  If `TRUE`, remove rows that cannot be assigned to a subject and remove
+  subjects with missing visits or required values between baseline and
+  cutoff. The returned report records what was removed. If `FALSE`,
+  these problems stop standardization.
 
 ## Value
 
@@ -37,8 +37,8 @@ are:
 
 - pd_mapping:
 
-  The mapping with standardized baseline and cutoff times; column roles
-  retain their input names.
+  The mapping updated to use the standardized baseline and cutoff times.
+  Column names remain unchanged.
 
 - pd_original_mapping:
 
@@ -56,14 +56,14 @@ are:
   `initial_check`. The maps link raw values to their standardized
   values; the initial check describes the input data.
 
-Both the initial and final validation are performed. Audit attributes
-describe this standardization call and are not recomputed when the data
-are subsequently edited or subsetted; see
+The function checks the data both before and after preparation. The
+stored reports describe this call and are not recalculated if the
+returned data are later edited or subsetted; see
 [pd_methods](https://whhuan.github.io/PD_Robust/reference/pd_methods.md).
-The ID map has one row per retained subject, so audit storage grows with
-sample size. Analysis columns and computational mappings retain full
-precision; only returned display diagnostics and attrition percentages
-are rounded.
+The ID map has one row per retained subject, so its size increases with
+the number of subjects. Analysis values retain full precision; only
+summaries shown to users and percentages describing removed data are
+rounded.
 
 ## Examples
 
