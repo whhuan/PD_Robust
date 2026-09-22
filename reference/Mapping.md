@@ -57,9 +57,8 @@ Mapping(
 
 - cutoff_time:
 
-  A single finite number giving the last time included in the analysis,
-  in the original time scale. The always-survivor principal stratum used
-  in treatment-effect analyses is defined by survival through this time.
+  The time point, on the original time scale, at which the
+  always-survivor principal stratum is defined.
 
 - covariates:
 
@@ -68,9 +67,9 @@ Mapping(
 
 - interest_vars:
 
-  A character vector naming the variables used to describe
-  treatment-effect differences or principal-stratum summaries. Each
-  variable must also be listed in `covariates`.
+  A character vector specifying the names of variables used to evaluate
+  heterogeneous treatment effects. Each variable must also be included
+  in `covariates`.
 
 - y_type:
 
